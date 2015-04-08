@@ -1,5 +1,20 @@
 /build
 
+.DS_Store
+*.log
+*.sock*
+*.pyo
+*.pyc
+*.crash
+*.so
+*.o
+*.a
+* copy.*
+._*
+build_config.mk
+*.patch
+*.diff
+
 *.xcodeproj/*.pbxuser
 *.xcodeproj/*.perspective*
 *.xcodeproj/*.mode1*

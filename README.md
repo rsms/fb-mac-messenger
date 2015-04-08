@@ -4,6 +4,8 @@ Mac app wrapper around [Facebook's stand-alone Messenger](https://www.messenger.
 
 > Disclaimer: This is NOT an official Facebook product, but just a hobby project
 
+Icon courtesy of Sebastiaan de With (Muir v3) <http://pictogram.agency/muir/>
+
 ## MIT license
 
 Copyright (c) 2015 Rasmus Andersson <http://rsms.me/>

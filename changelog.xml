@@ -9,6 +9,23 @@
       <title>Messenger for Mac 0.0.1</title>
       <description><![CDATA[
         <ul>
+          <li>New icon (sdw)</li>
+          <li>Clicking hyperlinks now open in default web browser (joshpuckett)</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 08 Apr 2015 14:19:39 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="2e29c8e9b6bbc854"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.1.1428527957-2e29c8e9b6bbc854.zip"
+        sparkle:version="0.0.1.1428527957"
+        length="1926961"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.1</title>
+      <description><![CDATA[
+        <ul>
           <li>Initial release</li>
         </ul>
       ]]></description>

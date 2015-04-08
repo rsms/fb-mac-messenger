@@ -5,5 +5,21 @@
     <link>http://fbmacmessenger.rsms.me/changelog.xml</link>
     <description>Most recent changes with links to updates</description>
     <language>en</language>
+    <item>
+      <title>Messenger for Mac 0.0.1</title>
+      <description><![CDATA[
+        <ul>
+          <li>Initial release</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 08 Apr 2015 14:09:59 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="0fbdac9bb899642d"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.1.1428527387-0fbdac9bb899642d.zip"
+        sparkle:version="0.0.1.1428527387"
+        length="1164208"
+        type="application/octet-stream" />
+    </item>
   </channel>
 </rss>

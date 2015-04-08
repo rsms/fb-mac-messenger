@@ -22,6 +22,7 @@
   // Web view in main window
   auto webView = [[WebView alloc] initWithFrame:{{0,0},{100,100}} frameName:@"main" groupName:@"main"];
   self.window.contentView = webView;
+  webView.policyDelegate = self;
   auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/"]];
   [webView.mainFrame loadRequest:req];
   
@@ -38,5 +39,21 @@
   [[SUUpdater sharedUpdater] checkForUpdates:self];
 }
 
+
+#pragma mark - WebPolicyDelegate
+
+- (void)webView:(WebView *)sender decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request frame:(WebFrame *)frame decisionListener:(id<WebPolicyDecisionListener>)listener {
+  if ([sender isEqual:self.window.contentView]) {
+    [listener use];
+  } else {
+    [[NSWorkspace sharedWorkspace] openURL:[actionInformation objectForKey:WebActionOriginalURLKey]];
+    [listener ignore];
+  }
+}
+
+- (void)webView:(WebView *)sender decidePolicyForNewWindowAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request newFrameName:(NSString *)frameName decisionListener:(id<WebPolicyDecisionListener>)listener {
+  [[NSWorkspace sharedWorkspace] openURL:[actionInformation objectForKey:WebActionOriginalURLKey]];
+  [listener ignore];
+}
 
 @end

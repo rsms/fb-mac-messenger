@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22C40EB11AD5C5E100FE12C1 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 22C40EB01AD5C5E100FE12C1 /* icon.icns */; };
 		3A9A9C461AD5B407008FABE9 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */; };
 		3A9A9C481AD5B407008FABE9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C471AD5B407008FABE9 /* main.m */; };
 		3A9A9C4A1AD5B407008FABE9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A9A9C491AD5B407008FABE9 /* Images.xcassets */; };
@@ -31,6 +32,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		22C40EB01AD5C5E100FE12C1 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		3A9A9C3F1AD5B407008FABE9 /* Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A9A9C431AD5B407008FABE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A9A9C441AD5B407008FABE9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 				3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */,
 				3A9A9C491AD5B407008FABE9 /* Images.xcassets */,
 				3A9A9C4B1AD5B407008FABE9 /* MainMenu.xib */,
+				22C40EB01AD5C5E100FE12C1 /* icon.icns */,
 				3A9A9C421AD5B407008FABE9 /* Supporting Files */,
 			);
 			path = Messenger;
@@ -187,6 +190,7 @@
 			files = (
 				3A9A9C4A1AD5B407008FABE9 /* Images.xcassets in Resources */,
 				3A9A9C4D1AD5B407008FABE9 /* MainMenu.xib in Resources */,
+				22C40EB11AD5C5E100FE12C1 /* icon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,7 +300,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3A9A9C701AD5CA29008FABE9 /* messenger-debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -309,7 +312,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3A9A9C701AD5CA29008FABE9 /* messenger-debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

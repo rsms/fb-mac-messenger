@@ -10,7 +10,7 @@ Icon courtesy of Sebastiaan de With (Muir v3) <http://pictogram.agency/muir/>
 
 ## MIT license
 
-Copyright (c) 2015 Rasmus Andersson <http://rsms.me/>
+Copyright (c) 2015 Authors of the source code of this project
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -13,7 +13,7 @@
   self.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
   self.window.titleVisibility = NSWindowTitleHidden;
   self.window.titlebarAppearsTransparent = YES;
-  
+
   // Hack to hide "traffic lights" but still allowing window manipulation (which isn't the case if we use proper window flags)
   [[self.window standardWindowButton:NSWindowCloseButton] setFrame:NSZeroRect];
   [[self.window standardWindowButton:NSWindowMiniaturizeButton] setFrame:NSZeroRect];
@@ -25,7 +25,7 @@
   webView.policyDelegate = self;
   auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/"]];
   [webView.mainFrame loadRequest:req];
-  
+
   // Sparkle
   auto su = [SUUpdater sharedUpdater];
   su.automaticallyChecksForUpdates = YES;
@@ -37,6 +37,15 @@
 
 - (IBAction)checkForUpdates:(id)sender {
   [[SUUpdater sharedUpdater] checkForUpdates:self];
+}
+
+- (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag {
+  [self.window makeKeyAndOrderFront:self];
+  return YES;
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification {
+  [self.window makeKeyAndOrderFront:self];
 }
 
 

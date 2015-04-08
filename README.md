@@ -2,6 +2,8 @@
 
 Mac app wrapper around [Facebook's stand-alone Messenger](https://www.messenger.com/).
 
+![fb-messenger](https://dl.dropboxusercontent.com/u/1603978/fb-messenger.png)
+
 > Disclaimer: This is NOT an official Facebook product, but just a hobby project
 
 Icon courtesy of Sebastiaan de With (Muir v3) <http://pictogram.agency/muir/>

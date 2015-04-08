@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <link rel="alternate" type="application/rss+xml"  href="/changelog.xml" title="Changelog">
+    <title>Messenger for Mac</title>
+    <style type="text/css">
+body {
+  background-color:white;
+  color:black;
+  font:18px/1.6 helvetica, sans-serif;
+  font-weight:200;
+  margin:2em 3em;
+  width:auto;
+}
+a {
+  color:#0084ff;
+  text-decoration:inherit;
+  display:inline-block;
+  padding:0 0.3em;
+  margin:0 -0.3em;
+  border-radius:5px;
+}
+a:hover {
+  background-color:#faf0ee;
+  /*color:white;*/
+}
+
+h1 {
+  font-size:40px;
+  font-weight:200;
+}
+h2 {
+  font-size:22px;
+  font-weight:400;
+}
+
+#releases {
+  display:inline-block;
+  max-width:900px;
+}
+
+.release {
+  /*border-top: 1px solid #ddd;*/
+  padding-top: 1em;
+}
+  .release > h2, .release > p {
+    margin:0;
+    padding:0;
+  }
+    .release > h2 > * {
+      margin-right:0.3em;
+    }
+    .release > h2 .title .version-detail {
+      color:rgba(0,0,0,0.3);
+    }
+    .release > h2 > .pubinfo {
+      font-weight:normal;
+      color:rgba(0,0,0,0.3);
+    }
+      .release > h2 > .pubinfo > a {
+        color:inherit;
+      }
+      .release > h2 > .pubinfo > a:hover {
+        color:black;
+        background-color:rgba(0,0,0,0.06);
+      }
+    .release > h2 > .dist-link {
+      font-weight:normal;
+    }
+  .release > .divider {
+    border-bottom: 1px solid #ddd;
+    display:block;
+    height:11px;
+  }
+    .release > .divider > a {
+      display:block;
+      position:relative;
+      text-align:center;
+      color:#ddd;
+      font-size:14px;
+      line-height:20px;
+    }
+      .release > .divider > a > .text {
+        display:inline-block;
+        margin:0 auto;
+        padding:0 0.3em;
+        background-color:white;
+      }
+    .release > .divider:hover,
+    .release > .divider > a:hover {
+      background-color: transparent;
+      color:black;
+    }
+    .release > .divider:hover {
+      border-color:black;
+    }
+    .release:last-child > .divider {
+      display:none;
+    }
+
+#releases-trailer {
+  margin-top:2em;
+}
+
+    </style>
+  </head>
+  <body>
+    <h1>Messenger for Mac</h1>
+    <div class="latest">
+      <h2><a>Download latest version <span class="version">0.0</span></a></h2>
+    </div>
+    <div id="releases">
+      <div class="release" style="display:none">
+        <h2>
+          <span class="title"></span>
+          <span class="pubinfo">
+            published <span class="date reldate"></span>
+            from <a class="srclink"></a>
+          </span>
+          <a class="dist-link">Download</a>
+        </h2>
+        <p class="description"></p>
+        <p class="divider">
+          <a class="diff-compare-link"><span class="text">Compare source changes</span></a>
+        </p>
+      </div>
+    </div>
+    <p id="releases-trailer">
+      <a href="changelog.xml">Complete changelog in RSS format</a>
+    </p>
+    <script type="text/javascript">
+
+var releaseDivTemplate = document.querySelector('div.release');
+releaseDivTemplate.parentNode.removeChild(releaseDivTemplate);
+releaseDivTemplate.style.display = null;
+
+var releasesDiv = document.getElementById('releases');
+
+var req = new XMLHttpRequest();
+req.open('GET', 'changelog.xml', false);
+req.send(null);
+var doc = req.responseXML.documentElement;
+var latestVersion = false;
+
+function parseVersion(e) {
+  if (e.tagName.toLowerCase() !== 'enclosure') e = e.querySelector('enclosure');
+  var v = e.getAttribute('sparkle:version').match(/([0-9]+\.[0-9]+\.[0-9]+)\.(.+)/);
+  var vd = new Date(parseInt(v[2])*1000);
+  vd = vd.toISOString().substr(0,19)+'Z';
+  return {
+    version: v[1],
+    version_detail: vd,
+    gitrev: e.getAttribute('gitrev'),
+  };
+}
+
+
+// var items = []; for (var n = 4; n; --n) { items.push(doc.querySelector('item')); }
+var items = Array.prototype.slice.call(doc.querySelectorAll('item'));
+var latestItem;
+items.forEach(function (item, index) {
+  var div = releaseDivTemplate.cloneNode(true);
+  var enclosure = item.querySelector('enclosure');
+  var version = parseVersion(enclosure);
+  var pubdate = item.querySelector('pubDate').firstChild.nodeValue;
+
+  var titleElem = div.querySelector('.title');
+  titleElem.innerText = 'Version ' + version.version;
+  var vd = document.createElement('span');
+  vd.className = 'version-detail';
+  vd.innerText = '.' + version.version_detail;
+  titleElem.appendChild(vd);
+
+  var pubdateDate = new Date(pubdate);
+  div.querySelector('.pubinfo .date').innerText = reldate(pubdateDate);
+  div.querySelector('.pubinfo .date').setAttribute('data-date', pubdate);
+  div.querySelector('.pubinfo .srclink').href =
+    'https://github.com/rsms/fb-mac-messenger/tree/'+version.gitrev+'/';
+  div.querySelector('.pubinfo .srclink').innerText = version.gitrev.substr(0,6);
+
+  div.querySelector('.dist-link').href = enclosure.getAttribute('url');
+
+  div.querySelector('.description').innerHTML =
+    item.querySelector('description').firstChild.nodeValue;
+
+  if (index === items.length-1) {
+    // The oldest release: There's no older release to be compared to
+    div.querySelector('.diff-compare-link').style.display = 'none';
+  } else {
+    var olderVersion = parseVersion(items[index+1]);
+    div.querySelector('.diff-compare-link').href =
+      'https://github.com/rsms/fb-mac-messenger/compare/'+olderVersion.gitrev+'...'+version.gitrev;
+  }
+
+  releasesDiv.appendChild(div);
+
+  if (!latestItem || latestItem.pubdateDate < item.pubdateDate) {
+    latestItem = item;
+    latestItem.pubdateDate = pubdateDate;
+  }
+});
+
+// latest
+var latest = document.querySelector('.latest');
+if (!latestItem) {
+  latest.style.display = 'none';
+} else {
+  var latestEnclosure = latestItem.querySelector('enclosure');
+  var latestVersion = parseVersion(latestEnclosure);
+  latest.querySelector('.version').innerText = latestVersion.version;
+  latest.querySelector('a').href = latestEnclosure.getAttribute('url');
+}
+
+setInterval(function() {
+  Array.prototype.slice.call(document.querySelectorAll('.reldate')).forEach(function (e) {
+    e.innerText = reldate(new Date(e.getAttribute('data-date')));
+  });
+},60000);
+
+
+function reldate(date) {
+  var ms = Math.abs((new Date) - date);
+  if (ms < 60000)         return 'just now';
+  if (ms == 60000)        return 'a minute ago';
+  if (ms < 3600000)       return Math.ceil(ms / 60000) + ' minutes ago';
+  if (ms == 3600000)      return 'an hour ago';
+  if (ms < 3600000*17)      return Math.ceil(ms / 3600000) + ' hours ago';
+  if (ms <= 86400000)     return 'a day ago';
+  if (ms < 604800000)     return Math.ceil(ms / 86400000) + ' days ago';
+  if (ms == 604800000)    return 'a week ago';
+  if (ms < 2628000000)    return Math.ceil(ms / 604800000) + ' weeks ago';
+  if (ms == 2628000000)   return 'a month ago';
+  //if (ms < 31536000000)   return Math.ceil(ms / 2628000000) + ' months ago';
+  //if (ms == 31536000000)  return 'a year ago';
+  // Math.round(ms / 31536000000) + ' years ago';
+  return date.toLocaleString();
+}
+
+    </script>
+  </body>
+</html>
+<!-- ./s3put.py -vw index.html -->

@@ -1,0 +1,6 @@
+#ifndef Messenger_prefix_pch
+#define Messenger_prefix_pch
+
+#import <Cocoa/Cocoa.h>
+
+#endif

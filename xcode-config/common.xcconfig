@@ -1,0 +1,35 @@
+ALWAYS_SEARCH_USER_PATHS = NO
+  // If enabled both #include <header.h>-style and #include "header.h"-style directives will
+  // search the paths in "User Header Search Paths" before "Header Search Paths", with the
+  // consequence that user headers (such as your own String.h header) would have precedence
+  // over system headers when using #include <header.h>. This is done using the -iquote flag
+  // for the paths provided in "User Header Search Paths". If disabled and your compiler fully
+  // supports separate user paths, user headers will only be accessible with
+  // #include "header.h"-style preprocessor directives. 
+
+GCC_SYMBOLS_PRIVATE_EXTERN = NO
+  // When enabled, all symbols are declared 'private extern' unless explicitly marked to be
+  // exported using '__attribute__((visibility("default")))' in code. If not enabled, all symbols
+  // are exported unless explicitly marked as 'private extern'.
+
+GCC_C_LANGUAGE_STANDARD = gnu11
+CLANG_CXX_LANGUAGE_STANDARD = c++14
+CLANG_CXX_LIBRARY = libc++
+GCC_ENABLE_CPP_RTTI = NO
+GCC_ENABLE_CPP_EXCEPTIONS = YES
+
+CLANG_ENABLE_OBJC_ARC = YES
+CLANG_WARN__DUPLICATE_METHOD_MATCH = YES
+CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR
+CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR
+ENABLE_STRICT_OBJC_MSGSEND = YES
+GCC_WARN_UNDECLARED_SELECTOR = YES
+GCC_ENABLE_OBJC_EXCEPTIONS = YES
+
+GCC_WARN_64_TO_32_BIT_CONVERSION = YES
+GCC_WARN_ABOUT_RETURN_TYPE = YES
+GCC_WARN_MISSING_PARENTHESES = YES
+GCC_WARN_UNUSED_VARIABLE = YES
+WARNING_CFLAGS = -Wall
+
+CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer

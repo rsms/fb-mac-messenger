@@ -23,10 +23,10 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Messenger" systemMenu="apple" id="uQy-DD-JDr">
                         <items>
-                            <menuItem title="About Messenger" id="5kV-Vb-QxS">
+                            <menuItem title="Check for updates..." id="5kV-Vb-QxS">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="orderFrontStandardAboutPanel:" target="-1" id="Exp-CZ-Vem"/>
+                                    <action selector="checkForUpdates:" target="Voe-Tx-rLC" id="sxb-UY-31p"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>

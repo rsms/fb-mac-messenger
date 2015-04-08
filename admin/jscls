@@ -1,0 +1,490 @@
+#!/usr/bin/env python
+# encoding: utf-8
+#
+# Takes a C++ source file and generates code for any JSClass subclasses,
+# bridging C++ and JavaScriptCore.
+#
+# The one exported function generated is the {Name}Create() function, which is the
+# Python-style JavaScript constructor. The C++ interface looks like this:
+# (where "Foo" is the name of your type)
+#
+#   JSObjectRef FooCreate(JSContextRef ctx, size_t argc, const JSValueRef argv[], JSValueRef* exc)
+#
+# Which can be used like this in JavaScript:
+#
+#   var foo = Foo({bar:123})
+#
+# Accepting an optional object argument with initial properties.
+#
+# Example of generated code:
+#
+#  #line 1 "Foo.cc"
+#  #include "JSClass.hh"
+#  struct Foo : JSClass {
+#    JSValueRef jsget_foo(JSValueRef* exc);
+#  };
+#  #line 1 "Foo.jscls.cc"
+#  //--begin jscls generated code--
+#  static Foo* Foo__get_this ...
+#  static JSValueRef Foo__get_foo(
+#      JSContextRef ctx, JSObjectRef obj, JSStringRef name, JSValueRef* exc) {
+#    auto p = Foo__get_this(ctx, obj, exc);
+#    return p == nullptr ? (JSValueRef)p : p->jsget_foo(exc);
+#  }
+#  static void Foo__jsfinalize ...
+#  JSObjectRef FooCreate(JSContextRef ctx, size_t argc, const JSValueRef argv[], JSValueRef* exc)
+#  ...
+#  //--end jscls generated code--
+#  #line 5 "Foo.cc"
+#  ...
+#
+import os, os.path, sys, re, string
+
+debug_disable_source_mapping = False
+
+try:
+  infile, outdir = sys.argv[1:3]
+  if infile == '-h' or infile == '--help':
+    raise ValueError('')
+except ValueError:
+  print >>sys.stderr, 'usage: %s <infile> <outdir>' % sys.argv[0]
+  sys.exit(1)
+
+with open(infile) as f:
+  src = f.read()
+
+jsclassRe = re.compile(
+  '(?:struct|class)[\s\n\r]+([a-zA-Z0-9_]+)[\s\n\r]*:[\s\n\r]*JSClass[\s\n\r]*\{', re.M)
+
+# When passing ctx and obj by arguments
+# jscallRe = re.compile(
+#   'JSValueRef[\s\n\r]+jscall_([a-zA-Z0-9_]+)[\s\n\r]*\([\s\n\r]*JSContextRef', re.M)
+# jspropGetRe = re.compile(
+#   'JSValueRef[\s\n\r]+jsget_([a-zA-Z0-9_]+)[\s\n\r]*\([\s\n\r]*JSContextRef', re.M)
+# jspropSetRe = re.compile(
+#   'bool[\s\n\r]+jsset_([a-zA-Z0-9_]+)[\s\n\r]*\([\s\n\r]*JSContextRef', re.M)
+
+# When referring to ctx and obj via JSClass struct
+jscallRe = re.compile(
+  '\n[\s\n\r]*JSValueRef[\s\n\r]+jscall_([a-zA-Z0-9_]+)[\s\n\r]*\(([^\)]+)\)', re.M)
+jspropGetRe = re.compile(
+  '\n[\s\n\r]*JSValueRef[\s\n\r]+jsget_([a-zA-Z0-9_]+)[\s\n\r]*\(([^\)]+)\)', re.M)
+jspropSetRe = re.compile(
+  '\n[\s\n\r]*bool[\s\n\r]+jsset_([a-zA-Z0-9_]+)[\s\n\r]*\(([^\)]+)\)', re.M)
+jsinitRe = re.compile(
+  '\n[\s\n\r]*([^\s\n\r]+)[\s\n\r]+jsinit[\s\n\r]*\(([^\)]+)\)', re.M)
+
+whitespaceRe = re.compile(r'[\s\n\r]+')
+argsRe = re.compile(
+  r'(const[\s\n\r]+)?([a-zA-Z0-9_<>]+(\[\])?(?:[\s\n\r]*[\*\&])?)[\s\n\r]*([a-zA-Z0-9_]+)?(\[\])?')
+
+def parse_args(args):
+  # Example:
+  #   parse_args('JSStringRef  prop, JSValueRef *exc, Foo&, const Bar x[]')
+  #   => [
+  #    ['', JSStringRef', 'prop'],
+  #    ['', 'JSValueRef*', 'exc'],
+  #    ['', 'Foo&', ''],
+  #    ['const', 'Bar[]', 'x']
+  #   ]
+  args = [ [ [\
+    whitespaceRe.sub('', c) for c in t ] \
+      for t in argsRe.findall(s.strip()) ][0] \
+        for s in args.split(',') ]
+  args = [ [a[0], a[1]+a[2]+a[4], a[3]] for a in args ]
+  return args
+
+def check_arg_types(args, require_types):
+  if len(args) != len(require_types):
+    return False
+  for i in range(len(require_types)):
+    if args[i][0] != require_types[i][0] or args[i][1] != require_types[i][1]:
+      return False
+  return True
+
+
+def error(line, column, msg):
+  print >>sys.stderr, '%s:%d:%d: %s' % (infile, line, column, msg)
+
+
+def offset_to_line_and_column(src, offs):
+  lineno = src.count('\n', 0, offs)+1
+  column = offs
+  a = src.rfind('\n', 0, offs)
+  if a != -1:
+    column = offs - a
+  return lineno, column
+
+
+class JSClass:
+  def __init__(c, src, name, startpos, endpos):
+    c.src = src
+    c.name = name
+    c.startpos = startpos
+    c.endpos = endpos
+
+  def __str__(c):
+    return 'JSClass(%s @ %d..%d)' % (c.name, c.startpos, c.endpos)
+
+  def constructors(c):
+    constructorRe = re.compile(
+      r'[\s\n\r]' + c.name + r'[\s\n\r]*\(([^\)]*)\)[\s\n\r]*[\{;:]', re.M)
+    for m in constructorRe.finditer(c.src, c.startpos, c.endpos):
+      params = m.group(1).strip()
+      # print 'found constructor', params, 'in', m.group(0)
+      if len(params):
+        # print '=>', parse_args(params)
+        yield parse_args(params), params
+      else:
+        yield [], ''
+
+  def has_jsinit(c):
+    m = jsinitRe.search(c.src, c.startpos, c.endpos)
+    if m is not None:
+      if m.group(1) != 'bool':
+        line, column = offset_to_line_and_column(c.src, m.start(1))
+        error(line, column, 'Invalid return type; expected bool')
+      else:
+        args = parse_args(m.group(2))
+        if not check_arg_types(args, [('','size_t'), ('const','JSValueRef[]'), ('','JSValueRef*')]):
+          line, column = offset_to_line_and_column(c.src, m.start(2))
+          error(line, column,
+            'Invalid arguments; expected (size_t argc, const JSValueRef argv[], JSValueRef* exc)'
+          )
+        else:
+          return True
+    return False
+
+  def jscalls(c):
+    pos = c.startpos
+    while pos < len(src):
+      m = jscallRe.search(src, pos, c.endpos)
+      if m is None:
+        break
+      name = m.group(1)
+      args = parse_args(m.group(2))
+      if not check_arg_types(args, [('','size_t'), ('const','JSValueRef[]'), ('','JSValueRef*')]):
+        line, column = offset_to_line_and_column(c.src, m.start(2))
+        error(line, column, 'Invalid signature; '+\
+          'expected jscall_%s(size_t argc, const JSValueRef argv[], JSValueRef* exc)' % name)
+      pos = m.end()
+      yield name
+
+  def jsgetprops(c):
+    pos = c.startpos
+    while pos < len(src):
+      m = jspropGetRe.search(src, pos, c.endpos)
+      if m is None:
+        break
+      name = m.group(1)
+      args = parse_args(m.group(2))
+      if not check_arg_types(args, [('','JSValueRef*')]):
+        lineno = src.count('\n', 0, m.start(2))+1
+        error(lineno, 1, 'Invalid signature: expected jsget_%s(JSValueRef* exc)' % name)
+      pos = m.end()
+      yield name
+
+  def jssetprops(c):
+    pos = c.startpos
+    while pos < len(src):
+      m = jspropSetRe.search(src, pos, c.endpos)
+      if m is None:
+        break
+      name = m.group(1)
+      args = parse_args(m.group(2))
+      if not check_arg_types(args, [('','JSValueRef'), ('','JSValueRef*')]):
+        lineno = src.count('\n', 0, m.start(2))+1
+        error(lineno, 1, 'Invalid signature: expected jsset_%s(JSValueRef value, JSValueRef* exc)'\
+                         % name)
+      pos = m.end()
+      yield name
+
+
+def find_jsclass_endpos(src, startpos):
+  # startpos is expected to be the first char after the opening "{"
+  bracecount = 1
+  # TODO: this is stupid and doesn't account for comments. Make it comment-aware.
+  for i in range(startpos, len(src)):
+    c = src[i]
+    if c == '}':
+      bracecount -= 1
+    elif c == '{':
+      bracecount += 1
+    elif c == '\n' and bracecount == 0:
+      # cls ends at first linebreak after last "}"
+      return i+1
+  return i  # should be len(src)
+
+
+def jsclasses(src):
+  endpos = 0
+  while endpos < len(src):
+    m = jsclassRe.search(src, endpos)
+    if m is None:
+      break
+    name = m.group(1)
+    startpos = m.end()
+    endpos = find_jsclass_endpos(src, startpos)
+    yield JSClass(src, name, m.start(), endpos)
+
+headerTemplate = string.Template(r'''
+// Generated from ${filename}
+#pragma once
+#include "JSClass.hh"
+
+// Create a new JavaScript object wrapping ${classname}.
+// Accepts an optional object as the first parameter from which properties are copied
+// onto the resulting object.
+JSObjectRef ${classname}Create(JSContextRef, size_t argc, const JSValueRef argv[], JSValueRef* exc);
+''')
+
+
+_createFunImpTemplate = string.Template(r'''
+static void ${classname}__jsfinalize(JSObjectRef object) {
+  auto p = (${classname}*)JSObjectGetPrivate(object);
+  //std::clog << "${classname}__jsfinalize " << (void*)p << std::endl;
+  assert(p != nullptr);
+  delete p;
+  JSObjectSetPrivate(object, nullptr);
+}
+
+JSClassRef ${classname}JSClass() {
+  static JSClassRef cls = nullptr;
+  static volatile long oncetoken = 0;
+  if (__sync_add_and_fetch(&oncetoken, 1L) == 1L) {
+    JSStaticValue props[] = {
+      ${propsdef}{ NULL, NULL, NULL, NULL }
+    };
+    
+    JSStaticFunction methods[] = {
+      ${methodsdef}{ NULL, NULL, NULL }
+    };
+    
+    JSClassDefinition clsdef = kJSClassDefinitionEmpty;
+    clsdef.className       = "${classname}";
+    clsdef.finalize        = ${classname}__jsfinalize;
+    clsdef.staticValues    = props;
+    clsdef.staticFunctions = methods;
+    cls = JSClassCreate(&clsdef);
+  }
+  return cls;
+}
+
+static ${classname}* _${classname}Create(JSContextRef ctx, size_t argc, const JSValueRef argv[], JSValueRef* exc) {
+  std::allocator<${classname}> memalloc;
+  auto p = memalloc.allocate(1);
+  //std::clog << "${classname}Create " << (void*)p << std::endl;
+  auto obj = JSObjectMake(ctx, ${classname}JSClass(), (void*)p);
+  p->jsctx = JSContextGetGlobalContext(ctx);
+  p->jsobj = obj;
+  return p;
+}
+
+${createFunImps}
+'''.strip())
+
+
+createFunImpTemplate = string.Template(r'''
+JSObjectRef ${classname}Create(JSContextRef __ctx, size_t __argc, const JSValueRef __argv[], JSValueRef* __exc${constructorParams}) {
+  auto __p = _${classname}Create(__ctx, __argc, __argv, __exc);
+  if (__p == nullptr) {
+    return nullptr;
+  }
+
+  auto __obj = __p->jsobj;
+  std::allocator<${classname}>().construct(__p${constructorVars});
+  __p->jsctx = JSContextGetGlobalContext(__ctx);
+  __p->jsobj = __obj;
+
+  // Allows `${classname}({ prop: value, ... })` to set properties on the new object
+  if (__argc > 0) {
+    auto __argv0 = JSValueToObject(__ctx, __argv[0], __exc);
+    if (__argv0 == nullptr || !JSClass::extendJSObject(__ctx, __argv0, ((JSClass*)__p)->jsobj, __exc)) {
+      return nullptr;
+    }
+  }
+
+  return ((JSClass*)__p)->jsobj;
+}
+'''.strip())
+
+createFunImpWithJSInitTemplate = string.Template(r'''
+JSObjectRef ${classname}Create(JSContextRef __ctx, size_t __argc, const JSValueRef __argv[], JSValueRef* __exc${constructorParams}) {
+  auto __p = _${classname}Create(__ctx, __argc, __argv, __exc);
+  if (__p == nullptr) {
+    return nullptr;
+  }
+
+  auto __obj = __p->jsobj;
+  std::allocator<${classname}>().construct(__p${constructorVars});
+  __p->jsctx = JSContextGetGlobalContext(__ctx);
+  __p->jsobj = __obj;
+
+  if (!__p->jsinit(__argc, __argv, __exc)) {
+    return nullptr;
+  } else {
+    return ((JSClass*)__p)->jsobj;
+  }
+}
+'''.strip())
+
+
+rPropDefTemplate = string.Template(
+  '{ "$name", ${classname}__get_${name}, NULL, kJSPropertyAttributeReadOnly|kJSPropertyAttributeDontDelete },\n      '
+)
+
+rwPropDefTemplate = string.Template(
+  '{ "$name", ${classname}__get_${name}, ${classname}__set_${name}, kJSPropertyAttributeDontDelete },\n      '
+)
+
+getThisImpTemplate = string.Template(r'''
+static ${classname}* ${classname}__get_this(JSContextRef ctx, JSObjectRef obj, JSValueRef* exc) {
+  auto p = (${classname}*)JSObjectGetPrivate(obj);
+  if (p == nullptr) {
+    if (exc != nullptr) {
+      *exc = JSClass::createJSError(ctx, u"method called on unexpected \"this\" object");
+    }
+  } else {
+    p->jsctx = JSContextGetGlobalContext(ctx);
+    p->jsobj = obj;
+  }
+  return p;
+}
+'''.strip())
+
+propGetImpTemplate = string.Template(r'''
+static JSValueRef ${classname}__get_${name}(JSContextRef ctx, JSObjectRef obj, JSStringRef name, JSValueRef* exc) {
+  auto p = ${classname}__get_this(ctx, obj, exc);
+  return p == nullptr ? (JSValueRef)p : p->jsget_${name}(exc);
+}
+'''.strip())
+
+propSetImpTemplate = string.Template(r'''
+static bool ${classname}__set_${name}(JSContextRef ctx, JSObjectRef obj, JSStringRef name, JSValueRef value, JSValueRef* exc) {
+  auto p = ${classname}__get_this(ctx, obj, exc);
+  return p == nullptr ? false : p->jsset_${name}(value, exc);
+}
+'''.strip())
+
+methodImpTemplate = string.Template(r'''
+static JSValueRef ${classname}__call_${name}(JSContextRef ctx, JSObjectRef fn, JSObjectRef obj, size_t argc, const JSValueRef argv[], JSValueRef* exc) {
+  auto p = ${classname}__get_this(ctx, obj, exc);
+  return p == nullptr ? (JSValueRef)p : p->jscall_${name}(argc, argv, exc);
+}
+'''.strip())
+
+methodDefTemplate = string.Template(
+  '{ "$name", ${classname}__call_${name}, kJSPropertyAttributeReadOnly },\n      '
+)
+
+inbase, inext = os.path.splitext(os.path.basename(infile))
+outfile_hh = outdir + '/' + inbase + '.jscls.hh'
+outfile_cc = outdir + '/' + inbase + '.jscls' + inext
+
+prev_src_end_pos = 0
+src_lineno = 1
+
+out_hh = []
+out_cc = []
+out_cc.append('#include <memory>\n')
+if not debug_disable_source_mapping:
+  out_cc.append('#line 1 "%s"\n' % infile)
+
+for c in jsclasses(src):
+  # print c
+  methods  = list(c.jscalls())
+  getprops = list(c.jsgetprops())
+  setprops = list(c.jssetprops())
+
+  src_chunk = src[prev_src_end_pos:c.endpos]
+  src_lineno += src_chunk.count('\n')
+  out_cc.append(src_chunk)
+  prev_src_end_pos = c.endpos
+
+  rprops = {}
+  rwprops = {}
+  for s in getprops:
+    rprops[s] = True
+  for s in setprops:
+    if s in rprops:
+      del rprops[s]
+    rwprops[s] = True
+
+  header = headerTemplate.substitute({ 'classname': c.name, 'filename': infile })
+  out_hh.append(header + '\n')
+
+  if not debug_disable_source_mapping:
+    out_cc.append('#line 0 "%s"\n' % outfile_cc)
+  out_cc.append('//--begin jscls generated code--\n')
+
+  if len(rwprops) != 0 or len(rprops) != 0 or len(methods) != 0:
+    getThisImp = getThisImpTemplate.substitute({ 'classname': c.name })
+    out_cc.append(getThisImp + '\n')
+
+    for name, _ in rwprops.iteritems():
+      out_cc.append(propGetImpTemplate.substitute({'classname': c.name, 'name': name }) + '\n\n')
+      out_cc.append(propSetImpTemplate.substitute({'classname': c.name, 'name': name }) + '\n\n')
+
+    for name, _ in rprops.iteritems():
+      out_cc.append(propGetImpTemplate.substitute({'classname': c.name, 'name': name }) + '\n\n')
+
+    for name in methods:
+      out_cc.append(methodImpTemplate.substitute({'classname': c.name, 'name': name }) + '\n\n')
+
+  # Constructors
+  createFunImps = []
+  constructors = list(c.constructors())
+  if len(constructors) == 0:
+    constructors = [([],'')]
+  # print 'constructors:', constructors
+  # [([], ''), ([['', 'NSView<TView>*', 'view']], 'NSView<TView>* view')]
+  createTemplate = createFunImpTemplate
+  if c.has_jsinit():
+    createTemplate = createFunImpWithJSInitTemplate
+  for paramDescr, paramStr in constructors:
+    params = ''
+    symbols = ''
+    if len(paramStr) != 0:
+      params = ', ' + paramStr
+      symbols = ''.join([ ', ' + p[2] for p in paramDescr ])
+    createFunImps.append(
+      createTemplate.substitute({
+        'classname': c.name,
+        'constructorParams': params,
+        'constructorVars': symbols,
+      })
+    )
+
+  # Class definition and create function
+  methodsdef = [ methodDefTemplate.substitute({ 'classname': c.name, 'name': name }) \
+                 for name in methods ]
+  propsdef   = [ rwPropDefTemplate.substitute({ 'classname': c.name, 'name': name }) \
+                 for name, _ in rwprops.iteritems() ] +\
+               [ rPropDefTemplate.substitute({ 'classname': c.name, 'name': name }) \
+                 for name, _ in rprops.iteritems() ]
+  out_cc.append(
+    _createFunImpTemplate.substitute({
+      'classname': c.name,
+      'propsdef': ''.join(propsdef),
+      'methodsdef': ''.join(methodsdef),
+      'createFunImps': '\n'.join(createFunImps),
+    }) + '\n'
+  )
+
+  out_cc.append('//--end jscls generated code--\n')
+  if not debug_disable_source_mapping:
+    out_cc.append('#line %d "%s"\n' % (src_lineno, infile))
+
+if prev_src_end_pos < len(src):
+  out_cc.append(src[prev_src_end_pos:])
+
+
+# print('write %s' % outfile_hh)
+# with open(outfile_hh, 'w') as f:
+#   for chunk in out_hh:
+#     f.write(chunk)
+
+print('write %s' % outfile_cc)
+with open(outfile_cc, 'w') as f:
+  for chunk in out_cc:
+    f.write(chunk)

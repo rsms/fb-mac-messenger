@@ -12,7 +12,23 @@
 		3A9A9C4A1AD5B407008FABE9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A9A9C491AD5B407008FABE9 /* Images.xcassets */; };
 		3A9A9C4D1AD5B407008FABE9 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A9A9C4B1AD5B407008FABE9 /* MainMenu.xib */; };
 		3A9A9C631AD5B4CD008FABE9 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9A9C621AD5B4CD008FABE9 /* WebKit.framework */; };
+		3A9A9C651AD5C307008FABE9 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9A9C641AD5C307008FABE9 /* Sparkle.framework */; };
+		3A9A9C681AD5C3AD008FABE9 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9A9C641AD5C307008FABE9 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3A9A9C671AD5C356008FABE9 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3A9A9C681AD5C3AD008FABE9 /* Sparkle.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		3A9A9C3F1AD5B407008FABE9 /* Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -23,6 +39,15 @@
 		3A9A9C491AD5B407008FABE9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		3A9A9C4C1AD5B407008FABE9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		3A9A9C621AD5B4CD008FABE9 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		3A9A9C641AD5C307008FABE9 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = sparkle/Sparkle.framework; sourceTree = "<group>"; };
+		3A9A9C691AD5C6A7008FABE9 /* prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
+		3A9A9C6D1AD5CA29008FABE9 /* common-debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "common-debug.xcconfig"; sourceTree = "<group>"; };
+		3A9A9C6E1AD5CA29008FABE9 /* common-release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "common-release.xcconfig"; sourceTree = "<group>"; };
+		3A9A9C6F1AD5CA29008FABE9 /* common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = common.xcconfig; sourceTree = "<group>"; };
+		3A9A9C701AD5CA29008FABE9 /* messenger-debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "messenger-debug.xcconfig"; sourceTree = "<group>"; };
+		3A9A9C711AD5CA29008FABE9 /* messenger-release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "messenger-release.xcconfig"; sourceTree = "<group>"; };
+		3A9A9C721AD5CA29008FABE9 /* messenger.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = messenger.xcconfig; sourceTree = "<group>"; };
+		3A9A9C731AD5CF9D008FABE9 /* version.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = version.txt; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +56,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A9A9C631AD5B4CD008FABE9 /* WebKit.framework in Frameworks */,
+				3A9A9C651AD5C307008FABE9 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,7 +67,8 @@
 			isa = PBXGroup;
 			children = (
 				3A9A9C411AD5B407008FABE9 /* Messenger */,
-				3A9A9C621AD5B4CD008FABE9 /* WebKit.framework */,
+				3A9A9C661AD5C30A008FABE9 /* Deps */,
+				3A9A9C6C1AD5CA29008FABE9 /* xcode-config */,
 				3A9A9C401AD5B407008FABE9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -69,10 +96,34 @@
 		3A9A9C421AD5B407008FABE9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				3A9A9C731AD5CF9D008FABE9 /* version.txt */,
 				3A9A9C431AD5B407008FABE9 /* Info.plist */,
 				3A9A9C471AD5B407008FABE9 /* main.m */,
+				3A9A9C691AD5C6A7008FABE9 /* prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3A9A9C661AD5C30A008FABE9 /* Deps */ = {
+			isa = PBXGroup;
+			children = (
+				3A9A9C621AD5B4CD008FABE9 /* WebKit.framework */,
+				3A9A9C641AD5C307008FABE9 /* Sparkle.framework */,
+			);
+			name = Deps;
+			sourceTree = "<group>";
+		};
+		3A9A9C6C1AD5CA29008FABE9 /* xcode-config */ = {
+			isa = PBXGroup;
+			children = (
+				3A9A9C6D1AD5CA29008FABE9 /* common-debug.xcconfig */,
+				3A9A9C6E1AD5CA29008FABE9 /* common-release.xcconfig */,
+				3A9A9C6F1AD5CA29008FABE9 /* common.xcconfig */,
+				3A9A9C701AD5CA29008FABE9 /* messenger-debug.xcconfig */,
+				3A9A9C711AD5CA29008FABE9 /* messenger-release.xcconfig */,
+				3A9A9C721AD5CA29008FABE9 /* messenger.xcconfig */,
+			);
+			path = "xcode-config";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -85,6 +136,7 @@
 				3A9A9C3B1AD5B407008FABE9 /* Sources */,
 				3A9A9C3C1AD5B407008FABE9 /* Frameworks */,
 				3A9A9C3D1AD5B407008FABE9 /* Resources */,
+				3A9A9C671AD5C356008FABE9 /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
@@ -106,6 +158,7 @@
 				TargetAttributes = {
 					3A9A9C3E1AD5B407008FABE9 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = 2JS2795PX7;
 					};
 				};
 			};
@@ -241,23 +294,27 @@
 		};
 		3A9A9C5D1AD5B407008FABE9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3A9A9C701AD5CA29008FABE9 /* messenger-debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = Messenger/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/sparkle",
+				);
 			};
 			name = Debug;
 		};
 		3A9A9C5E1AD5B407008FABE9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3A9A9C701AD5CA29008FABE9 /* messenger-debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = Messenger/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/sparkle",
+				);
 			};
 			name = Release;
 		};

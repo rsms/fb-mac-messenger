@@ -1,0 +1,17 @@
+PRODUCT_NAME = Messenger
+
+SDKROOT = macosx  // aka "latest"
+MACOSX_DEPLOYMENT_TARGET = 10.10
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks
+
+INFOPLIST_FILE = Messenger/Info.plist
+
+GCC_PRECOMPILE_PREFIX_HEADER = YES
+GCC_PREFIX_HEADER = Messenger/Prefix.pch
+
+//SWIFT_OBJC_BRIDGING_HEADER = $(PROJECT_DIR)/$(PRODUCT_NAME)/BridgingHeader.h
+//OTHER_LDFLAGS = $(inherited)
+
+//CODE_SIGN_IDENTITY = Mac Developer
+
+SYMROOT = $(SRCROOT)/build

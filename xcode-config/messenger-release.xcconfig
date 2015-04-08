@@ -1,0 +1,4 @@
+#include "common-release"
+#include "messenger"
+
+ONLY_ACTIVE_ARCH = YES

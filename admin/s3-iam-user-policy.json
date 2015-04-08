@@ -1,0 +1,17 @@
+{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:ListAllMyBuckets",
+      "Resource": "arn:aws:s3:::*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "s3:*",
+      "Resource": [
+        "arn:aws:s3:::fbmacmessenger.rsms.me",
+        "arn:aws:s3:::fbmacmessenger.rsms.me/*"
+      ]
+    }
+  ]
+}

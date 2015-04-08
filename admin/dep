@@ -1,0 +1,109 @@
+#!/bin/bash
+set -e
+if [ "$1" = "-h" ] || [ "$1" = "--help" ] || [ "$1" = "" ]; then
+  echo "usage:" >&2
+  echo "  $0 list" >&2
+  echo "  $0 update <name>..." >&2
+  echo "  $0 add <name> <path> <url> <branch>" >&2
+  echo "  $0 push <name>..." >&2
+  exit 1
+fi
+
+cd "$(dirname "$0")/.."
+
+mget() { 
+  local array=$1 index=$2
+  local i="${array}_$index"
+  printf '%s' "${!i}"
+}
+
+deps=()
+
+# Load deps
+while read line; do
+  # echo "line: $line"
+  if [[ $line != '#'* ]] && [[ $line != '' ]]; then
+    eval $(echo $line | sed -E 's/([^ ]+)[ ]+([^ ]+)[ ]+(.+)/name="\1"; branch="\2"; path="\3"/')
+    deps+=($name $branch $path)
+    declare "branches_$name=$branch"
+    declare "paths_$name=$path"
+    if [ "$1" = "list" ] || [ "$1" = "ls" ]; then
+      url=$(git remote -v | grep -E '^'$name'\s+.*\(fetch\)' | awk '{print $2}')
+      echo "$name in './$path' tracking $url @ $branch"
+    fi
+  fi
+done < deps
+
+use_dep() {
+  for ((a=0, b=1, c=2; c <= ${#deps[@]} ; a+=3, b+=3, c+=3)); do
+    if [ "${deps[$a]}" = "$1" ]; then
+      name=${deps[$a]}
+      branch=${deps[$b]}
+      path=${deps[$c]}
+      return 0
+    fi
+  done
+  return 1
+}
+
+
+if [ "$1" = "add" ]; then
+  if [ $# -lt 5 ]; then
+    echo "not enough arguments to '$1'. Try '$0 --help'" >&2
+    exit 1
+  fi
+
+  name=$2; path=$3; url=$4; branch=$5
+
+  if [ -e $path ]; then
+    echo "directory '$path' already exists" >&2
+    exit 1
+  fi
+
+  if use_dep $name; then
+    echo "name '$name' is already being used" >&2
+    exit 1
+  fi
+
+  echo git remote add -f $name "'$url'"
+  git remote add -f $name "$url"
+
+  echo git subtree add "'--prefix=$path'" $name "'$branch'" --squash
+  if ! git subtree add "--prefix=$path" $name "$branch" --squash; then
+    git remote remove $name
+    exit 1
+  fi
+
+  printf '%-13s %-10s %s\n' $name "$branch" "$path" >> deps
+  git commit -m "[dep] added $name to ./deps" deps
+
+elif [ "$1" = "update" ]; then
+  for depname in ${@:2}; do
+    if ! use_dep $depname; then
+      echo "'$depname' not found in deps file" >&2
+      exit 1
+    fi
+
+    echo git fetch "'$name'" "'$branch'"
+    git fetch "$name" "$branch"
+
+    echo git subtree pull "'--prefix=$path'" $name "'$branch'" --squash
+    git subtree pull "--prefix=$path" $name "$branch" --squash
+  done
+
+elif [ "$1" = "push" ]; then
+
+  for depname in ${@:2}; do
+    if ! use_dep $depname; then
+      echo "'$depname' not found in deps file" >&2
+      exit 1
+    fi
+
+    echo git subtree push "'--prefix=$path'" $name "'$branch'"
+    git subtree push "--prefix=$path" $name "$branch"
+  done
+
+elif [ "$1" != "list" ] && [ "$1" != "ls" ]; then
+  echo "'$1' is not a command. Try '$0 --help'" >&2
+  exit 1
+fi

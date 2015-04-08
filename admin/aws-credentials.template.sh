@@ -1,0 +1,3 @@
+export AWS_ACCESS_KEY_ID=ABCDEF
+export AWS_SECRET_ACCESS_KEY=abcdef1234
+export AWS_DEFAULT_REGION=us-west-1

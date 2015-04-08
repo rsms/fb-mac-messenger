@@ -17,6 +17,12 @@
   self.window.contentView = webView;
   auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/"]];
   [webView.mainFrame loadRequest:req];
+    [[self.window standardWindowButton:NSWindowCloseButton]
+     setFrame:NSZeroRect];
+    [[self.window standardWindowButton:NSWindowMiniaturizeButton]
+     setFrame:NSZeroRect];
+    [[self.window standardWindowButton:NSWindowZoomButton]
+     setFrame:NSZeroRect];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {

@@ -9,6 +9,22 @@
       <title>Messenger for Mac 0.0.2</title>
       <description><![CDATA[
         <ul>
+          <li>Fixes a bug with local storage file system location</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 08 Apr 2015 17:59:51 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="f446430758969b4a"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.2.1428541185-f446430758969b4a.zip"
+        sparkle:version="0.0.2.1428541185"
+        length="1948314"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.2</title>
+      <description><![CDATA[
+        <ul>
           <li>Adds desktop notifications, which can be enabled via the "gear" icon in the top-right corner of the main window</li>
         </ul>
       ]]></description>

@@ -87,7 +87,7 @@
   webView.frameLoadDelegate = self;
   webView.UIDelegate = self;
   webView.preferences = wp;
-  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/"]];
+  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/login"]];
   [webView.mainFrame loadRequest:req];
   _webView = webView;
 

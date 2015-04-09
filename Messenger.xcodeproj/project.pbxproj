@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		22C40EB11AD5C5E100FE12C1 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 22C40EB01AD5C5E100FE12C1 /* icon.icns */; };
+		3A713BA01AD65F6500870D2A /* MEmbeddedRes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */; };
 		3A9A9C461AD5B407008FABE9 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */; };
 		3A9A9C481AD5B407008FABE9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C471AD5B407008FABE9 /* main.m */; };
 		3A9A9C4A1AD5B407008FABE9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A9A9C491AD5B407008FABE9 /* Images.xcassets */; };
@@ -52,6 +53,8 @@
 
 /* Begin PBXFileReference section */
 		22C40EB01AD5C5E100FE12C1 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
+		3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEmbeddedRes.h; sourceTree = "<group>"; };
+		3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEmbeddedRes.m; sourceTree = "<group>"; };
 		3A9A9C3F1AD5B407008FABE9 /* Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A9A9C431AD5B407008FABE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A9A9C441AD5B407008FABE9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -118,6 +121,8 @@
 				3A9A9C441AD5B407008FABE9 /* AppDelegate.h */,
 				3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */,
 				3A9A9C7E1AD5DBD4008FABE9 /* WebPreferences.h */,
+				3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */,
+				3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */,
 				3A9A9C741AD5D838008FABE9 /* JSAPI */,
 				3A9A9C491AD5B407008FABE9 /* Images.xcassets */,
 				3A9A9C4B1AD5B407008FABE9 /* MainMenu.xib */,
@@ -253,6 +258,7 @@
 				3A9A9C781AD5D873008FABE9 /* JSClass.mm in Sources */,
 				3A9A9C461AD5B407008FABE9 /* AppDelegate.mm in Sources */,
 				3A9A9C861AD5EE4E008FABE9 /* JSNotifications.js.mm in Sources */,
+				3A713BA01AD65F6500870D2A /* MEmbeddedRes.m in Sources */,
 				3A9A9C7C1AD5D8ED008FABE9 /* JSNotification.js.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

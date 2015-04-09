@@ -248,6 +248,8 @@ static void ${classname}__jsfinalize(JSObjectRef object) {
   JSObjectSetPrivate(object, nullptr);
 }
 
+${constructFunImps}
+
 JSClassRef ${classname}JSClass() {
   static JSClassRef cls = nullptr;
   static volatile long oncetoken = 0;
@@ -265,6 +267,7 @@ JSClassRef ${classname}JSClass() {
     clsdef.finalize        = ${classname}__jsfinalize;
     clsdef.staticValues    = props;
     clsdef.staticFunctions = methods;
+    ${cls_call_as_constructor_entry}
     cls = JSClassCreate(&clsdef);
   }
   return cls;
@@ -325,6 +328,18 @@ JSObjectRef ${classname}Create(JSContextRef __ctx, size_t __argc, const JSValueR
   } else {
     return ((JSClass*)__p)->jsobj;
   }
+}
+'''.strip())
+
+constructFunImpTemplate = string.Template(r'''
+JSObjectRef ${classname}Construct(
+  JSContextRef     __ctx,
+  JSObjectRef      __constructorFunc,
+  size_t           __argc,
+  const JSValueRef __argv[],
+  JSValueRef*      __exc${constructorParams})
+{
+  return ${classname}Create(__ctx, __argc, __argv, __exc${constructorVars});
 }
 '''.strip())
 
@@ -432,6 +447,7 @@ for c in jsclasses(src):
       out_cc.append(methodImpTemplate.substitute({'classname': c.name, 'name': name }) + '\n\n')
 
   # Constructors
+  constructFunImps = []
   createFunImps = []
   constructors = list(c.constructors())
   if len(constructors) == 0:
@@ -439,7 +455,8 @@ for c in jsclasses(src):
   # print 'constructors:', constructors
   # [([], ''), ([['', 'NSView<TView>*', 'view']], 'NSView<TView>* view')]
   createTemplate = createFunImpTemplate
-  if c.has_jsinit():
+  has_jsinit = c.has_jsinit()
+  if has_jsinit:
     createTemplate = createFunImpWithJSInitTemplate
   for paramDescr, paramStr in constructors:
     params = ''
@@ -454,22 +471,32 @@ for c in jsclasses(src):
         'constructorVars': symbols,
       })
     )
+    constructFunImps.append(
+      constructFunImpTemplate.substitute({
+        'classname': c.name,
+        'constructorParams': params,
+        'constructorVars': symbols,
+      })
+    )
 
   # Class definition and create function
+
   methodsdef = [ methodDefTemplate.substitute({ 'classname': c.name, 'name': name }) \
                  for name in methods ]
   propsdef   = [ rwPropDefTemplate.substitute({ 'classname': c.name, 'name': name }) \
                  for name, _ in rwprops.iteritems() ] +\
                [ rPropDefTemplate.substitute({ 'classname': c.name, 'name': name }) \
                  for name, _ in rprops.iteritems() ]
-  out_cc.append(
-    _createFunImpTemplate.substitute({
-      'classname': c.name,
-      'propsdef': ''.join(propsdef),
-      'methodsdef': ''.join(methodsdef),
-      'createFunImps': '\n'.join(createFunImps),
-    }) + '\n'
-  )
+  params = {
+    'classname': c.name,
+    'propsdef': ''.join(propsdef),
+    'methodsdef': ''.join(methodsdef),
+    'createFunImps': '\n'.join(createFunImps),
+    'constructFunImps': '\n'.join(constructFunImps),
+    'cls_call_as_constructor_entry': 'clsdef.callAsConstructor = ' + c.name + 'Construct;',
+  }
+
+  out_cc.append(_createFunImpTemplate.substitute(params) + '\n')
 
   out_cc.append('//--end jscls generated code--\n')
   if not debug_disable_source_mapping:

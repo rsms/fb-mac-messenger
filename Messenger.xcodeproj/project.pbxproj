@@ -15,7 +15,26 @@
 		3A9A9C631AD5B4CD008FABE9 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9A9C621AD5B4CD008FABE9 /* WebKit.framework */; };
 		3A9A9C651AD5C307008FABE9 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9A9C641AD5C307008FABE9 /* Sparkle.framework */; };
 		3A9A9C681AD5C3AD008FABE9 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9A9C641AD5C307008FABE9 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A9A9C781AD5D873008FABE9 /* JSClass.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C771AD5D873008FABE9 /* JSClass.mm */; };
+		3A9A9C7A1AD5D8D2008FABE9 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9A9C791AD5D8D2008FABE9 /* JavaScriptCore.framework */; };
+		3A9A9C7C1AD5D8ED008FABE9 /* JSNotification.js.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C7B1AD5D8ED008FABE9 /* JSNotification.js.mm */; };
+		3A9A9C841AD5EA13008FABE9 /* JSObjWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C831AD5EA13008FABE9 /* JSObjWrapper.m */; };
+		3A9A9C861AD5EE4E008FABE9 /* JSNotifications.js.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		3A9A9C7D1AD5D97E008FABE9 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.js.mm";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE).jscls.mm",
+			);
+			script = "admin/jscls ${INPUT_FILE_PATH} ${DERIVED_FILES_DIR}";
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		3A9A9C671AD5C356008FABE9 /* Copy Frameworks */ = {
@@ -50,6 +69,15 @@
 		3A9A9C711AD5CA29008FABE9 /* messenger-release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "messenger-release.xcconfig"; sourceTree = "<group>"; };
 		3A9A9C721AD5CA29008FABE9 /* messenger.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = messenger.xcconfig; sourceTree = "<group>"; };
 		3A9A9C731AD5CF9D008FABE9 /* version.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = version.txt; sourceTree = SOURCE_ROOT; };
+		3A9A9C751AD5D873008FABE9 /* jsapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsapi.h; sourceTree = "<group>"; };
+		3A9A9C761AD5D873008FABE9 /* JSClass.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JSClass.hh; sourceTree = "<group>"; };
+		3A9A9C771AD5D873008FABE9 /* JSClass.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSClass.mm; sourceTree = "<group>"; };
+		3A9A9C791AD5D8D2008FABE9 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		3A9A9C7B1AD5D8ED008FABE9 /* JSNotification.js.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSNotification.js.mm; sourceTree = "<group>"; };
+		3A9A9C7E1AD5DBD4008FABE9 /* WebPreferences.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebPreferences.h; sourceTree = "<group>"; };
+		3A9A9C821AD5EA13008FABE9 /* JSObjWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSObjWrapper.h; sourceTree = "<group>"; };
+		3A9A9C831AD5EA13008FABE9 /* JSObjWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSObjWrapper.m; sourceTree = "<group>"; };
+		3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSNotifications.js.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A9A9C7A1AD5D8D2008FABE9 /* JavaScriptCore.framework in Frameworks */,
 				3A9A9C631AD5B4CD008FABE9 /* WebKit.framework in Frameworks */,
 				3A9A9C651AD5C307008FABE9 /* Sparkle.framework in Frameworks */,
 			);
@@ -88,6 +117,8 @@
 			children = (
 				3A9A9C441AD5B407008FABE9 /* AppDelegate.h */,
 				3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */,
+				3A9A9C7E1AD5DBD4008FABE9 /* WebPreferences.h */,
+				3A9A9C741AD5D838008FABE9 /* JSAPI */,
 				3A9A9C491AD5B407008FABE9 /* Images.xcassets */,
 				3A9A9C4B1AD5B407008FABE9 /* MainMenu.xib */,
 				22C40EB01AD5C5E100FE12C1 /* icon.icns */,
@@ -110,6 +141,7 @@
 		3A9A9C661AD5C30A008FABE9 /* Deps */ = {
 			isa = PBXGroup;
 			children = (
+				3A9A9C791AD5D8D2008FABE9 /* JavaScriptCore.framework */,
 				3A9A9C621AD5B4CD008FABE9 /* WebKit.framework */,
 				3A9A9C641AD5C307008FABE9 /* Sparkle.framework */,
 			);
@@ -129,6 +161,20 @@
 			path = "xcode-config";
 			sourceTree = "<group>";
 		};
+		3A9A9C741AD5D838008FABE9 /* JSAPI */ = {
+			isa = PBXGroup;
+			children = (
+				3A9A9C751AD5D873008FABE9 /* jsapi.h */,
+				3A9A9C7B1AD5D8ED008FABE9 /* JSNotification.js.mm */,
+				3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */,
+				3A9A9C821AD5EA13008FABE9 /* JSObjWrapper.h */,
+				3A9A9C831AD5EA13008FABE9 /* JSObjWrapper.m */,
+				3A9A9C761AD5D873008FABE9 /* JSClass.hh */,
+				3A9A9C771AD5D873008FABE9 /* JSClass.mm */,
+			);
+			name = JSAPI;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -142,6 +188,7 @@
 				3A9A9C671AD5C356008FABE9 /* Copy Frameworks */,
 			);
 			buildRules = (
+				3A9A9C7D1AD5D97E008FABE9 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -202,7 +249,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A9A9C481AD5B407008FABE9 /* main.m in Sources */,
+				3A9A9C841AD5EA13008FABE9 /* JSObjWrapper.m in Sources */,
+				3A9A9C781AD5D873008FABE9 /* JSClass.mm in Sources */,
 				3A9A9C461AD5B407008FABE9 /* AppDelegate.mm in Sources */,
+				3A9A9C861AD5EE4E008FABE9 /* JSNotifications.js.mm in Sources */,
+				3A9A9C7C1AD5D8ED008FABE9 /* JSNotification.js.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -254,23 +254,23 @@
 }
 
 - (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {
-    NSString* notificationCount = _lastNotificationCount;
+  NSString* notificationCount = _lastNotificationCount;
+  
+  if ([title isEqualToString:@"Messenger"]) {
+    notificationCount = @"";
+  } else {
+    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"\\(([0-9]+)\\) Messenger" options:0 error:nil];
+    NSTextCheckingResult* match = [regex firstMatchInString:title options:0 range:NSMakeRange(0, [title length])];
     
-    if ([title isEqualToString:@"Messenger"]) {
-        notificationCount = @"";
-    } else {
-        NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"\\(([0-9]+)\\) Messenger" options:0 error:nil];
-        NSTextCheckingResult* match = [regex firstMatchInString:title options:0 range:NSMakeRange(0, [title length])];
-
-        if (match) {
-            notificationCount = [title substringWithRange:[match rangeAtIndex:1]];
-        }
+    if (match) {
+      notificationCount = [title substringWithRange:[match rangeAtIndex:1]];
     }
-
-    if (![notificationCount isEqualTo:_lastNotificationCount]) {
-        [[NSApp dockTile] setBadgeLabel: notificationCount];
-        _lastNotificationCount = notificationCount;
-    }
+  }
+  
+  if (![notificationCount isEqualTo:_lastNotificationCount]) {
+    [[NSApp dockTile] setBadgeLabel: notificationCount];
+    _lastNotificationCount = notificationCount;
+  }
 }
 
 

@@ -162,6 +162,19 @@ static void __attribute__((constructor))_init() {
   [[SUUpdater sharedUpdater] checkForUpdates:self];
 }
 
+- (IBAction)openPreferences:(NSMenuItem *)sender {
+  [_webView.windowScriptObject evaluateWebScript:@"\
+    \\ Settings dialog\n\
+    if (document.evaluate('//div[@role=\"dialog\"]//span[text()=\"Settings\"]', document).iterateNext()) {\n\
+      // 'Done' link\n\
+      document.evaluate('//div[@role=\"dialog\"]//*[@type=\"primary\"][text()=\"Done\"]', document).iterateNext().click();\n\
+    } else {\n\
+      // cog icon\n\
+      document.querySelector('a[title=\"Settings, privacy policy, help and more\"]').click();\n\
+      // 'Settings' link\n\
+      document.evaluate('//div[contains(@class, \"uiContextualLayer\")]//a[text()=\"Settings\"]', document).iterateNext().click();\n\
+    }"];
+}
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag {
   [_window makeKeyAndOrderFront:self];

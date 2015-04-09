@@ -21,7 +21,7 @@
   
   // Register ourselves as the default-user-notification center delegate
   [NSUserNotificationCenter defaultUserNotificationCenter].delegate = self;
-  
+
   // Hack to hide "traffic lights" but still allowing window manipulation (which isn't the case if we use proper window flags)
   [[self.window standardWindowButton:NSWindowCloseButton] setFrame:NSZeroRect];
   [[self.window standardWindowButton:NSWindowMiniaturizeButton] setFrame:NSZeroRect];
@@ -86,7 +86,7 @@
   auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/login"]];
   [webView.mainFrame loadRequest:req];
   _webView = webView;
-  
+
   // Sparkle
   auto su = [SUUpdater sharedUpdater];
   su.automaticallyChecksForUpdates = YES;
@@ -98,6 +98,15 @@
 
 - (IBAction)checkForUpdates:(id)sender {
   [[SUUpdater sharedUpdater] checkForUpdates:self];
+}
+
+- (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag {
+  [self.window makeKeyAndOrderFront:self];
+  return YES;
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification {
+  [self.window makeKeyAndOrderFront:self];
 }
 
 

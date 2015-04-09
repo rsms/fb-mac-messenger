@@ -11,6 +11,7 @@
 @end
 @implementation AppDelegate {
   WebView* _webView;
+  NSView*  _titlebarView; // NSTitlebarView
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
@@ -23,9 +24,11 @@
   [NSUserNotificationCenter defaultUserNotificationCenter].delegate = self;
 
   // Hack to hide "traffic lights" but still allowing window manipulation (which isn't the case if we use proper window flags)
-  [[self.window standardWindowButton:NSWindowCloseButton] setFrame:NSZeroRect];
-  [[self.window standardWindowButton:NSWindowMiniaturizeButton] setFrame:NSZeroRect];
-  [[self.window standardWindowButton:NSWindowZoomButton] setFrame:NSZeroRect];
+  _titlebarView = [self.window standardWindowButton:NSWindowCloseButton].superview;
+  _titlebarView.wantsLayer = YES;
+  _titlebarView.layer.opacity = 0.0;
+  auto titlebarTrackingArea = [[NSTrackingArea alloc] initWithRect:_titlebarView.bounds options:NSTrackingMouseEnteredAndExited|NSTrackingActiveInActiveApp owner:self userInfo:nil];
+  [_titlebarView addTrackingArea:titlebarTrackingArea];
   
   // App data
   auto appDataDir = [NSString stringWithFormat:@"~/Library/Application Support/%@", [NSBundle mainBundle].bundleIdentifier].stringByExpandingTildeInPath;
@@ -82,8 +85,9 @@
   self.window.contentView = webView;
   webView.policyDelegate = self;
   webView.frameLoadDelegate = self;
+  webView.UIDelegate = self;
   webView.preferences = wp;
-  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/login"]];
+  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/"]];
   [webView.mainFrame loadRequest:req];
   _webView = webView;
 
@@ -93,6 +97,18 @@
   su.automaticallyDownloadsUpdates = YES;
   su.feedURL = [NSURL URLWithString:@"http://fbmacmessenger.rsms.me/changelog.xml"];
   [su checkForUpdatesInBackground];
+}
+
+
+- (void)mouseEntered:(NSEvent*)ev {
+  // titlebar
+  _titlebarView.layer.opacity = 1;
+}
+
+
+- (void)mouseExited:(NSEvent*)ev {
+  // titlebar
+  _titlebarView.layer.opacity = 0;
 }
 
 
@@ -140,6 +156,7 @@
     JSNotificationsActivateNotification(_webView.mainFrame.globalContext, notification);
   }
 }
+
 
 
 #pragma mark - WebFrameLoadDelegate

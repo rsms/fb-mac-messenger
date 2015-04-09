@@ -131,8 +131,17 @@
 
 - (BOOL)userNotificationCenter:(NSUserNotificationCenter*)center
      shouldPresentNotification:(NSUserNotification*)notification {
-  NSLog(@"%@%@ notification=%@", self, NSStringFromSelector(_cmd), notification);
+  //NSLog(@"%@%@ notification=%@", self, NSStringFromSelector(_cmd), notification);
   return YES;
+}
+
+
+- (void)userNotificationCenter:(NSUserNotificationCenter*)center
+       didActivateNotification:(NSUserNotification*)notification {
+  //NSLog(@"%@%@ notification=%@", self, NSStringFromSelector(_cmd), notification);
+  if (notification.userInfo && notification.userInfo[@"isJSNotification"]) {
+    JSNotificationsActivateNotification(_webView.mainFrame.globalContext, notification);
+  }
 }
 
 
@@ -146,15 +155,6 @@
   // to not accept the drag.
   //  NSLog(@"%@%@ draggingInfo=%@", self, NSStringFromSelector(_cmd), draggingInfo);
   return WebDragDestinationActionAny;
-}
-
-
-- (void)userNotificationCenter:(NSUserNotificationCenter*)center
-       didActivateNotification:(NSUserNotification*)notification {
-  NSLog(@"%@%@ notification=%@", self, NSStringFromSelector(_cmd), notification);
-  if (notification.userInfo && notification.userInfo[@"isJSNotification"]) {
-    JSNotificationsActivateNotification(_webView.mainFrame.globalContext, notification);
-  }
 }
 
 
@@ -192,6 +192,21 @@
 //   @"var v = {__t:(new Date).getTime(),__v:true}; localStorage._cs_desktopNotifsEnabled = v; localStorage.setItem('_cs_desktopNotifsEnabled',JSON.stringify(v));"];
 //  NSLog(@"r: %@", r);
   
+}
+
+
+- (void)webView:(WebView *)webView didFinishLoadForFrame:(WebFrame *)frame {
+  auto rsp = frame.dataSource.response;
+  if ([rsp isKindOfClass:[NSHTTPURLResponse class]] && ((NSHTTPURLResponse*)rsp).statusCode == 400) {
+    NSLog(@"%@%@ frame.dataSource.response=%@", self, NSStringFromSelector(_cmd), frame.dataSource.response);
+    [webView.mainFrame.windowObject evaluateWebScript:
+     @"document.body.innerText = ''; var e = document.createElement('p'); document.body.appendChild(e); e.innerText = 'Oh snap. It appears messenger.com is down for maintenance. Please try again later'; var s = e.style; s.font='16px helvetica'; s.color='#999'; s.margin='30% auto'; s.width='50%'; s.textAlign='center';"];
+  }
+}
+
+- (void)webView:(WebView *)webView didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
+  //NSLog(@"%@%@ frame.dataSource.response=%@", self, NSStringFromSelector(_cmd), frame.dataSource.response);
+  // TODO: some sweet-looking "oh snap, messenger.com is not accessible, check your internets" message
 }
 
 

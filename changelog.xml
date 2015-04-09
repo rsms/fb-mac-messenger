@@ -9,6 +9,23 @@
       <title>Messenger for Mac 0.0.2</title>
       <description><![CDATA[
         <ul>
+          <li>Allows signing in to Facebook upon first launch</li>
+          <li>Fixes a bug with the window where closing the main window would require an app restart to get it back on screen</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 08 Apr 2015 18:11:02 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="5e9153c98cecfa7a"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.2.1428541486-5e9153c98cecfa7a.zip"
+        sparkle:version="0.0.2.1428541486"
+        length="1948808"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.2</title>
+      <description><![CDATA[
+        <ul>
           <li>Fixes a bug with local storage file system location</li>
         </ul>
       ]]></description>

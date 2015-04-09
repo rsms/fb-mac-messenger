@@ -13,6 +13,7 @@
 @implementation AppDelegate {
   WebView* _webView;
   NSView*  _titlebarView; // NSTitlebarView
+  NSString* _lastNotificationCount;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
@@ -100,6 +101,8 @@
   su.automaticallyDownloadsUpdates = YES;
   su.feedURL = [NSURL URLWithString:@"http://fbmacmessenger.rsms.me/changelog.xml"];
   [su checkForUpdatesInBackground];
+    
+  _lastNotificationCount = @"";
 }
 
 
@@ -242,13 +245,32 @@
     [webView.mainFrame.windowObject evaluateWebScript:
      [NSString stringWithFormat:@"document.body.innerText = ''; var e = document.createElement('p'); document.body.appendChild(e); e.innerText = 'Oh noes. It appears Messenger.com is down for maintenance. Please try again later.'; var s = e.style; s.font='18px helvetica-light'; s.lineHeight='27px'; s.color='#999'; s.margin='0 auto'; s.width='50%%'; s.textAlign='center'; s.margin='0 auto'; s.marginTop='100px'; s.marginBottom='30px'; s.width='235px'; s.height='235px'; s.paddingTop='250px'; s.backgroundRepeat='no-repeat'; s.backgroundPosition='top center'; s.backgroundImage='url(%@)';", kErrorPNGDataURL]];
   }
-
 }
 
 -(void)webView:(WebView *)webView didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
   NSLog(@"%@%@ error=%@", self, NSStringFromSelector(_cmd), error);
   [webView.mainFrame.windowObject evaluateWebScript:
    [NSString stringWithFormat:@"document.body.innerText = ''; var e = document.createElement('p'); document.body.appendChild(e); e.innerText = 'Oh snap. It looks like your connection is offline, please try again later.'; var s = e.style; s.font='18px helvetica-light'; s.lineHeight='27px'; s.color='#999'; s.margin='0 auto'; s.width='50%%'; s.textAlign='center'; s.margin='0 auto'; s.marginTop='100px'; s.marginBottom='30px'; s.width='235px'; s.height='235px'; s.paddingTop='250px'; s.backgroundRepeat='no-repeat'; s.backgroundPosition='top center'; s.backgroundImage='url(%@)';", kErrorPNGDataURL]];
+}
+
+- (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {
+    NSString* notificationCount = _lastNotificationCount;
+    
+    if ([title isEqualToString:@"Messenger"]) {
+        notificationCount = @"";
+    } else {
+        NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"\\(([0-9]+)\\) Messenger" options:0 error:nil];
+        NSTextCheckingResult* match = [regex firstMatchInString:title options:0 range:NSMakeRange(0, [title length])];
+
+        if (match) {
+            notificationCount = [title substringWithRange:[match rangeAtIndex:1]];
+        }
+    }
+
+    if (![notificationCount isEqualTo:_lastNotificationCount]) {
+        [[NSApp dockTile] setBadgeLabel: notificationCount];
+        _lastNotificationCount = notificationCount;
+    }
 }
 
 

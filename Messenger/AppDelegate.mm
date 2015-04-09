@@ -15,10 +15,15 @@
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-  // Configure main window
-  self.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
-  self.window.titleVisibility = NSWindowTitleHidden;
-  self.window.titlebarAppearsTransparent = YES;
+
+  BOOL isYosemite = floor(kCFCoreFoundationVersionNumber) > kCFCoreFoundationVersionNumber10_9;
+
+  if (isYosemite) {
+    // Configure main window
+    self.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
+    self.window.titleVisibility = NSWindowTitleHidden;
+    self.window.titlebarAppearsTransparent = YES;
+  }
   
   // Register ourselves as the default-user-notification center delegate
   [NSUserNotificationCenter defaultUserNotificationCenter].delegate = self;
@@ -57,7 +62,9 @@
   DISABLE(usePreHTML5ParserQuirks);
   DISABLE(useLegacyTextAlignPositionedElementBehavior);
   DISABLE(textAreasAreResizable);
-  ENABLE(subpixelCSSOMElementMetricsEnabled);
+  if (isYosemite) {
+    ENABLE(subpixelCSSOMElementMetricsEnabled);
+  }
   DISABLE(mediaPlaybackRequiresUserGesture);
   ENABLE(mediaPlaybackAllowsInline);
   ENABLE(hixie76WebSocketProtocolEnabled);

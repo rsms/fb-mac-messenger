@@ -6,6 +6,27 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.0.3</title>
+      <description><![CDATA[
+        <ul>
+          <li>Pretty error messages for when things go awry (no internet connection, messenger.com is down, etc)</li>
+          <li>Adds support for attaching files</li>
+          <li>Fixes a bug where Cmd-W wouldn't close the window</li>
+          <li>Fixes a bug where opening links or downloading images would not open in the default web browser</li>
+          <li>Saves the window position &amp; size between app launches</li>
+          <li>Adds fullscreen support</li>
+        </ul>
+      ]]></description>
+      <pubDate>Thu, 09 Apr 2015 00:44:29 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="e5d7ed3698917650"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.3.1428564817-e5d7ed3698917650.zip"
+        sparkle:version="0.0.3.1428564817"
+        length="1968064"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.0.2</title>
       <description><![CDATA[
         <ul>

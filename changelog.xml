@@ -6,6 +6,22 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.0.2</title>
+      <description><![CDATA[
+        <ul>
+          <li>Adds desktop notifications, which can be enabled via the "gear" icon in the top-right corner of the main window</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 08 Apr 2015 17:57:07 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="42b6eabd3a3f5fcc"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.2.1428540990-42b6eabd3a3f5fcc.zip"
+        sparkle:version="0.0.2.1428540990"
+        length="1948323"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.0.1</title>
       <description><![CDATA[
         <ul>

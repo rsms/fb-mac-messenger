@@ -119,6 +119,10 @@
   [[SUUpdater sharedUpdater] checkForUpdates:self];
 }
 
+- (IBAction)openPreferences:(id)sender {
+    [[_webView windowScriptObject] evaluateWebScript:@"var menuLinks = document.getElementsByClassName('_256n');menuLinks[0].click();"];
+}
+
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag {
   [self.window makeKeyAndOrderFront:self];
   return YES;

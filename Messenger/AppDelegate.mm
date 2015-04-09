@@ -105,6 +105,10 @@
   _lastNotificationCount = @"";
 }
 
+- (void)setActiveConversationAtIndex:(NSString *)index {
+  [_webView.windowScriptObject evaluateWebScript:
+   [NSString stringWithFormat:@"document.querySelector('li:nth-child(%@) > [data-reactid]:first-child').click();", index]];
+}
 
 - (void)mouseEntered:(NSEvent*)ev {
   // titlebar

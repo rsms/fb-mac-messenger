@@ -23,7 +23,7 @@
   auto webView = [[WebView alloc] initWithFrame:{{0,0},{100,100}} frameName:@"main" groupName:@"main"];
   self.window.contentView = webView;
   webView.policyDelegate = self;
-  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/"]];
+  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/new"]];
   [webView.mainFrame loadRequest:req];
   
   // Sparkle

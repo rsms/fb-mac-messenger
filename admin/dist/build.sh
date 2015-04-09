@@ -43,4 +43,4 @@ pushd "${PRODUCT_DIR}" >/dev/null
 popd >/dev/null
 
 echo "Next step:"
-echo "  '$(pwd)/admin/dist/addchangelog.sh' ${BUILD_DIR}/${BUILD_CONFIG}/${ARCHIVE}"
+echo "  admin/dist/addchangelog.sh ${BUILD_DIR}/${BUILD_CONFIG}/${ARCHIVE}"

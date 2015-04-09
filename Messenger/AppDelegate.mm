@@ -87,7 +87,7 @@
   webView.frameLoadDelegate = self;
   webView.UIDelegate = self;
   webView.preferences = wp;
-  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/login"]];
+  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/t/"]];
   [webView.mainFrame loadRequest:req];
   _webView = webView;
 
@@ -158,6 +158,43 @@
 }
 
 
+- (void)webView:(WebView*)webView runOpenPanelForFileButtonWithResultListener:(id<WebOpenPanelResultListener>)resultListener allowMultipleFiles:(BOOL)allowMultipleFiles {
+  //NSLog(@"%@%@ resultListener=%@", self, NSStringFromSelector(_cmd), resultListener);
+  auto openPanel = [NSOpenPanel openPanel];
+  openPanel.canChooseDirectories = NO;
+  openPanel.canChooseFiles = YES;
+  openPanel.allowsMultipleSelection = allowMultipleFiles;
+  openPanel.resolvesAliases = YES;
+  openPanel.canResolveUbiquitousConflicts = YES;
+  openPanel.canDownloadUbiquitousContents = YES;
+  openPanel.canCreateDirectories = YES;
+  openPanel.title = @"Select files";
+  
+  auto ud = [NSUserDefaults standardUserDefaults];
+  auto dirURL = [ud URLForKey:@"open-dialog-url"];
+  if (!dirURL) {
+    dirURL = [NSURL fileURLWithPath:NSHomeDirectory() isDirectory:YES];
+  }
+  
+  openPanel.directoryURL = dirURL;
+  
+  auto onComplete = ^(NSInteger result) {
+    [ud setURL:openPanel.directoryURL forKey:@"open-dialog-url"];
+    if (result == 1) {
+      auto filenames = [NSMutableArray arrayWithCapacity:openPanel.URLs.count];
+      for (NSURL* url in openPanel.URLs) {
+        [filenames addObject:url.absoluteURL.path];
+      }
+      [resultListener chooseFilenames:filenames];
+    } else {
+      [resultListener cancel];
+    }
+  };
+  [openPanel beginSheetModalForWindow:self.window completionHandler:onComplete];
+//  [openPanel beginWithCompletionHandler:onComplete];
+}
+
+
 
 #pragma mark - WebFrameLoadDelegate
 
@@ -212,18 +249,48 @@
 
 #pragma mark - WebPolicyDelegate
 
-- (void)webView:(WebView *)sender decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request frame:(WebFrame *)frame decisionListener:(id<WebPolicyDecisionListener>)listener {
-  if ([sender isEqual:self.window.contentView]) {
+- (void)webView:(WebView *)sender
+decidePolicyForNavigationAction:(NSDictionary *)actionInformation
+        request:(NSURLRequest *)request
+          frame:(WebFrame *)frame
+decisionListener:(id<WebPolicyDecisionListener>)listener
+{
+  //NSLog(@"%@%@ actionInformation=%@ request=%@", self, NSStringFromSelector(_cmd), actionInformation, request);
+  NSURL* url = [actionInformation objectForKey:WebActionOriginalURLKey];
+  if ([url.host isEqualToString:@"www.messenger.com"] ||
+      ([url.host isEqualToString:@"www.facebook.com"] && [url.path hasPrefix:@"/login/"]) )
+  {
     [listener use];
   } else {
-    [[NSWorkspace sharedWorkspace] openURL:[actionInformation objectForKey:WebActionOriginalURLKey]];
+    [self openWorkspaceURL:url];
     [listener ignore];
   }
 }
 
+
 - (void)webView:(WebView *)sender decidePolicyForNewWindowAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request newFrameName:(NSString *)frameName decisionListener:(id<WebPolicyDecisionListener>)listener {
-  [[NSWorkspace sharedWorkspace] openURL:[actionInformation objectForKey:WebActionOriginalURLKey]];
+  // Open all "new window" links in the browser
+  //NSLog(@"%@%@ actionInformation=%@ request=%@", self, NSStringFromSelector(_cmd), actionInformation, request);
+  NSURL* url = [actionInformation objectForKey:WebActionOriginalURLKey];
+  [self openWorkspaceURL:url];
   [listener ignore];
 }
+
+
+- (void)openWorkspaceURL:(NSURL*)url {
+  if ([url.path hasPrefix:@"/l.php"]) {
+    // Make things a bit faster by bypassing Facebook's link filter, which sometimes traps completely
+    // legit URLs as "phishing" (like the website for this app!)
+    for (NSString* kv in [url.query componentsSeparatedByString:@"&"]) {
+      auto r = [kv rangeOfString:@"=" options:NSLiteralSearch];
+      if (r.location != NSNotFound && [[kv substringToIndex:r.location] isEqualToString:@"u"]) {
+        auto encodedURL = [kv substringFromIndex:r.location + r.length];
+        url = [NSURL URLWithString:[encodedURL stringByRemovingPercentEncoding]];
+      }
+    }
+  }
+  [[NSWorkspace sharedWorkspace] openURL:url];
+}
+
 
 @end

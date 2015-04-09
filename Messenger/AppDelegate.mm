@@ -32,7 +32,7 @@
 
   // Web prefs
   auto wp = [[WebPreferences alloc] initWithIdentifier:@"main"];
-  [wp _setLocalStorageDatabasePath:[appDataDir stringByAppendingString:@"localstorage"]];
+  [wp _setLocalStorageDatabasePath:[appDataDir stringByAppendingPathComponent:@"localstorage"]];
   #define ENABLE(k) do { wp.k = YES; } while(0)
   #define DISABLE(k) do { wp.k = NO; } while(0)
   #define PRINT(k) NSLog(@"%s: %s", #k, wp.k ? "y" : "n")

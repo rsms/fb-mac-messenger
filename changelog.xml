@@ -9,6 +9,23 @@
       <title>Messenger for Mac 0.0.2</title>
       <description><![CDATA[
         <ul>
+          <li>Show better maintenance message for 400 errors, when messenger.com is faulting</li>
+          <li>Window controls (close, minimize, etc) now appears when the pointer is inside the window titlebar</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 08 Apr 2015 19:40:27 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="019677e9a6329958"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.2.1428547214-019677e9a6329958.zip"
+        sparkle:version="0.0.2.1428547214"
+        length="1947282"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.2</title>
+      <description><![CDATA[
+        <ul>
           <li>Allows signing in to Facebook upon first launch</li>
           <li>Fixes a bug with the window where closing the main window would require an app restart to get it back on screen</li>
         </ul>

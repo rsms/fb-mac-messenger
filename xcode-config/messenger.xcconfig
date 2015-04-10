@@ -1,7 +1,7 @@
 PRODUCT_NAME = Messenger
 
 SDKROOT = macosx  // aka "latest"
-MACOSX_DEPLOYMENT_TARGET = 10.10
+MACOSX_DEPLOYMENT_TARGET = 10.9
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks
 
 INFOPLIST_FILE = Messenger/Info.plist

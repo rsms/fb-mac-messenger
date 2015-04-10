@@ -6,6 +6,11 @@
 #import "JSClass.hh"
 #import "MEmbeddedRes.h"
 
+static BOOL kCFIsOSX_10_10_orNewer;
+
+static void __attribute__((constructor))_init() {
+  kCFIsOSX_10_10_orNewer = floor(kCFCoreFoundationVersionNumber) > kCFCoreFoundationVersionNumber10_9;
+}
 
 @interface AppDelegate ()
 @property (weak) IBOutlet NSWindow *window;
@@ -16,21 +21,26 @@
   NSString* _lastNotificationCount;
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-  // Configure main window
-  self.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
-  self.window.titleVisibility = NSWindowTitleHidden;
-  self.window.titlebarAppearsTransparent = YES;
-  
+- (void)applicationDidFinishLaunching:(NSNotification*)notification {
   // Register ourselves as the default-user-notification center delegate
   [NSUserNotificationCenter defaultUserNotificationCenter].delegate = self;
 
-  // Hack to hide "traffic lights" but still allowing window manipulation (which isn't the case if we use proper window flags)
-  _titlebarView = [self.window standardWindowButton:NSWindowCloseButton].superview;
-  _titlebarView.wantsLayer = YES;
-  _titlebarView.layer.opacity = 0.0;
-  auto titlebarTrackingArea = [[NSTrackingArea alloc] initWithRect:_titlebarView.bounds options:NSTrackingMouseEnteredAndExited|NSTrackingActiveInActiveApp owner:self userInfo:nil];
-  [_titlebarView addTrackingArea:titlebarTrackingArea];
+  // Configure main window
+  if (kCFIsOSX_10_10_orNewer) {
+    self.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
+    self.window.titleVisibility = NSWindowTitleHidden;
+    self.window.titlebarAppearsTransparent = YES;
+    self.window.styleMask |= NSFullSizeContentViewWindowMask;
+  }
+
+  if (kCFIsOSX_10_10_orNewer) {
+    // Hack to hide "traffic lights" but still allowing window manipulation (which isn't the case if we use proper window flags)
+    _titlebarView = [self.window standardWindowButton:NSWindowCloseButton].superview;
+    _titlebarView.wantsLayer = YES;
+    _titlebarView.layer.opacity = 0.0;
+    auto titlebarTrackingArea = [[NSTrackingArea alloc] initWithRect:_titlebarView.bounds options:NSTrackingMouseEnteredAndExited|NSTrackingActiveInActiveApp owner:self userInfo:nil];
+    [_titlebarView addTrackingArea:titlebarTrackingArea];
+  }
   
   // App data
   auto appDataDir = [NSString stringWithFormat:@"~/Library/Application Support/%@", [NSBundle mainBundle].bundleIdentifier].stringByExpandingTildeInPath;
@@ -59,7 +69,6 @@
   DISABLE(usePreHTML5ParserQuirks);
   DISABLE(useLegacyTextAlignPositionedElementBehavior);
   DISABLE(textAreasAreResizable);
-  ENABLE(subpixelCSSOMElementMetricsEnabled);
   DISABLE(mediaPlaybackRequiresUserGesture);
   ENABLE(mediaPlaybackAllowsInline);
   ENABLE(hixie76WebSocketProtocolEnabled);
@@ -68,6 +77,9 @@
   ENABLE(hiddenPageCSSAnimationSuspensionEnabled);
   ENABLE(hiddenPageDOMTimerThrottlingEnabled);
   DISABLE(backspaceKeyNavigationEnabled);
+  if (kCFIsOSX_10_10_orNewer) {
+    ENABLE(subpixelCSSOMElementMetricsEnabled);
+  }
   
   // Security relaxation
   //DISABLE(XSSAuditorEnabled);

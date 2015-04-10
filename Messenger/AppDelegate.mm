@@ -117,6 +117,10 @@
   _titlebarView.layer.opacity = 0;
 }
 
+- (IBAction)find:(NSMenuItem*)sender {
+  [_webView.windowScriptObject evaluateWebScript:@"document.querySelector('input[placeholder~=\"Search\"]').focus();"];
+}
+
 
 - (IBAction)checkForUpdates:(id)sender {
   [[SUUpdater sharedUpdater] checkForUpdates:self];

@@ -141,6 +141,20 @@ static void __attribute__((constructor))_init() {
     @"document.querySelector('li:nth-child(%@) > [data-reactid]:first-child').click();", index]];
 }
 
+- (IBAction)nextConversation:(NSMenuItem *)sender {
+    [_webView.windowScriptObject evaluateWebScript:@"\
+     var element = document.evaluate('//li[contains(@class, \" \")]', document).iterateNext();\n\
+     var index = Array.prototype.indexOf.call(element.parentNode.children, element);\n\
+     document.querySelector('li:nth-child(' + (index + 2) + ') > [data-reactid]:first-child').click();"];
+}
+
+- (IBAction)previousConversation:(NSMenuItem *)sender {
+    [_webView.windowScriptObject evaluateWebScript:@"\
+     var element = document.evaluate('//li[contains(@class, \" \")]', document).iterateNext();\n\
+     var index = Array.prototype.indexOf.call(element.parentNode.children, element);\n\
+     document.querySelector('li:nth-child(' + index + ') > [data-reactid]:first-child').click();"];
+}
+
 - (void)mouseEntered:(NSEvent*)ev {
   // titlebar
   _titlebarView.layer.opacity = 1;

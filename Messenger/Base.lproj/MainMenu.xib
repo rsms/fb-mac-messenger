@@ -349,6 +349,19 @@
                                     <action selector="performClose:" target="-1" id="NqB-2e-WSV"/>
                                 </connections>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="45F-Dh-ojr"/>
+                            <menuItem title="Select Next Conversation" keyEquivalent="" id="31E-NN-KHA">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="nextConversation:" target="Voe-Tx-rLC" id="1r3-pm-Tun"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Select Previous Conversation" keyEquivalent="" id="Nh4-gV-XSY">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="previousConversation:" target="Voe-Tx-rLC" id="xHF-df-AQZ"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="eu3-7i-yIM"/>
                             <menuItem title="Bring All to Front" id="LE2-aR-0XJ">
                                 <modifierMask key="keyEquivalentModifierMask"/>

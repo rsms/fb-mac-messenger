@@ -6,6 +6,28 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.0.4</title>
+      <description><![CDATA[
+        <ul>
+          <li>Enables zooming of the UI with ⌘-, ⌘+, and ⌘0)</li>
+          <li>Enabled jumping to a conversation using ⌘1..9 where the number correlates to the "nth" list item</li>
+          <li>Input focus is now given to the message composer when the window is activated</li>
+          <li>Fixes a bug with Facebook two-factor authentication (no longer opens external web browser)</li>
+          <li>Adds support for OS X 10.9</li>
+          <li>Adds "unseen messages" badge to app icon that follows Messenger's badging logic</li>
+          <li>Adds keyboard shortcut for search (⌘F)</li>
+        </ul>
+      ]]></description>
+      <pubDate>Thu, 09 Apr 2015 19:58:35 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="a80cddf5538e66d6"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.4.1428634580-a80cddf5538e66d6.zip"
+        sparkle:version="0.0.4.1428634580"
+        length="1972813"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.0.3</title>
       <description><![CDATA[
         <ul>

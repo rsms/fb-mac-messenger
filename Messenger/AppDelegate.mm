@@ -42,6 +42,7 @@ static void __attribute__((constructor))_init() {
     _window.titleVisibility = NSWindowTitleHidden;
     _window.titlebarAppearsTransparent = YES;
   }
+    [_window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
   _window.minSize = {640,400};
   _window.releasedWhenClosed = NO;
   _window.delegate = self;

@@ -299,9 +299,11 @@ decidePolicyForNavigationAction:(NSDictionary *)actionInformation
 decisionListener:(id<WebPolicyDecisionListener>)listener
 {
   //NSLog(@"%@%@ actionInformation=%@ request=%@", self, NSStringFromSelector(_cmd), actionInformation, request);
-  NSURL* url = [actionInformation objectForKey:WebActionOriginalURLKey];
+  NSURL* url = [[actionInformation objectForKey:WebActionOriginalURLKey] absoluteURL];
   if ([url.host isEqualToString:@"www.messenger.com"] ||
-      ([url.host isEqualToString:@"www.facebook.com"] && [url.path hasPrefix:@"/login/"]) )
+      ([url.host isEqualToString:@"www.facebook.com"] &&
+       ([url.path hasPrefix:@"/login/"] || [url.path hasPrefix:@"/checkpoint/"] || [url.path isEqualToString:@"/checkpoint"])
+      ) )
   {
     [listener use];
   } else {

@@ -31,6 +31,6 @@
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
+	<string>FBMApplication</string>
 </dict>
 </plist>

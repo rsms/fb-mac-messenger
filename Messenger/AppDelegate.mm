@@ -281,7 +281,7 @@ static void __attribute__((constructor))_init() {
 
   s = U16JSStr(u"requestPermission");
   auto paramName = U16JSStr(u"callback");
-  auto bodys = U16JSStr(u"console.log('requestPermission'); callback(\"granted\");");
+  auto bodys = U16JSStr(u"callback(\"granted\");");
   auto f = JSObjectMakeFunction(ctx, s, 1, &paramName, bodys, nullptr, 1, nullptr);
   JSClass::setProperty(ctx, NotificationCons, u"requestPermission", f);
   JSStringRelease(paramName);

@@ -21,7 +21,7 @@ itembuf = '''
         </ul>
       ]]></description>
       <pubDate>{pubdate}</pubDate>
-      <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="{gitrev}"
         url="http://fbmacmessenger.rsms.me/dist/{filename}"

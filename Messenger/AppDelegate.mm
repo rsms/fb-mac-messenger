@@ -12,7 +12,6 @@ static void __attribute__((constructor))_init() {
 }
 
 @interface AppDelegate ()
-@property (weak) IBOutlet NSWindow *window;
 @property (nonatomic, readonly) BOOL canMakeTextLarger;
 - (IBAction)makeTextLarger:(id)sender;
 @property (nonatomic, readonly) BOOL canMakeTextSmaller;
@@ -22,8 +21,9 @@ static void __attribute__((constructor))_init() {
 @end
 
 @implementation AppDelegate {
-  WebView* _webView;
-  NSView*  _titlebarView; // NSTitlebarView
+  NSWindow* _window;
+  WebView*  _webView;
+  NSView*   _titlebarView; // NSTitlebarView
   NSString* _lastNotificationCount;
 }
 
@@ -31,18 +31,26 @@ static void __attribute__((constructor))_init() {
   // Register ourselves as the default-user-notification center delegate
   [NSUserNotificationCenter defaultUserNotificationCenter].delegate = self;
 
-  // Configure main window
+  // Create main window
+  NSUInteger windowStyle = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
   if (kCFIsOSX_10_10_orNewer) {
-    self.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
-    self.window.titleVisibility = NSWindowTitleHidden;
-    self.window.titlebarAppearsTransparent = YES;
-    self.window.styleMask |= NSFullSizeContentViewWindowMask;
+    windowStyle |= NSFullSizeContentViewWindowMask;
   }
-  self.window.delegate = self;
+  _window = [[NSWindow alloc] initWithContentRect:{{0,0},{800,600}} styleMask:windowStyle backing:NSBackingStoreBuffered defer:YES];
+  if (kCFIsOSX_10_10_orNewer) {
+    _window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
+    _window.titleVisibility = NSWindowTitleHidden;
+    _window.titlebarAppearsTransparent = YES;
+  }
+  _window.minSize = {640,400};
+  _window.releasedWhenClosed = NO;
+  _window.delegate = self;
+  [_window center];
+  _window.frameAutosaveName = @"main";
 
   if (kCFIsOSX_10_10_orNewer) {
     // Hack to hide "traffic lights" but still allowing window manipulation (which isn't the case if we use proper window flags)
-    _titlebarView = [self.window standardWindowButton:NSWindowCloseButton].superview;
+    _titlebarView = [_window standardWindowButton:NSWindowCloseButton].superview;
     _titlebarView.wantsLayer = YES;
     _titlebarView.layer.opacity = 0.0;
     auto titlebarTrackingArea = [[NSTrackingArea alloc] initWithRect:_titlebarView.bounds options:NSTrackingMouseEnteredAndExited|NSTrackingActiveInActiveApp owner:self userInfo:nil];
@@ -103,7 +111,7 @@ static void __attribute__((constructor))_init() {
 
   // Web view in main window
   auto webView = [[WebView alloc] initWithFrame:{{0,0},{100,100}} frameName:@"main" groupName:@"main"];
-  self.window.contentView = webView;
+  _window.contentView = webView;
   webView.policyDelegate = self;
   webView.frameLoadDelegate = self;
   webView.UIDelegate = self;
@@ -111,6 +119,9 @@ static void __attribute__((constructor))_init() {
   auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/t/"]];
   [webView.mainFrame loadRequest:req];
   _webView = webView;
+
+  // Present main window
+  [_window makeKeyAndOrderFront:self];
   
   //- (BOOL)searchFor:(NSString *)string direction:(BOOL)forward caseSensitive:(BOOL)caseFlag wrap:(BOOL)wrapFlag;
 
@@ -153,12 +164,12 @@ static void __attribute__((constructor))_init() {
 
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag {
-  [self.window makeKeyAndOrderFront:self];
+  [_window makeKeyAndOrderFront:self];
   return YES;
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification {
-  [self.window makeKeyAndOrderFront:self];
+  [_window makeKeyAndOrderFront:self];
 }
 
 
@@ -246,8 +257,7 @@ static void __attribute__((constructor))_init() {
       [resultListener cancel];
     }
   };
-  [openPanel beginSheetModalForWindow:self.window completionHandler:onComplete];
-//  [openPanel beginWithCompletionHandler:onComplete];
+  [openPanel beginSheetModalForWindow:_window completionHandler:onComplete];
 }
 
 

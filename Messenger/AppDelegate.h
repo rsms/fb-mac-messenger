@@ -1,4 +1,6 @@
-@interface AppDelegate : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate>
+#import <WebKit/WebKit.h>
+
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate, NSWindowDelegate>
 
 - (IBAction)checkForUpdates:(id)sender;
 

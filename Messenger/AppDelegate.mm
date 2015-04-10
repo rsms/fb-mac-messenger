@@ -1,5 +1,4 @@
 #import "AppDelegate.h"
-#import <WebKit/WebKit.h>
 #import <Sparkle/Sparkle.h>
 #import "jsapi.h"
 #import "WebPreferences.h"
@@ -14,7 +13,14 @@ static void __attribute__((constructor))_init() {
 
 @interface AppDelegate ()
 @property (weak) IBOutlet NSWindow *window;
+@property (nonatomic, readonly) BOOL canMakeTextLarger;
+- (IBAction)makeTextLarger:(id)sender;
+@property (nonatomic, readonly) BOOL canMakeTextSmaller;
+- (IBAction)makeTextSmaller:(id)sender;
+@property (nonatomic, readonly) BOOL canMakeTextStandardSize;
+- (IBAction)makeTextStandardSize:(id)sender;
 @end
+
 @implementation AppDelegate {
   WebView* _webView;
   NSView*  _titlebarView; // NSTitlebarView
@@ -149,6 +155,16 @@ static void __attribute__((constructor))_init() {
 - (void)applicationDidBecomeActive:(NSNotification *)notification {
   [self.window makeKeyAndOrderFront:self];
 }
+
+
+#pragma mark - WebView proxies
+
+- (BOOL)canMakeTextLarger { return _webView.canMakeTextLarger; }
+- (IBAction)makeTextLarger:(id)sender { [_webView makeTextLarger:sender]; }
+- (BOOL)canMakeTextSmaller { return _webView.canMakeTextSmaller; }
+- (IBAction)makeTextSmaller:(id)sender { [_webView makeTextSmaller:sender]; }
+- (BOOL)canMakeTextStandardSize { return _webView.canMakeTextStandardSize; }
+- (IBAction)makeTextStandardSize:(id)sender { [_webView makeTextStandardSize:sender]; }
 
 
 #pragma mark - NSWindowDelegate

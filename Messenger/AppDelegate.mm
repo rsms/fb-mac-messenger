@@ -32,6 +32,7 @@ static void __attribute__((constructor))_init() {
     self.window.titlebarAppearsTransparent = YES;
     self.window.styleMask |= NSFullSizeContentViewWindowMask;
   }
+  self.window.delegate = self;
 
   if (kCFIsOSX_10_10_orNewer) {
     // Hack to hide "traffic lights" but still allowing window manipulation (which isn't the case if we use proper window flags)
@@ -130,6 +131,7 @@ static void __attribute__((constructor))_init() {
 }
 
 - (IBAction)find:(NSMenuItem*)sender {
+  // Give input focus to the search field
   [_webView.windowScriptObject evaluateWebScript:@"document.querySelector('input[placeholder~=\"Search\"]').focus();"];
 }
 
@@ -137,6 +139,7 @@ static void __attribute__((constructor))_init() {
 - (IBAction)checkForUpdates:(id)sender {
   [[SUUpdater sharedUpdater] checkForUpdates:self];
 }
+
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag {
   [self.window makeKeyAndOrderFront:self];
@@ -148,12 +151,22 @@ static void __attribute__((constructor))_init() {
 }
 
 
+#pragma mark - NSWindowDelegate
+
+
+- (void)windowDidBecomeKey:(NSNotification*)notification {
+  //NSLog(@"%@%@%@", self, NSStringFromSelector(_cmd), notification);
+  // Give focus to the composer
+  [_webView.windowScriptObject evaluateWebScript:@"document.querySelector('div[contenteditable=\"true\"]').focus();"];
+}
+
+
 #pragma mark - NSUserNotificationCenterDelegate
 
 
 - (BOOL)userNotificationCenter:(NSUserNotificationCenter*)center
      shouldPresentNotification:(NSUserNotification*)notification {
-  //NSLog(@"%@%@ notification=%@", self, NSStringFromSelector(_cmd), notification);
+  //NSLog(@"%@%@%@", self, NSStringFromSelector(_cmd), notification);
   return YES;
 }
 

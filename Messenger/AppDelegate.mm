@@ -176,7 +176,7 @@ static void __attribute__((constructor))_init() {
   // WebDragDestinationActionAny to allow any kind of action or WebDragDestinationActionNone
   // to not accept the drag.
   //  NSLog(@"%@%@ draggingInfo=%@", self, NSStringFromSelector(_cmd), draggingInfo);
-  return WebDragDestinationActionAny;
+  return WebDragDestinationActionDHTML;
 }
 
 

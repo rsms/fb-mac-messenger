@@ -362,6 +362,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/sparkle",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 			};
 			name = Debug;
 		};
@@ -374,6 +375,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/sparkle",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 			};
 			name = Release;
 		};

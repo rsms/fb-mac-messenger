@@ -232,8 +232,10 @@ static void __attribute__((constructor))_init() {
   openPanel.canChooseFiles = YES;
   openPanel.allowsMultipleSelection = allowMultipleFiles;
   openPanel.resolvesAliases = YES;
-  openPanel.canResolveUbiquitousConflicts = YES;
-  openPanel.canDownloadUbiquitousContents = YES;
+  if (kCFIsOSX_10_10_orNewer) {
+    openPanel.canResolveUbiquitousConflicts = YES;
+    openPanel.canDownloadUbiquitousContents = YES;
+  }
   openPanel.canCreateDirectories = YES;
   openPanel.title = @"Select files";
   

@@ -48,6 +48,9 @@ static void __attribute__((constructor))_init() {
   [_window center];
   _window.frameAutosaveName = @"main";
 
+  // make window move to current space when alt-tab'd to (as opposed to switching spaces)
+  [_window setCollectionBehavior:NSWindowCollectionBehaviorMoveToActiveSpace];
+
   if (kCFIsOSX_10_10_orNewer) {
     // Hack to hide "traffic lights" but still allowing window manipulation (which isn't the case if we use proper window flags)
     _titlebarView = [_window standardWindowButton:NSWindowCloseButton].superview;

@@ -1,5 +1,5 @@
 window.FBM = {
-  get activeConversationIndex() {
+  activeConversationIndex: function() {
     var element = document.evaluate('//li[contains(@class, " ")]', document).iterateNext();
     return Array.prototype.indexOf.call(element.parentNode.children, element) + 1;
   },
@@ -8,6 +8,14 @@ window.FBM = {
     document.querySelector('li:nth-child(' + index + ') > [data-reactid]:first-child').click();
   },
   
+  nextConversation: function() {
+    this.setActiveConversation(this.activeConversationIndex() + 1);
+  },
+    
+  previousConversation: function() {
+    this.setActiveConversation(this.activeConversationIndex() - 1);
+  },
+    
   toggleSettings: function() {
     // Settings dialog
     if (document.evaluate('//div[@role="dialog"]//span[text()="Settings"]', document).iterateNext()) {

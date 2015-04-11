@@ -27,7 +27,11 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
-                            <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
+                            <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
+                                <connections>
+                                    <action selector="openPreferences:" target="Voe-Tx-rLC" id="ToY-Bf-tQV"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                             <menuItem title="Services" id="NMo-om-nkz">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -343,6 +347,19 @@
                             <menuItem title="Close" keyEquivalent="w" id="bmx-5O-EXy">
                                 <connections>
                                     <action selector="performClose:" target="-1" id="NqB-2e-WSV"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="45F-Dh-ojr"/>
+                            <menuItem title="Select Next Conversation" keyEquivalent="" id="31E-NN-KHA">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="nextConversation:" target="Voe-Tx-rLC" id="1r3-pm-Tun"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Select Previous Conversation" keyEquivalent="" id="Nh4-gV-XSY">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="previousConversation:" target="Voe-Tx-rLC" id="xHF-df-AQZ"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="eu3-7i-yIM"/>

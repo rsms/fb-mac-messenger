@@ -25,6 +25,7 @@ static void __attribute__((constructor))_init() {
   WebView*  _webView;
   NSView*   _titlebarView; // NSTitlebarView
   NSString* _lastNotificationCount;
+  NSString* _injectionJS;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
@@ -108,6 +109,9 @@ static void __attribute__((constructor))_init() {
   #undef ENABLE
   #undef DISABLE
   #undef PRINT
+  
+  auto path = [[NSBundle mainBundle] pathForResource:@"injection" ofType:@"js"];
+  _injectionJS = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
 
   // Web view in main window
   auto webView = [[WebView alloc] initWithFrame:{{0,0},{100,100}} frameName:@"main" groupName:@"main"];
@@ -135,10 +139,31 @@ static void __attribute__((constructor))_init() {
   _lastNotificationCount = @"";
 }
 
+- (id)callJS:(NSString*)methodName, ... NS_REQUIRES_NIL_TERMINATION {
+  auto methodArguments = [NSMutableArray array];
+
+  va_list args;
+  va_start(args, methodName);
+  id arg;
+  while ((arg = va_arg(args, id))) {
+    [methodArguments addObject:arg];
+  }
+  va_end(args);
+  
+  return [_webView.windowScriptObject evaluateWebScript:
+   [NSString stringWithFormat:@"FBM.%@(%@);", methodName, [methodArguments componentsJoinedByString:@", "]]];
+}
+
 - (void)setActiveConversationAtIndex:(NSString*)index {
-  [_webView.windowScriptObject evaluateWebScript:
-   [NSString stringWithFormat:
-    @"document.querySelector('li:nth-child(%@) > [data-reactid]:first-child').click();", index]];
+  [self callJS:@"setActiveConversation", index, nil];
+}
+
+- (IBAction)nextConversation:(NSMenuItem *)sender {
+  [self callJS:@"nextConversation", nil];
+}
+
+- (IBAction)previousConversation:(NSMenuItem *)sender {
+  [self callJS:@"previousConversation", nil];
 }
 
 - (void)mouseEntered:(NSEvent*)ev {
@@ -154,7 +179,7 @@ static void __attribute__((constructor))_init() {
 
 - (IBAction)find:(NSMenuItem*)sender {
   // Give input focus to the search field
-  [_webView.windowScriptObject evaluateWebScript:@"document.querySelector('input[placeholder~=\"Search\"]').focus();"];
+  [self callJS:@"focusSearchField", nil];
 }
 
 
@@ -162,6 +187,9 @@ static void __attribute__((constructor))_init() {
   [[SUUpdater sharedUpdater] checkForUpdates:self];
 }
 
+- (IBAction)openPreferences:(NSMenuItem *)sender {
+  [self callJS:@"toggleSettings", nil];
+}
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag {
   [_window makeKeyAndOrderFront:self];
@@ -189,7 +217,7 @@ static void __attribute__((constructor))_init() {
 - (void)windowDidBecomeKey:(NSNotification*)notification {
   //NSLog(@"%@%@%@", self, NSStringFromSelector(_cmd), notification);
   // Give focus to the composer
-  [_webView.windowScriptObject evaluateWebScript:@"document.querySelector('div[contenteditable=\"true\"]').focus();"];
+  [self callJS:@"focusComposerField", nil];
 }
 
 
@@ -302,15 +330,16 @@ static void __attribute__((constructor))_init() {
   auto rsp = frame.dataSource.response;
   if ([rsp isKindOfClass:[NSHTTPURLResponse class]] && ((NSHTTPURLResponse*)rsp).statusCode == 400) {
     NSLog(@"%@%@ frame.dataSource.response=%@", self, NSStringFromSelector(_cmd), frame.dataSource.response);
-    [webView.mainFrame.windowObject evaluateWebScript:
-     [NSString stringWithFormat:@"document.body.innerText = ''; var e = document.createElement('p'); document.body.appendChild(e); e.innerText = 'Oh noes. It appears Messenger.com is down for maintenance. Please try again later.'; var s = e.style; s.font='18px helvetica-light'; s.lineHeight='27px'; s.color='#999'; s.margin='0 auto'; s.width='50%%'; s.textAlign='center'; s.margin='0 auto'; s.marginTop='100px'; s.marginBottom='30px'; s.width='235px'; s.height='235px'; s.paddingTop='250px'; s.backgroundRepeat='no-repeat'; s.backgroundPosition='top center'; s.backgroundImage='url(%@)';", kErrorPNGDataURL]];
+    [self callJS:@"showMaintenanceMessage", nil];
+  } else {
+    [_webView.windowScriptObject evaluateWebScript:_injectionJS];
+    [self callJS:@"loadImage", @"background", kErrorPNGDataURL, nil];
   }
 }
 
 -(void)webView:(WebView *)webView didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
   NSLog(@"%@%@ error=%@", self, NSStringFromSelector(_cmd), error);
-  [webView.mainFrame.windowObject evaluateWebScript:
-   [NSString stringWithFormat:@"document.body.innerText = ''; var e = document.createElement('p'); document.body.appendChild(e); e.innerText = 'Oh snap. It looks like your connection is offline, please try again later.'; var s = e.style; s.font='18px helvetica-light'; s.lineHeight='27px'; s.color='#999'; s.margin='0 auto'; s.width='50%%'; s.textAlign='center'; s.margin='0 auto'; s.marginTop='100px'; s.marginBottom='30px'; s.width='235px'; s.height='235px'; s.paddingTop='250px'; s.backgroundRepeat='no-repeat'; s.backgroundPosition='top center'; s.backgroundImage='url(%@)';", kErrorPNGDataURL]];
+  [self callJS:@"showOfflineMessage", nil];
 }
 
 - (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {

@@ -31,12 +31,13 @@ void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWidth, fl
     CGContextRestoreGState(context);
 }
 
-- (NSImage *)roundCornersImageCornerRadius:(NSInteger)radius {
+- (NSImage *)roundedImage {
     int w = (int) self.size.width;
     int h = (int) self.size.height;
+    int radius = (int) self.size.width < self.size.height ? self.size.width/2 : self.size.height/2;
     
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, kCGImageAlphaPremultipliedFirst);
+    CGContextRef context = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, (CGBitmapInfo)kCGImageAlphaPremultipliedFirst);
     
     CGContextBeginPath(context);
     CGRect rect = CGRectMake(0, 0, w, h);
@@ -54,9 +55,6 @@ void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWidth, fl
     
     NSImage *tmpImage = [[NSImage alloc] initWithCGImage:imageMasked size:self.size];
     NSData *imageData = [tmpImage TIFFRepresentation];
-    NSImage *image = [[NSImage alloc] initWithData:imageData];
-    [tmpImage release];
-    
-    return [image autorelease];
+    return [[NSImage alloc] initWithData:imageData];
 }
 @end

@@ -11,5 +11,5 @@
 void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWidth, float ovalHeight);
 
 @interface NSImage(RoundCorner)
-- (NSImage *)roundCornersImageCornerRadius:(NSInteger)radius;
+- (NSImage *)roundedImage;
 @end

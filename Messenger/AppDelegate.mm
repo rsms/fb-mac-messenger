@@ -381,5 +381,10 @@ decisionListener:(id<WebPolicyDecisionListener>)listener
   [[NSWorkspace sharedWorkspace] openURL:url];
 }
 
+#if !(DEBUG)
+- (NSArray *)webView:(WebView *)sender contextMenuItemsForElement:(NSDictionary *)element defaultMenuItems:(NSArray *)defaultMenuItems {
+   return nullptr;
+}
+#endif
 
 @end

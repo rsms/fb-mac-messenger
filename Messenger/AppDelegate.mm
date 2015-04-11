@@ -25,6 +25,7 @@ static void __attribute__((constructor))_init() {
   WebView*  _webView;
   NSView*   _titlebarView; // NSTitlebarView
   NSString* _lastNotificationCount;
+  NSString* _injectionJS;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
@@ -108,6 +109,9 @@ static void __attribute__((constructor))_init() {
   #undef ENABLE
   #undef DISABLE
   #undef PRINT
+  
+  auto path = [[NSBundle mainBundle] pathForResource:@"injection" ofType:@"js"];
+  _injectionJS = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
 
   // Web view in main window
   auto webView = [[WebView alloc] initWithFrame:{{0,0},{100,100}} frameName:@"main" groupName:@"main"];
@@ -133,12 +137,6 @@ static void __attribute__((constructor))_init() {
   [su checkForUpdatesInBackground];
     
   _lastNotificationCount = @"";
-    
-  auto path = [[NSBundle mainBundle] pathForResource:@"injection" ofType:@"js"];
-  auto content = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
-  [_webView.windowScriptObject evaluateWebScript:content];
-  [_webView.windowScriptObject evaluateWebScript:
-   [NSString stringWithFormat:@"FBM.loadImage('background', '%@');", kErrorPNGDataURL]];
 }
 
 - (void)setActiveConversationAtIndex:(NSString*)index {
@@ -321,6 +319,10 @@ static void __attribute__((constructor))_init() {
   if ([rsp isKindOfClass:[NSHTTPURLResponse class]] && ((NSHTTPURLResponse*)rsp).statusCode == 400) {
     NSLog(@"%@%@ frame.dataSource.response=%@", self, NSStringFromSelector(_cmd), frame.dataSource.response);
     [webView.mainFrame.windowObject evaluateWebScript:@"FBM.showMaintenanceMessage();"];
+  } else {
+    [_webView.windowScriptObject evaluateWebScript:_injectionJS];
+    [_webView.windowScriptObject evaluateWebScript:
+     [NSString stringWithFormat:@"FBM.loadImage('background', '%@');", kErrorPNGDataURL]];
   }
 }
 

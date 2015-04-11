@@ -22,6 +22,7 @@
 		3A9A9C841AD5EA13008FABE9 /* JSObjWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C831AD5EA13008FABE9 /* JSObjWrapper.m */; };
 		3A9A9C861AD5EE4E008FABE9 /* JSNotifications.js.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */; };
 		FC67C6201AD7027700459263 /* FBMApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = FC67C61F1AD7027700459263 /* FBMApplication.m */; };
+		FC8502E71AD8803B001BC2C9 /* injection.js in Resources */ = {isa = PBXBuildFile; fileRef = FC8502E61AD8803B001BC2C9 /* injection.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -84,6 +85,7 @@
 		3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSNotifications.js.mm; sourceTree = "<group>"; };
 		FC67C61E1AD7027700459263 /* FBMApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMApplication.h; sourceTree = "<group>"; };
 		FC67C61F1AD7027700459263 /* FBMApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBMApplication.m; sourceTree = "<group>"; };
+		FC8502E61AD8803B001BC2C9 /* injection.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = injection.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 				3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */,
 				FC67C61E1AD7027700459263 /* FBMApplication.h */,
 				FC67C61F1AD7027700459263 /* FBMApplication.m */,
+				FC8502E61AD8803B001BC2C9 /* injection.js */,
 				3A9A9C7E1AD5DBD4008FABE9 /* WebPreferences.h */,
 				3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */,
 				3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */,
@@ -247,6 +250,7 @@
 			files = (
 				3A9A9C4A1AD5B407008FABE9 /* Images.xcassets in Resources */,
 				3A9A9C4D1AD5B407008FABE9 /* MainMenu.xib in Resources */,
+				FC8502E71AD8803B001BC2C9 /* injection.js in Resources */,
 				22C40EB11AD5C5E100FE12C1 /* icon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -304,6 +304,8 @@ static void __attribute__((constructor))_init() {
     NSLog(@"%@%@ frame.dataSource.response=%@", self, NSStringFromSelector(_cmd), frame.dataSource.response);
     [webView.mainFrame.windowObject evaluateWebScript:
      [NSString stringWithFormat:@"document.body.innerText = ''; var e = document.createElement('p'); document.body.appendChild(e); e.innerText = 'Oh noes. It appears Messenger.com is down for maintenance. Please try again later.'; var s = e.style; s.font='18px helvetica-light'; s.lineHeight='27px'; s.color='#999'; s.margin='0 auto'; s.width='50%%'; s.textAlign='center'; s.margin='0 auto'; s.marginTop='100px'; s.marginBottom='30px'; s.width='235px'; s.height='235px'; s.paddingTop='250px'; s.backgroundRepeat='no-repeat'; s.backgroundPosition='top center'; s.backgroundImage='url(%@)';", kErrorPNGDataURL]];
+  } else {
+    [webView.mainFrame.windowObject evaluateWebScript:@"document.addEventListener('dragover', function(e) {e.stopPropagation();e.preventDefault();e.dataTransfer.dropEffect = 'copy';});document.addEventListener('drop', function(e) {e.stopPropagation();e.preventDefault();document.getElementById('js_2').files = e.dataTransfer.files;});"];
   }
 }
 

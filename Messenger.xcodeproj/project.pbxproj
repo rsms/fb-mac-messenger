@@ -21,6 +21,7 @@
 		3A9A9C7C1AD5D8ED008FABE9 /* JSNotification.js.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C7B1AD5D8ED008FABE9 /* JSNotification.js.mm */; };
 		3A9A9C841AD5EA13008FABE9 /* JSObjWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C831AD5EA13008FABE9 /* JSObjWrapper.m */; };
 		3A9A9C861AD5EE4E008FABE9 /* JSNotifications.js.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */; };
+		7355C12B1ADC6230005B89D0 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7355C12A1ADC6230005B89D0 /* Reachability.m */; };
 		FC67C6201AD7027700459263 /* FBMApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = FC67C61F1AD7027700459263 /* FBMApplication.m */; };
 /* End PBXBuildFile section */
 
@@ -82,6 +83,8 @@
 		3A9A9C821AD5EA13008FABE9 /* JSObjWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSObjWrapper.h; sourceTree = "<group>"; };
 		3A9A9C831AD5EA13008FABE9 /* JSObjWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSObjWrapper.m; sourceTree = "<group>"; };
 		3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSNotifications.js.mm; sourceTree = "<group>"; };
+		7355C1291ADC6230005B89D0 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		7355C12A1ADC6230005B89D0 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		FC67C61E1AD7027700459263 /* FBMApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMApplication.h; sourceTree = "<group>"; };
 		FC67C61F1AD7027700459263 /* FBMApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBMApplication.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -129,6 +132,7 @@
 				3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */,
 				3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */,
 				3A9A9C741AD5D838008FABE9 /* JSAPI */,
+				7355C1281ADC61FE005B89D0 /* Reachability */,
 				3A9A9C491AD5B407008FABE9 /* Images.xcassets */,
 				3A9A9C4B1AD5B407008FABE9 /* MainMenu.xib */,
 				22C40EB01AD5C5E100FE12C1 /* icon.icns */,
@@ -183,6 +187,15 @@
 				3A9A9C771AD5D873008FABE9 /* JSClass.mm */,
 			);
 			name = JSAPI;
+			sourceTree = "<group>";
+		};
+		7355C1281ADC61FE005B89D0 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				7355C1291ADC6230005B89D0 /* Reachability.h */,
+				7355C12A1ADC6230005B89D0 /* Reachability.m */,
+			);
+			name = Reachability;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -265,6 +278,7 @@
 				FC67C6201AD7027700459263 /* FBMApplication.m in Sources */,
 				3A9A9C861AD5EE4E008FABE9 /* JSNotifications.js.mm in Sources */,
 				3A713BA01AD65F6500870D2A /* MEmbeddedRes.m in Sources */,
+				7355C12B1ADC6230005B89D0 /* Reachability.m in Sources */,
 				3A9A9C7C1AD5D8ED008FABE9 /* JSNotification.js.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

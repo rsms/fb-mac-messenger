@@ -23,7 +23,6 @@ static void __attribute__((constructor))_init() {
 @implementation AppDelegate {
   NSWindow* _window;
   WebView*  _webView;
-  NSView*   _titlebarView; // NSTitlebarView
   NSString* _lastNotificationCount;
 }
 
@@ -47,15 +46,6 @@ static void __attribute__((constructor))_init() {
   _window.delegate = self;
   [_window center];
   _window.frameAutosaveName = @"main";
-
-  if (kCFIsOSX_10_10_orNewer) {
-    // Hack to hide "traffic lights" but still allowing window manipulation (which isn't the case if we use proper window flags)
-    _titlebarView = [_window standardWindowButton:NSWindowCloseButton].superview;
-    _titlebarView.wantsLayer = YES;
-    _titlebarView.layer.opacity = 0.0;
-    auto titlebarTrackingArea = [[NSTrackingArea alloc] initWithRect:_titlebarView.bounds options:NSTrackingMouseEnteredAndExited|NSTrackingActiveInActiveApp owner:self userInfo:nil];
-    [_titlebarView addTrackingArea:titlebarTrackingArea];
-  }
   
   // App data
   auto appDataDir = [NSString stringWithFormat:@"~/Library/Application Support/%@", [NSBundle mainBundle].bundleIdentifier].stringByExpandingTildeInPath;
@@ -139,17 +129,6 @@ static void __attribute__((constructor))_init() {
   [_webView.windowScriptObject evaluateWebScript:
    [NSString stringWithFormat:
     @"document.querySelector('li:nth-child(%@) > [data-reactid]:first-child').click();", index]];
-}
-
-- (void)mouseEntered:(NSEvent*)ev {
-  // titlebar
-  _titlebarView.layer.opacity = 1;
-}
-
-
-- (void)mouseExited:(NSEvent*)ev {
-  // titlebar
-  _titlebarView.layer.opacity = 0;
 }
 
 - (IBAction)find:(NSMenuItem*)sender {
@@ -304,6 +283,16 @@ static void __attribute__((constructor))_init() {
     NSLog(@"%@%@ frame.dataSource.response=%@", self, NSStringFromSelector(_cmd), frame.dataSource.response);
     [webView.mainFrame.windowObject evaluateWebScript:
      [NSString stringWithFormat:@"document.body.innerText = ''; var e = document.createElement('p'); document.body.appendChild(e); e.innerText = 'Oh noes. It appears Messenger.com is down for maintenance. Please try again later.'; var s = e.style; s.font='18px helvetica-light'; s.lineHeight='27px'; s.color='#999'; s.margin='0 auto'; s.width='50%%'; s.textAlign='center'; s.margin='0 auto'; s.marginTop='100px'; s.marginBottom='30px'; s.width='235px'; s.height='235px'; s.paddingTop='250px'; s.backgroundRepeat='no-repeat'; s.backgroundPosition='top center'; s.backgroundImage='url(%@)';", kErrorPNGDataURL]];
+  } else {
+     if (kCFIsOSX_10_10_orNewer) {
+        // Move the Settings icon and Messenger title to the right to make place for the "traffic lights"
+        NSString *cssString = [NSString stringWithFormat:@"[data-reactid=\".0.1.$0.0.0.$0\"] { float: right; } [data-reactid=\".0.1.$0.0.0.$1\"] { margin-left: 64px; }"];
+        NSString *jsString = [NSString stringWithFormat:@"var styleNode = document.createElement('style');\n"
+                              "var styleText = document.createTextNode('%@');\n"
+                              "styleNode.appendChild(styleText);\n"
+                              "document.getElementsByTagName('head')[0].appendChild(styleNode);\n", cssString];
+        [webView stringByEvaluatingJavaScriptFromString:jsString];
+     }
   }
 }
 

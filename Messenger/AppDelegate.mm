@@ -4,6 +4,8 @@
 #import "WebPreferences.h"
 #import "JSClass.hh"
 #import "MEmbeddedRes.h"
+#import "Reachability.h"
+
 
 static BOOL kCFIsOSX_10_10_orNewer;
 
@@ -12,6 +14,10 @@ static void __attribute__((constructor))_init() {
 }
 
 @interface AppDelegate ()
+
+@property (nonatomic) Reachability *internetReachability;
+@property (nonatomic) Reachability *wifiReachability;
+
 @property (nonatomic, readonly) BOOL canMakeTextLarger;
 - (IBAction)makeTextLarger:(id)sender;
 @property (nonatomic, readonly) BOOL canMakeTextSmaller;
@@ -30,7 +36,11 @@ static void __attribute__((constructor))_init() {
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
   // Register ourselves as the default-user-notification center delegate
   [NSUserNotificationCenter defaultUserNotificationCenter].delegate = self;
-
+    
+    //Observe the kNetworkReachabilityChangedNotification for connection changes
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+    [self startReachabilityObserving];
+ 
   // Create main window
   NSUInteger windowStyle = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
   if (kCFIsOSX_10_10_orNewer) {
@@ -379,6 +389,35 @@ decisionListener:(id<WebPolicyDecisionListener>)listener
     }
   }
   [[NSWorkspace sharedWorkspace] openURL:url];
+}
+
+/*!
+ * Called by Reachability whenever status changes.
+ */
+- (void) reachabilityChanged:(NSNotification *)note
+{
+    Reachability* curReach = [note object];
+    NSParameterAssert([curReach isKindOfClass:[Reachability class]]);
+    [self tryAgainWithReachability:curReach];
+}
+
+
+- (void)tryAgainWithReachability:(Reachability *)reachability
+{
+    if (reachability == self.internetReachability || reachability == self.wifiReachability)
+    {
+        auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/t/"]];
+        [_webView.mainFrame loadRequest:req];
+    }
+}
+
+-(void)startReachabilityObserving{
+    
+    self.internetReachability = [Reachability reachabilityForInternetConnection];
+    [self.internetReachability startNotifier];
+    
+    self.wifiReachability = [Reachability reachabilityForLocalWiFi];
+    [self.wifiReachability startNotifier];
 }
 
 

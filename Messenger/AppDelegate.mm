@@ -406,7 +406,6 @@ decisionListener:(id<WebPolicyDecisionListener>)listener
 {
     if (reachability == self.internetReachability || reachability == self.wifiReachability)
     {
-        NSLog(@"status changed %@", reachability);
         auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/t/"]];
         [_webView.mainFrame loadRequest:req];
     }

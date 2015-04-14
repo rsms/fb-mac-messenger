@@ -5,6 +5,9 @@
 #import "JSClass.hh"
 #import "MEmbeddedRes.h"
 
+
+#define USE_BLURRY_BACKGROUND 0
+
 static BOOL kCFIsOSX_10_10_orNewer;
 
 static void __attribute__((constructor))_init() {
@@ -36,26 +39,30 @@ static void __attribute__((constructor))_init() {
   if (kCFIsOSX_10_10_orNewer) {
     windowStyle |= NSFullSizeContentViewWindowMask;
   }
-  _window = [[NSWindow alloc] initWithContentRect:{{0,0},{800,600}} styleMask:windowStyle backing:NSBackingStoreBuffered defer:YES];
+  NSSize frameSize = {800,600};
+  _window = [[NSWindow alloc] initWithContentRect:{{0,0},frameSize} styleMask:windowStyle backing:NSBackingStoreBuffered defer:YES];
   if (kCFIsOSX_10_10_orNewer) {
     _window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
     _window.titleVisibility = NSWindowTitleHidden;
     _window.titlebarAppearsTransparent = YES;
+    
+    #if USE_BLURRY_BACKGROUND
+    auto* fxview = [[NSVisualEffectView alloc] initWithFrame:{{0,0},frameSize}];
+    fxview.blendingMode = NSVisualEffectBlendingModeBehindWindow;
+    fxview.material = NSVisualEffectMaterialAppearanceBased;
+    fxview.state = NSVisualEffectStateFollowsWindowActiveState;
+    _window.contentView = fxview;
+    #endif
   }
+  _window.collectionBehavior = NSWindowCollectionBehaviorFullScreenPrimary;
   _window.minSize = {640,400};
   _window.releasedWhenClosed = NO;
   _window.delegate = self;
   [_window center];
   _window.frameAutosaveName = @"main";
-
-  if (kCFIsOSX_10_10_orNewer) {
-    // Hack to hide "traffic lights" but still allowing window manipulation (which isn't the case if we use proper window flags)
-    _titlebarView = [_window standardWindowButton:NSWindowCloseButton].superview;
-    _titlebarView.wantsLayer = YES;
-    _titlebarView.layer.opacity = 0.0;
-    auto titlebarTrackingArea = [[NSTrackingArea alloc] initWithRect:_titlebarView.bounds options:NSTrackingMouseEnteredAndExited|NSTrackingActiveInActiveApp owner:self userInfo:nil];
-    [_titlebarView addTrackingArea:titlebarTrackingArea];
-  }
+  _window.movableByWindowBackground = YES;
+  _titlebarView = [_window standardWindowButton:NSWindowCloseButton].superview;
+  [self updateWindowTitlebar];
   
   // App data
   auto appDataDir = [NSString stringWithFormat:@"~/Library/Application Support/%@", [NSBundle mainBundle].bundleIdentifier].stringByExpandingTildeInPath;
@@ -111,19 +118,24 @@ static void __attribute__((constructor))_init() {
 
   // Web view in main window
   auto webView = [[WebView alloc] initWithFrame:{{0,0},{100,100}} frameName:@"main" groupName:@"main"];
-  _window.contentView = webView;
+  [webView setFrame:[_window.contentView bounds]];
+  webView.translatesAutoresizingMaskIntoConstraints = YES;
+  webView.autoresizesSubviews = YES;
+  webView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+  [_window.contentView addSubview:webView];
   webView.policyDelegate = self;
   webView.frameLoadDelegate = self;
   webView.UIDelegate = self;
   webView.preferences = wp;
+  #if USE_BLURRY_BACKGROUND
+  webView.drawsBackground = NO;
+  #endif
   auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/t/"]];
   [webView.mainFrame loadRequest:req];
   _webView = webView;
 
   // Present main window
   [_window makeKeyAndOrderFront:self];
-  
-  //- (BOOL)searchFor:(NSString *)string direction:(BOOL)forward caseSensitive:(BOOL)caseFlag wrap:(BOOL)wrapFlag;
 
   // Sparkle
   auto su = [SUUpdater sharedUpdater];
@@ -135,22 +147,39 @@ static void __attribute__((constructor))_init() {
   _lastNotificationCount = @"";
 }
 
+
+- (void)updateWindowTitlebar {
+  const CGFloat kTitlebarHeight = 50;
+  auto windowFrame = _window.frame;
+
+  // Set size of titlebar container
+  auto titlebarContainerView = _titlebarView.superview;
+  auto titlebarContainerFrame = titlebarContainerView.frame;
+  titlebarContainerFrame.origin.y = windowFrame.size.height - kTitlebarHeight;
+  titlebarContainerFrame.size.height = kTitlebarHeight;
+  titlebarContainerView.frame = titlebarContainerFrame;
+
+  // Set position of window buttons
+  __block CGFloat x = 12; // initial LHS margin, matching Safari 8.0 on OS X 10.10.
+  auto updateButton = ^(NSView* buttonView) {
+    auto buttonFrame = buttonView.frame;
+    buttonFrame.origin.y = round((kTitlebarHeight - buttonFrame.size.height) / 2.0);
+    buttonFrame.origin.x = x;
+    x += buttonFrame.size.width + 6; // spacing, matching Safari 8.0 on OS X 10.10.
+    [buttonView setFrameOrigin:buttonFrame.origin];
+  };
+  updateButton([_window standardWindowButton:NSWindowCloseButton]);
+  updateButton([_window standardWindowButton:NSWindowMiniaturizeButton]);
+  updateButton([_window standardWindowButton:NSWindowZoomButton]);
+}
+
+
 - (void)setActiveConversationAtIndex:(NSString*)index {
   [_webView.windowScriptObject evaluateWebScript:
    [NSString stringWithFormat:
     @"document.querySelector('li:nth-child(%@) > [data-reactid]:first-child').click();", index]];
 }
 
-- (void)mouseEntered:(NSEvent*)ev {
-  // titlebar
-  _titlebarView.layer.opacity = 1;
-}
-
-
-- (void)mouseExited:(NSEvent*)ev {
-  // titlebar
-  _titlebarView.layer.opacity = 0;
-}
 
 - (IBAction)find:(NSMenuItem*)sender {
   // Give input focus to the search field
@@ -158,8 +187,58 @@ static void __attribute__((constructor))_init() {
 }
 
 
+- (IBAction)composeNewMessage:(id)sender {
+  [_webView.mainFrame.windowObject evaluateWebScript:@""
+   "document.querySelector('a[href=\"/new\"]').dispatchEvent(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));"];
+}
+
+
 - (IBAction)checkForUpdates:(id)sender {
   [[SUUpdater sharedUpdater] checkForUpdates:self];
+}
+
+
+- (IBAction)showPreferences:(id)sender {
+  [_webView.mainFrame.windowObject evaluateWebScript:@""
+   "var f = function(settingsButton) {"
+   "  settingsButton.firstElementChild.dispatchEvent(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));"
+   "  document.querySelector('div.uiLayer.uiContextualLayerPositioner > div.uiContextualLayer a').dispatchEvent(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));"
+   "};"
+   "if (window.messengerSettingsButton) {"
+   "  f(window.messengerSettingsButton);"
+   "} else {"
+   "  window.onMessengerSettingsButton = f;"
+   "}"];
+}
+
+
+- (IBAction)showAppHelp:(id)sender {
+  [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.facebook.com/help/735006619902401"]];
+}
+
+- (IBAction)showAbout:(id)sender {
+  [self showWebViewWindowWithID:@"about" title:@"About Messenger" URL:@"https://www.messenger.com/about"];
+}
+
+- (IBAction)logOut:(id)sender {
+  // TODO: Actually "log out" instead of showing the menu
+  [_webView.mainFrame.windowObject evaluateWebScript:@""
+   "var f = function(settingsButton) {"
+   "  settingsButton.firstElementChild.dispatchEvent(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));"
+   "};"
+   "if (window.messengerSettingsButton) {"
+   "  f(window.messengerSettingsButton);"
+   "} else {"
+   "  window.onMessengerSettingsButton = f;"
+   "}"];
+}
+
+- (IBAction)showTerms:(id)sender {
+  [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.facebook.com/policies"]];
+}
+
+- (IBAction)showPrivacyPolicy:(id)sender {
+  [self showWebViewWindowWithID:@"privacy-policy" title:@"Messenger Privacy Policy" URL:@"https://www.facebook.com/help/cookies"];
 }
 
 
@@ -170,6 +249,42 @@ static void __attribute__((constructor))_init() {
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification {
   [_window makeKeyAndOrderFront:self];
+}
+
+
+#pragma mark - Utils
+
+- (NSWindow*)showWebViewWindowWithID:(NSString*)identifier title:(NSString*)title URL:(NSString*)url {
+  NSUInteger windowStyle = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
+  if (kCFIsOSX_10_10_orNewer) {
+    windowStyle |= NSFullSizeContentViewWindowMask;
+  }
+  auto window = [[NSWindow alloc] initWithContentRect:{{0,0},{1040,800}} styleMask:windowStyle backing:NSBackingStoreBuffered defer:YES];
+  window.minSize = {200,100};
+  [window center];
+  window.frameAutosaveName = identifier;
+  window.movableByWindowBackground = YES;
+  window.title = title;
+  if (kCFIsOSX_10_10_orNewer) {
+    window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
+    window.titleVisibility = title == nil ? NSWindowTitleHidden : NSWindowTitleVisible;
+    //window.titlebarAppearsTransparent = YES;
+  }
+
+  auto webView = [[WebView alloc] initWithFrame:{{0,0},{100,100}} frameName:@"main" groupName:identifier];
+  [webView setFrame:[window.contentView bounds]];
+  webView.translatesAutoresizingMaskIntoConstraints = YES;
+  webView.autoresizesSubviews = YES;
+  webView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+  window.contentView = webView;
+  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+  [webView.mainFrame loadRequest:req];
+  
+  window.releasedWhenClosed = YES;
+  CFBridgingRetain(window);
+  [window makeKeyAndOrderFront:self];
+
+  return window;
 }
 
 
@@ -190,6 +305,13 @@ static void __attribute__((constructor))_init() {
   //NSLog(@"%@%@%@", self, NSStringFromSelector(_cmd), notification);
   // Give focus to the composer
   [_webView.windowScriptObject evaluateWebScript:@"document.querySelector('div[contenteditable=\"true\"]').focus();"];
+}
+
+
+- (void)windowDidResize:(NSNotification *)notification {
+  if (_window.isVisible) {
+    [self updateWindowTitlebar];
+  }
 }
 
 
@@ -295,6 +417,27 @@ static void __attribute__((constructor))_init() {
 //   @"var v = {__t:(new Date).getTime(),__v:true}; localStorage._cs_desktopNotifsEnabled = v; localStorage.setItem('_cs_desktopNotifsEnabled',JSON.stringify(v));"];
 //  NSLog(@"r: %@", r);
   
+  // CSS injection to move the settings gear away from underneath the window controls
+  [webView.mainFrame.windowObject evaluateWebScript:
+   @"document.addEventListener('DOMContentLoaded', function() {"
+   "  var observer = new MutationObserver(function(mutations) {"
+   "    mutations.forEach(function(mutation) {"
+   "      var e = document.querySelector('a[title^=\"Settings\"]');"
+   "      if (e) {"
+   "        e = e.parentNode;"
+   "        observer.disconnect();"
+   "        var s = e.style;"
+   "        /*s.position = 'absolute'; s.left='127px'; s.top='29px'; s.zoom='0.55';*/"
+   "        s.visibility = 'hidden';"
+   "        window.messengerSettingsButton = e;"
+   "        if (window.onMessengerSettingsButton) {"
+   "          window.onMessengerSettingsButton(e); window.onMessengerSettingsButton = null;"
+   "        }"
+   "      }"
+   "    });"
+   "  });"
+   "  observer.observe(document.body, { attributes: false, childList: true, characterData: false });"
+   "});"];
 }
 
 

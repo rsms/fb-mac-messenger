@@ -304,7 +304,8 @@ static void __attribute__((constructor))_init() {
 - (void)windowDidBecomeKey:(NSNotification*)notification {
   //NSLog(@"%@%@%@", self, NSStringFromSelector(_cmd), notification);
   // Give focus to the composer
-  [_webView.windowScriptObject evaluateWebScript:@"document.querySelector('div[contenteditable=\"true\"]').focus();"];
+  [_webView.windowScriptObject evaluateWebScript:@""
+   "document.querySelector('div[contenteditable=\"true\"]').focus();"];
 }
 
 
@@ -446,17 +447,66 @@ static void __attribute__((constructor))_init() {
   if ([rsp isKindOfClass:[NSHTTPURLResponse class]] && ((NSHTTPURLResponse*)rsp).statusCode == 400) {
     NSLog(@"%@%@ frame.dataSource.response=%@", self, NSStringFromSelector(_cmd), frame.dataSource.response);
     [webView.mainFrame.windowObject evaluateWebScript:
-     [NSString stringWithFormat:@"document.body.innerText = ''; var e = document.createElement('p'); document.body.appendChild(e); e.innerText = 'Oh noes. It appears Messenger.com is down for maintenance. Please try again later.'; var s = e.style; s.font='18px helvetica-light'; s.lineHeight='27px'; s.color='#999'; s.margin='0 auto'; s.width='50%%'; s.textAlign='center'; s.margin='0 auto'; s.marginTop='100px'; s.marginBottom='30px'; s.width='235px'; s.height='235px'; s.paddingTop='250px'; s.backgroundRepeat='no-repeat'; s.backgroundPosition='top center'; s.backgroundImage='url(%@)';", kErrorPNGDataURL]];
+     [NSString stringWithFormat:@""
+      "document.body.innerText = '';"
+      "var e = document.createElement('p');"
+      "document.body.appendChild(e);"
+      "e.innerText = 'Oh noes. It appears Messenger.com is down for maintenance. Please try again later.';"
+      "var s = e.style;"
+      "s.font='18px helvetica-light';"
+      "s.lineHeight='27px';"
+      "s.color='#999';"
+      "s.margin='0 auto';"
+      "s.width='50%%';"
+      "s.textAlign='center';"
+      "s.margin='0 auto';"
+      "s.marginTop='100px';"
+      "s.marginBottom='30px';"
+      "s.width='235px';"
+      "s.height='235px';"
+      "s.paddingTop='250px';"
+      "s.backgroundRepeat='no-repeat';"
+      "s.backgroundPosition='top center';"
+      "s.backgroundImage='url(%@)';",
+      kErrorPNGDataURL]];
   } else {
-    [webView.mainFrame.windowObject evaluateWebScript:
-     @"document.body.onkeypress=function (e) { var target = e.target.contentEditable && e.target.querySelector('[data-block]'); if (target && window.getSelection().baseOffset === 0 && !e.metaKey) { var textEvent = document.createEvent('TextEvent'); textEvent.initTextEvent('textInput', true, true, null, String.fromCharCode(e.which)); target.dispatchEvent(textEvent); return false; } };"];
+    [webView.mainFrame.windowObject evaluateWebScript:@""
+     "document.body.onkeypress=function (e) {"
+     "  var target = e.target.contentEditable && e.target.querySelector('[data-block]');"
+     "  if (target && window.getSelection().baseOffset === 0 && !e.metaKey) {"
+     "    var textEvent = document.createEvent('TextEvent');"
+     "    textEvent.initTextEvent('textInput', true, true, null, String.fromCharCode(e.which));"
+     "    target.dispatchEvent(textEvent); return false;"
+     "  }"
+     "};"];
   }
 }
 
 -(void)webView:(WebView *)webView didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
   NSLog(@"%@%@ error=%@", self, NSStringFromSelector(_cmd), error);
   [webView.mainFrame.windowObject evaluateWebScript:
-   [NSString stringWithFormat:@"document.body.innerText = ''; var e = document.createElement('p'); document.body.appendChild(e); e.innerText = 'Oh snap. It looks like your connection is offline, please try again later.'; var s = e.style; s.font='18px helvetica-light'; s.lineHeight='27px'; s.color='#999'; s.margin='0 auto'; s.width='50%%'; s.textAlign='center'; s.margin='0 auto'; s.marginTop='100px'; s.marginBottom='30px'; s.width='235px'; s.height='235px'; s.paddingTop='250px'; s.backgroundRepeat='no-repeat'; s.backgroundPosition='top center'; s.backgroundImage='url(%@)';", kErrorPNGDataURL]];
+   [NSString stringWithFormat:@""
+    "document.body.innerText = '';"
+    "var e = document.createElement('p');"
+    "document.body.appendChild(e);"
+    "e.innerText = 'Oh snap. It looks like your connection is offline, please try again later.';"
+    "var s = e.style;"
+    "s.font='18px helvetica-light';"
+    "s.lineHeight='27px';"
+    "s.color='#999';"
+    "s.margin='0 auto';"
+    "s.width='50%%';"
+    "s.textAlign='center';"
+    "s.margin='0 auto';"
+    "s.marginTop='100px';"
+    "s.marginBottom='30px';"
+    "s.width='235px';"
+    "s.height='235px';"
+    "s.paddingTop='250px';"
+    "s.backgroundRepeat='no-repeat';"
+    "s.backgroundPosition='top center';"
+    "s.backgroundImage='url(%@)';",
+    kErrorPNGDataURL]];
 }
 
 - (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {

@@ -59,7 +59,7 @@ window.FBM = {
     s.paddingTop = '250px';
     s.backgroundRepeat = 'no-repeat';
     s.backgroundPosition = 'top center';
-    s.backgroundImage = 'url(' + this.images['background'] + ')';
+    s.backgroundImage = 'url(' + this.resources['ErrorBackground'] + ')';
   },
   
   showOfflineMessage: function() {
@@ -84,14 +84,6 @@ window.FBM = {
     s.paddingTop = '250px';
     s.backgroundRepeat = 'no-repeat';
     s.backgroundPosition = 'top center';
-    s.backgroundImage = 'url(' + this.images['background'] + ')';
+    s.backgroundImage = 'url(' + this.resources['ErrorBackground'] + ')';
   },
-  
-  loadImage: function(name, data) {
-    if (this.images == undefined) {
-      this.images = {};
-    }
-    
-    this.images[name] = data;
-  }
 };

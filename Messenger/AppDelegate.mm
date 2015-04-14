@@ -3,7 +3,7 @@
 #import "jsapi.h"
 #import "WebPreferences.h"
 #import "JSClass.hh"
-#import "MEmbeddedRes.h"
+#import "EmbeddedResources.h"
 
 static BOOL kCFIsOSX_10_10_orNewer;
 
@@ -25,7 +25,6 @@ static void __attribute__((constructor))_init() {
   WebView*  _webView;
   NSView*   _titlebarView; // NSTitlebarView
   NSString* _lastNotificationCount;
-  NSString* _injectionJS;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
@@ -110,9 +109,6 @@ static void __attribute__((constructor))_init() {
   #undef DISABLE
   #undef PRINT
   
-  auto path = [[NSBundle mainBundle] pathForResource:@"injection" ofType:@"js"];
-  _injectionJS = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
-
   // Web view in main window
   auto webView = [[WebView alloc] initWithFrame:{{0,0},{100,100}} frameName:@"main" groupName:@"main"];
   _window.contentView = webView;
@@ -328,17 +324,17 @@ static void __attribute__((constructor))_init() {
 
 - (void)webView:(WebView *)webView didFinishLoadForFrame:(WebFrame *)frame {
   auto rsp = frame.dataSource.response;
+  [_webView.windowScriptObject evaluateWebScript:kInjectedScript];
+  
   if ([rsp isKindOfClass:[NSHTTPURLResponse class]] && ((NSHTTPURLResponse*)rsp).statusCode == 400) {
     NSLog(@"%@%@ frame.dataSource.response=%@", self, NSStringFromSelector(_cmd), frame.dataSource.response);
     [self callJS:@"showMaintenanceMessage", nil];
-  } else {
-    [_webView.windowScriptObject evaluateWebScript:_injectionJS];
-    [self callJS:@"loadImage", @"background", kErrorPNGDataURL, nil];
   }
 }
 
 -(void)webView:(WebView *)webView didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
   NSLog(@"%@%@ error=%@", self, NSStringFromSelector(_cmd), error);
+  [_webView.windowScriptObject evaluateWebScript:kInjectedScript];
   [self callJS:@"showOfflineMessage", nil];
 }
 

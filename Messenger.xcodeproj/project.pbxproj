@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		22C40EB11AD5C5E100FE12C1 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 22C40EB01AD5C5E100FE12C1 /* icon.icns */; };
-		3A713BA01AD65F6500870D2A /* MEmbeddedRes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */; };
 		3A9A9C461AD5B407008FABE9 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */; };
 		3A9A9C481AD5B407008FABE9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C471AD5B407008FABE9 /* main.m */; };
 		3A9A9C4A1AD5B407008FABE9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A9A9C491AD5B407008FABE9 /* Images.xcassets */; };
@@ -23,6 +22,7 @@
 		3A9A9C861AD5EE4E008FABE9 /* JSNotifications.js.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */; };
 		FC67C6201AD7027700459263 /* FBMApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = FC67C61F1AD7027700459263 /* FBMApplication.m */; };
 		FC8502E71AD8803B001BC2C9 /* injection.js in Resources */ = {isa = PBXBuildFile; fileRef = FC8502E61AD8803B001BC2C9 /* injection.js */; };
+		FC9752111ADD8E9500D232F9 /* EmbeddedResources.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9752101ADD8E9500D232F9 /* EmbeddedResources.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -38,6 +38,23 @@
 			script = "admin/jscls ${INPUT_FILE_PATH} ${DERIVED_FILES_DIR}";
 		};
 /* End PBXBuildRule section */
+
+/* Begin PBXContainerItemProxy section */
+		FC9752171ADD90E800D232F9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A9A9C371AD5B407008FABE9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FC9752131ADD901800D232F9;
+			remoteInfo = compile_js;
+		};
+		FC97521F1ADD96E400D232F9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A9A9C371AD5B407008FABE9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FC9752191ADD955C00D232F9;
+			remoteInfo = compile_resources;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		3A9A9C671AD5C356008FABE9 /* Copy Frameworks */ = {
@@ -55,8 +72,6 @@
 
 /* Begin PBXFileReference section */
 		22C40EB01AD5C5E100FE12C1 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
-		3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEmbeddedRes.h; sourceTree = "<group>"; };
-		3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEmbeddedRes.m; sourceTree = "<group>"; };
 		3A9A9C3F1AD5B407008FABE9 /* Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A9A9C431AD5B407008FABE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A9A9C441AD5B407008FABE9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -86,6 +101,8 @@
 		FC67C61E1AD7027700459263 /* FBMApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMApplication.h; sourceTree = "<group>"; };
 		FC67C61F1AD7027700459263 /* FBMApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBMApplication.m; sourceTree = "<group>"; };
 		FC8502E61AD8803B001BC2C9 /* injection.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = injection.js; sourceTree = "<group>"; };
+		FC9752101ADD8E9500D232F9 /* EmbeddedResources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmbeddedResources.m; sourceTree = "<group>"; };
+		FC9752121ADD8EB700D232F9 /* EmbeddedResources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EmbeddedResources.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,8 +146,8 @@
 				FC67C61F1AD7027700459263 /* FBMApplication.m */,
 				FC8502E61AD8803B001BC2C9 /* injection.js */,
 				3A9A9C7E1AD5DBD4008FABE9 /* WebPreferences.h */,
-				3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */,
-				3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */,
+				FC9752121ADD8EB700D232F9 /* EmbeddedResources.h */,
+				FC9752101ADD8E9500D232F9 /* EmbeddedResources.m */,
 				3A9A9C741AD5D838008FABE9 /* JSAPI */,
 				3A9A9C491AD5B407008FABE9 /* Images.xcassets */,
 				3A9A9C4B1AD5B407008FABE9 /* MainMenu.xib */,
@@ -190,6 +207,37 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXLegacyTarget section */
+		FC9752131ADD901800D232F9 /* compile_js */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = FC9752141ADD901800D232F9 /* Build configuration list for PBXLegacyTarget "compile_js" */;
+			buildPhases = (
+			);
+			buildToolPath = ./Messenger/compile_js.sh;
+			buildWorkingDirectory = "";
+			dependencies = (
+				FC9752201ADD96E400D232F9 /* PBXTargetDependency */,
+			);
+			name = compile_js;
+			passBuildSettingsInEnvironment = 1;
+			productName = compile_js;
+		};
+		FC9752191ADD955C00D232F9 /* compile_resources */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = FC97521A1ADD955D00D232F9 /* Build configuration list for PBXLegacyTarget "compile_resources" */;
+			buildPhases = (
+			);
+			buildToolPath = ./Messenger/compile_resources.sh;
+			dependencies = (
+			);
+			name = compile_resources;
+			passBuildSettingsInEnvironment = 1;
+			productName = compile_resources;
+		};
+/* End PBXLegacyTarget section */
+
 /* Begin PBXNativeTarget section */
 		3A9A9C3E1AD5B407008FABE9 /* Messenger */ = {
 			isa = PBXNativeTarget;
@@ -204,6 +252,7 @@
 				3A9A9C7D1AD5D97E008FABE9 /* PBXBuildRule */,
 			);
 			dependencies = (
+				FC9752181ADD90E800D232F9 /* PBXTargetDependency */,
 			);
 			name = Messenger;
 			productName = Messenger;
@@ -223,6 +272,12 @@
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = 2JS2795PX7;
 					};
+					FC9752131ADD901800D232F9 = {
+						CreatedOnToolsVersion = 6.3;
+					};
+					FC9752191ADD955C00D232F9 = {
+						CreatedOnToolsVersion = 6.3;
+					};
 				};
 			};
 			buildConfigurationList = 3A9A9C3A1AD5B407008FABE9 /* Build configuration list for PBXProject "Messenger" */;
@@ -239,6 +294,8 @@
 			projectRoot = "";
 			targets = (
 				3A9A9C3E1AD5B407008FABE9 /* Messenger */,
+				FC9752131ADD901800D232F9 /* compile_js */,
+				FC9752191ADD955C00D232F9 /* compile_resources */,
 			);
 		};
 /* End PBXProject section */
@@ -264,16 +321,29 @@
 			files = (
 				3A9A9C481AD5B407008FABE9 /* main.m in Sources */,
 				3A9A9C841AD5EA13008FABE9 /* JSObjWrapper.m in Sources */,
+				FC9752111ADD8E9500D232F9 /* EmbeddedResources.m in Sources */,
 				3A9A9C781AD5D873008FABE9 /* JSClass.mm in Sources */,
 				3A9A9C461AD5B407008FABE9 /* AppDelegate.mm in Sources */,
 				FC67C6201AD7027700459263 /* FBMApplication.m in Sources */,
 				3A9A9C861AD5EE4E008FABE9 /* JSNotifications.js.mm in Sources */,
-				3A713BA01AD65F6500870D2A /* MEmbeddedRes.m in Sources */,
 				3A9A9C7C1AD5D8ED008FABE9 /* JSNotification.js.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FC9752181ADD90E800D232F9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FC9752131ADD901800D232F9 /* compile_js */;
+			targetProxy = FC9752171ADD90E800D232F9 /* PBXContainerItemProxy */;
+		};
+		FC9752201ADD96E400D232F9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FC9752191ADD955C00D232F9 /* compile_resources */;
+			targetProxy = FC97521F1ADD96E400D232F9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		3A9A9C4B1AD5B407008FABE9 /* MainMenu.xib */ = {
@@ -387,6 +457,64 @@
 			};
 			name = Release;
 		};
+		FC9752151ADD901800D232F9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		FC9752161ADD901800D232F9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		FC97521B1ADD955D00D232F9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		FC97521C1ADD955D00D232F9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -407,6 +535,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		FC9752141ADD901800D232F9 /* Build configuration list for PBXLegacyTarget "compile_js" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC9752151ADD901800D232F9 /* Debug */,
+				FC9752161ADD901800D232F9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		FC97521A1ADD955D00D232F9 /* Build configuration list for PBXLegacyTarget "compile_resources" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC97521B1ADD955D00D232F9 /* Debug */,
+				FC97521C1ADD955D00D232F9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

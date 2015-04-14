@@ -172,11 +172,16 @@ static void __attribute__((constructor))_init() {
   updateButton([_window standardWindowButton:NSWindowZoomButton]);
 }
 
+- (NSInteger) activeConversationIndex {
+    NSString* script = @"sel=document.querySelector('li._1ht2');for(var i=0;i<sel.parentNode.childNodes.length;i++){var item=sel.parentNode.childNodes[i];if(item==sel){activeConversationIndex=i}}";
+    [_webView.windowScriptObject evaluateWebScript: script];
+    return [[_webView.windowScriptObject evaluateWebScript: @"activeConversationIndex"] integerValue] + 1;
+}
 
 - (void)setActiveConversationAtIndex:(NSString*)index {
   [_webView.windowScriptObject evaluateWebScript:
    [NSString stringWithFormat:
-    @"document.querySelector('li:nth-child(%@) > [data-reactid]:first-child').click();", index]];
+    @"document.querySelector('li._1ht1:nth-child(%@) > [data-reactid]:first-child').click();", index]];
 }
 
 

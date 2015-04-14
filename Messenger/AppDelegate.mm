@@ -130,9 +130,8 @@ static void __attribute__((constructor))_init() {
   #if USE_BLURRY_BACKGROUND
   webView.drawsBackground = NO;
   #endif
-  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/t/"]];
-  [webView.mainFrame loadRequest:req];
   _webView = webView;
+  [self reloadFromServer:self];
 
   // Present main window
   [_window makeKeyAndOrderFront:self];
@@ -181,7 +180,13 @@ static void __attribute__((constructor))_init() {
 }
 
 
-- (IBAction)find:(NSMenuItem*)sender {
+- (IBAction)reloadFromServer:(id)sender {
+  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/t/"]];
+  [_webView.mainFrame loadRequest:req];
+}
+
+
+- (IBAction)find:(id)sender {
   // Give input focus to the search field
   [_webView.windowScriptObject evaluateWebScript:@"document.querySelector('input[placeholder~=\"Search\"]').focus();"];
 }

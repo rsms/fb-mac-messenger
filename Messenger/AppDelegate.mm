@@ -478,14 +478,29 @@ static void __attribute__((constructor))_init() {
       kErrorPNGDataURL]];
   } else {
     [webView.mainFrame.windowObject evaluateWebScript:@""
+     
+     // This fixes an annoying "beep" sound
      "document.body.onkeypress=function (e) {"
      "  var target = e.target.contentEditable && e.target.querySelector('[data-block]');"
      "  if (target && window.getSelection().baseOffset === 0 && !e.metaKey) {"
      "    var textEvent = document.createEvent('TextEvent');"
      "    textEvent.initTextEvent('textInput', true, true, null, String.fromCharCode(e.which));"
-     "    target.dispatchEvent(textEvent); return false;"
+     "    target.dispatchEvent(textEvent);"
+     "    return false;"
      "  }"
-     "};"];
+     "};"
+     
+     // The following two statements enable drag-and-drop file sending
+     "document.addEventListener('dragover', function(ev) {"
+     "  ev.stopPropagation();"
+     "  ev.preventDefault();"
+     "  ev.dataTransfer.dropEffect = 'copy';"
+     "});"
+     "document.addEventListener('drop', function(ev) {"
+     "  ev.stopPropagation();"
+     "  ev.preventDefault();"
+     "  document.querySelector('input[type=\"file\"][name=\"attachment[]\"]').files = ev.dataTransfer.files;"
+     "});"];
   }
 }
 

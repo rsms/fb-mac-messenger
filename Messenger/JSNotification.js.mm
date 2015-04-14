@@ -1,3 +1,4 @@
+#import "NSImage+RoundCorner.h"
 #import "jsapi.h"
 #import "JSClass.hh"
 #import "JSObjWrapper.h"
@@ -56,7 +57,8 @@ struct JSNotification : JSClass {
 
     if (iconURL != nullptr) {
       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        notif.contentImage = [[NSImage alloc] initWithContentsOfURL:iconURL];
+          NSImage *contentImage = [[NSImage alloc] initWithContentsOfURL:iconURL];
+        notif.contentImage = [contentImage roundedImage];
         dispatch_async(dispatch_get_main_queue(), ^{
           [[NSUserNotificationCenter defaultUserNotificationCenter] scheduleNotification:notif];
         });

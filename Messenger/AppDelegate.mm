@@ -135,31 +135,26 @@ static void __attribute__((constructor))_init() {
   _lastNotificationCount = @"";
 }
 
-- (id)callJS:(NSString*)methodName, ... NS_REQUIRES_NIL_TERMINATION {
-  auto methodArguments = [NSMutableArray array];
-
+- (id)callJS:(NSString*)format, ... {
   va_list args;
-  va_start(args, methodName);
-  id arg;
-  while ((arg = va_arg(args, id))) {
-    [methodArguments addObject:arg];
-  }
+  va_start(args, format);
+  auto script = [[NSString alloc] initWithFormat:format arguments:args];
   va_end(args);
   
   return [_webView.windowScriptObject evaluateWebScript:
-   [NSString stringWithFormat:@"FBM.%@(%@);", methodName, [methodArguments componentsJoinedByString:@", "]]];
+          [NSString stringWithFormat:@"FBM.%@;", script]];
 }
 
 - (void)setActiveConversationAtIndex:(NSString*)index {
-  [self callJS:@"setActiveConversation", index, nil];
+  [self callJS:@"setActiveConversation(%@)", index];
 }
 
 - (IBAction)nextConversation:(NSMenuItem *)sender {
-  [self callJS:@"nextConversation", nil];
+  [self callJS:@"nextConversation"];
 }
 
 - (IBAction)previousConversation:(NSMenuItem *)sender {
-  [self callJS:@"previousConversation", nil];
+  [self callJS:@"previousConversation"];
 }
 
 - (void)mouseEntered:(NSEvent*)ev {
@@ -175,7 +170,7 @@ static void __attribute__((constructor))_init() {
 
 - (IBAction)find:(NSMenuItem*)sender {
   // Give input focus to the search field
-  [self callJS:@"focusSearchField", nil];
+  [self callJS:@"focusSearchField"];
 }
 
 
@@ -184,7 +179,7 @@ static void __attribute__((constructor))_init() {
 }
 
 - (IBAction)openPreferences:(NSMenuItem *)sender {
-  [self callJS:@"toggleSettings", nil];
+  [self callJS:@"toggleSettings"];
 }
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag {
@@ -213,7 +208,7 @@ static void __attribute__((constructor))_init() {
 - (void)windowDidBecomeKey:(NSNotification*)notification {
   //NSLog(@"%@%@%@", self, NSStringFromSelector(_cmd), notification);
   // Give focus to the composer
-  [self callJS:@"focusComposerField", nil];
+  [self callJS:@"focusComposerField"];
 }
 
 
@@ -328,14 +323,14 @@ static void __attribute__((constructor))_init() {
   
   if ([rsp isKindOfClass:[NSHTTPURLResponse class]] && ((NSHTTPURLResponse*)rsp).statusCode == 400) {
     NSLog(@"%@%@ frame.dataSource.response=%@", self, NSStringFromSelector(_cmd), frame.dataSource.response);
-    [self callJS:@"showMaintenanceMessage", nil];
+    [self callJS:@"showMaintenanceMessage"];
   }
 }
 
 -(void)webView:(WebView *)webView didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
   NSLog(@"%@%@ error=%@", self, NSStringFromSelector(_cmd), error);
   [_webView.windowScriptObject evaluateWebScript:kInjectedScript];
-  [self callJS:@"showOfflineMessage", nil];
+  [self callJS:@"showOfflineMessage"];
 }
 
 - (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {

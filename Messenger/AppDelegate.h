@@ -2,7 +2,7 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate, NSWindowDelegate>
 
-- (id)callJS:(NSString*)methodName, ... NS_REQUIRES_NIL_TERMINATION;
+- (id)callJS:(NSString*)methodName, ...;
 - (IBAction)checkForUpdates:(id)sender;
 
 @end

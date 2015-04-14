@@ -127,6 +127,7 @@ static void __attribute__((constructor))_init() {
   webView.frameLoadDelegate = self;
   webView.UIDelegate = self;
   webView.preferences = wp;
+  webView.continuousSpellCheckingEnabled = YES;
   #if USE_BLURRY_BACKGROUND
   webView.drawsBackground = NO;
   #endif

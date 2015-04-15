@@ -11,11 +11,11 @@ ARCHIVE=$1
 python "${SRCDIR}/admin/dist/addchangelog.py" "$ARCHIVE"
 
 if (which subl) >/dev/null; then
-  subl "${SRCDIR}"/changelog.xml:12:15
+  subl "${SRCDIR}"/website/changelog.xml:12:15
 else
   echo "A new entry has been added to the changelog."
   echo "You should add/update release notes:"
-  echo "  $EDITOR '${SRCDIR}/changelog.xml'"
+  echo "  $EDITOR '${SRCDIR}/website/changelog.xml'"
 fi
 
 

@@ -81,10 +81,11 @@
 		3A9A9C771AD5D873008FABE9 /* JSClass.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSClass.mm; sourceTree = "<group>"; };
 		3A9A9C791AD5D8D2008FABE9 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		3A9A9C7B1AD5D8ED008FABE9 /* JSNotification.js.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSNotification.js.mm; sourceTree = "<group>"; };
-		3A9A9C7E1AD5DBD4008FABE9 /* WebPreferences.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebPreferences.h; sourceTree = "<group>"; };
 		3A9A9C821AD5EA13008FABE9 /* JSObjWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSObjWrapper.h; sourceTree = "<group>"; };
 		3A9A9C831AD5EA13008FABE9 /* JSObjWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSObjWrapper.m; sourceTree = "<group>"; };
 		3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSNotifications.js.mm; sourceTree = "<group>"; };
+		3AEEEB881ADE3A9800F3A659 /* WebStorageManagerPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebStorageManagerPrivate.h; sourceTree = "<group>"; };
+		3AEEEB891ADE3B0600F3A659 /* WebPreferencesPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebPreferencesPrivate.h; sourceTree = "<group>"; };
 		FC67C61E1AD7027700459263 /* FBMApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMApplication.h; sourceTree = "<group>"; };
 		FC67C61F1AD7027700459263 /* FBMApplication.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBMApplication.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -137,7 +138,8 @@
 				3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */,
 				FC67C61E1AD7027700459263 /* FBMApplication.h */,
 				FC67C61F1AD7027700459263 /* FBMApplication.mm */,
-				3A9A9C7E1AD5DBD4008FABE9 /* WebPreferences.h */,
+				3AEEEB891ADE3B0600F3A659 /* WebPreferencesPrivate.h */,
+				3AEEEB881ADE3A9800F3A659 /* WebStorageManagerPrivate.h */,
 				3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */,
 				3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */,
 				3A9A9C741AD5D838008FABE9 /* JSAPI */,

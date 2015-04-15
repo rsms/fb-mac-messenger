@@ -207,7 +207,7 @@ static void __attribute__((constructor))_init() {
   [_webView.mainFrame.windowObject evaluateWebScript:@""
    "var f = function(settingsButton) {"
    "  settingsButton.firstElementChild.dispatchEvent(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));"
-   "  document.querySelector('div.uiLayer.uiContextualLayerPositioner > div.uiContextualLayer a').dispatchEvent(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));"
+   "  document.querySelector('div.uiLayer.uiContextualLayerPositioner#js_1 > div.uiContextualLayer a').dispatchEvent(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));"
    "};"
    "if (window.messengerSettingsButton) {"
    "  f(window.messengerSettingsButton);"

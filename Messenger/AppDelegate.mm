@@ -150,6 +150,7 @@ static void __attribute__((constructor))_init() {
 - (void)updateWindowTitlebar {
   const CGFloat kTitlebarHeight = 50;
   auto windowFrame = _window.frame;
+  BOOL fullScreen = (_window.styleMask & NSFullScreenWindowMask) == NSFullScreenWindowMask;
 
   // Set size of titlebar container
   auto titlebarContainerView = _titlebarView.superview;
@@ -163,7 +164,9 @@ static void __attribute__((constructor))_init() {
   auto updateButton = ^(NSView* buttonView) {
     auto buttonFrame = buttonView.frame;
     buttonFrame.origin.y = round((kTitlebarHeight - buttonFrame.size.height) / 2.0);
+    if (fullScreen) buttonFrame.origin.y -= 15;
     buttonFrame.origin.x = x;
+    if (!fullScreen) buttonFrame.origin.x += 35;
     x += buttonFrame.size.width + 6; // spacing, matching Safari 8.0 on OS X 10.10.
     [buttonView setFrameOrigin:buttonFrame.origin];
   };

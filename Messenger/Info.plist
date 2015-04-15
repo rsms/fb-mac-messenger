@@ -21,9 +21,9 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.0.6.1429082889</string>
+	<string>0.0.6.1429084595</string>
 	<key>GitRev</key>
-	<string>e3c045c72240b5e9166a5bae68d2f5f74c8b330c</string>
+	<string>186e947e4741dba44d4161ab74a6c44868a944a8</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSHumanReadableCopyright</key>

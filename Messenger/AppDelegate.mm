@@ -430,7 +430,7 @@ static void __attribute__((constructor))_init() {
    @"document.addEventListener('DOMContentLoaded', function() {"
    "  var observer = new MutationObserver(function(mutations) {"
    "    mutations.forEach(function(mutation) {"
-   "      var e = document.querySelector('a[title^=\"Settings\"]');"
+   "      var e = document.querySelector('[aria-owns=\"js_1\"]');"
    "      if (e) {"
    "        e = e.parentNode;"
    "        observer.disconnect();"

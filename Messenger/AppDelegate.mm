@@ -57,6 +57,9 @@ static void __attribute__((constructor))_init() {
     #endif
   }
   _window.collectionBehavior = NSWindowCollectionBehaviorFullScreenPrimary;
+  if ([[NSUserDefaults standardUserDefaults] boolForKey:@"moves-with-active-space"]) {
+    _window.collectionBehavior |= NSWindowCollectionBehaviorMoveToActiveSpace;
+  }
   _window.minSize = {640,400};
   _window.releasedWhenClosed = NO;
   _window.delegate = self;

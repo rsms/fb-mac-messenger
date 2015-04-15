@@ -181,7 +181,7 @@ static void __attribute__((constructor))_init() {
 
 
 - (IBAction)reloadFromServer:(id)sender {
-  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/t/"]];
+  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/login.php"]];
   [_webView.mainFrame loadRequest:req];
 }
 

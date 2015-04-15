@@ -6,6 +6,33 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.0.5</title>
+      <description><![CDATA[
+        <ul>
+          <li>Adds the ability to reload the main web view (Messenger > Reload app from server)</li>
+          <li>Adds ⌘N shortcut for composing new message</li>
+          <li>Adds support for drag and drop file attachments</li>
+          <li>Changes the window titlebar to extend over the entire visual ~50pt top. Also positions the window buttons as always visible, matched to the position of Safari 8.0 on OS X 10.10.3.</li>
+          <li>"Gear" icon is replaced by menu item Messenger > Preferences... ⌘,</li>
+          <li>"Settings" moved to menu Messenger > Preferences...</li>
+          <li>"Help" moved to menu Help > Messenger Help</li>
+          <li>"Terms" moved to menu Help > Terms</li>
+          <li>"Privacy Policy" moved to menu Help > Privacy Policy</li>
+          <li>"Log Out" moved to menu Messenger > Log Out...</li>
+          <li>Fixes a bug where the first character entered into the composer would cause an "error beep" sound when audible alerts are enabled in OS X.</li>
+          <li>Profile images in system notifications are now circular.</li>
+        </ul>
+      ]]></description>
+      <pubDate>Mon, 13 Apr 2015 22:12:53 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="9f25fb1b20a9cacd"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.5.1428972877-9f25fb1b20a9cacd.zip"
+        sparkle:version="0.0.5.1428972877"
+        length="1980832"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.0.4</title>
       <description><![CDATA[
         <ul>

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07DB23D81AD9E22E00177F14 /* NSImage+RoundCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = 07DB23D71AD9E22E00177F14 /* NSImage+RoundCorner.m */; };
 		22C40EB11AD5C5E100FE12C1 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 22C40EB01AD5C5E100FE12C1 /* icon.icns */; };
 		3A713BA01AD65F6500870D2A /* MEmbeddedRes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */; };
 		3A9A9C461AD5B407008FABE9 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */; };
@@ -53,6 +54,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		07DB23D61AD9E22E00177F14 /* NSImage+RoundCorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+RoundCorner.h"; sourceTree = "<group>"; };
+		07DB23D71AD9E22E00177F14 /* NSImage+RoundCorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+RoundCorner.m"; sourceTree = "<group>"; };
 		22C40EB01AD5C5E100FE12C1 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEmbeddedRes.h; sourceTree = "<group>"; };
 		3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEmbeddedRes.m; sourceTree = "<group>"; };
@@ -100,6 +103,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		07DB23D91AD9E23100177F14 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				07DB23D61AD9E22E00177F14 /* NSImage+RoundCorner.h */,
+				07DB23D71AD9E22E00177F14 /* NSImage+RoundCorner.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
 		3A9A9C361AD5B407008FABE9 = {
 			isa = PBXGroup;
 			children = (
@@ -129,6 +141,7 @@
 				3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */,
 				3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */,
 				3A9A9C741AD5D838008FABE9 /* JSAPI */,
+				07DB23D91AD9E23100177F14 /* Categories */,
 				3A9A9C491AD5B407008FABE9 /* Images.xcassets */,
 				3A9A9C4B1AD5B407008FABE9 /* MainMenu.xib */,
 				22C40EB01AD5C5E100FE12C1 /* icon.icns */,
@@ -259,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A9A9C481AD5B407008FABE9 /* main.m in Sources */,
+				07DB23D81AD9E22E00177F14 /* NSImage+RoundCorner.m in Sources */,
 				3A9A9C841AD5EA13008FABE9 /* JSObjWrapper.m in Sources */,
 				3A9A9C781AD5D873008FABE9 /* JSClass.mm in Sources */,
 				3A9A9C461AD5B407008FABE9 /* AppDelegate.mm in Sources */,

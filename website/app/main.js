@@ -45,8 +45,33 @@ window.MacMessenger = {
 
 };
 
-// Find settings gear
-(function(){
+// The following two statements enable drag-and-drop file sending
+document.addEventListener('dragover', function(ev) {
+  ev.stopPropagation();
+  ev.preventDefault();
+  ev.dataTransfer.dropEffect = 'copy';
+});
+document.addEventListener('drop', function(ev) {
+  ev.stopPropagation();
+  ev.preventDefault();
+  document.querySelector('input[type="file"][name="attachment[]"]').files = ev.dataTransfer.files;
+});
+
+// Things that need the document to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+
+  // This fixes an annoying "beep" sound
+  document.body.onkeypress = function (e) {
+    var target = e.target.contentEditable && e.target.querySelector('[data-block]');
+    if (target && window.getSelection().baseOffset === 0 && !e.metaKey) {
+      var textEvent = document.createEvent('TextEvent');
+      textEvent.initTextEvent('textInput', true, true, null, String.fromCharCode(e.which));
+      target.dispatchEvent(textEvent);
+      return false;
+    }
+  };
+
+  // Find settings gear
   var tryFindSettingsGear = function() {
     var e = document.querySelector('[aria-owns="js_1"]');
     if (e) {
@@ -64,32 +89,7 @@ window.MacMessenger = {
     });
     observer.observe(document.body, { attributes: false, childList: true, characterData: false });
   }
-})();
 
-// The following two statements enable drag-and-drop file sending
-document.addEventListener('dragover', function(ev) {
-  ev.stopPropagation();
-  ev.preventDefault();
-  ev.dataTransfer.dropEffect = 'copy';
-});
-document.addEventListener('drop', function(ev) {
-  ev.stopPropagation();
-  ev.preventDefault();
-  document.querySelector('input[type="file"][name="attachment[]"]').files = ev.dataTransfer.files;
-});
-
-// Things that need the document to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  // This fixes an annoying "beep" sound
-  document.body.onkeypress = function (e) {
-    var target = e.target.contentEditable && e.target.querySelector('[data-block]');
-    if (target && window.getSelection().baseOffset === 0 && !e.metaKey) {
-      var textEvent = document.createEvent('TextEvent');
-      textEvent.initTextEvent('textInput', true, true, null, String.fromCharCode(e.which));
-      target.dispatchEvent(textEvent);
-      return false;
-    }
-  };
 });
 
 

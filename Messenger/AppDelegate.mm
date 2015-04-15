@@ -45,7 +45,7 @@ static void __attribute__((constructor))_init() {
     _window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
     _window.titleVisibility = NSWindowTitleHidden;
     _window.titlebarAppearsTransparent = YES;
-    
+
     #if USE_BLURRY_BACKGROUND
     auto* fxview = [[NSVisualEffectView alloc] initWithFrame:{{0,0},frameSize}];
     fxview.blendingMode = NSVisualEffectBlendingModeBehindWindow;
@@ -63,7 +63,7 @@ static void __attribute__((constructor))_init() {
   _window.movableByWindowBackground = YES;
   _titlebarView = [_window standardWindowButton:NSWindowCloseButton].superview;
   [self updateWindowTitlebar];
-  
+
   // App data
   auto appDataDir = [NSString stringWithFormat:@"~/Library/Application Support/%@", [NSBundle mainBundle].bundleIdentifier].stringByExpandingTildeInPath;
 
@@ -75,11 +75,11 @@ static void __attribute__((constructor))_init() {
   #define PRINT(k) NSLog(@"%s: %s", #k, wp.k ? "y" : "n")
   //  PRINT(showDebugBorders);
   //  PRINT(showRepaintCounter);
-  
+
   // Official settings
   DISABLE(javaEnabled);
   ENABLE(autosaves); // saves to user defaults with keys prefixed `identifier`
-  
+
   // Unofficial/Private settings
   ENABLE(acceleratedCompositingEnabled);
   ENABLE(acceleratedDrawingEnabled);
@@ -102,12 +102,12 @@ static void __attribute__((constructor))_init() {
   if (kCFIsOSX_10_10_orNewer) {
     ENABLE(subpixelCSSOMElementMetricsEnabled);
   }
-  
+
   // Security relaxation
   //DISABLE(XSSAuditorEnabled);
   //DISABLE(WebSecurityEnabled);
   //DISABLE(hyperlinkAuditingEnabled);
-  
+
   // Dev
 #if DEBUG
   ENABLE(developerExtrasEnabled);
@@ -142,7 +142,7 @@ static void __attribute__((constructor))_init() {
   su.automaticallyDownloadsUpdates = YES;
   su.feedURL = [NSURL URLWithString:@"http://fbmacmessenger.rsms.me/changelog.xml"];
   [su checkForUpdatesInBackground];
-    
+
   _lastNotificationCount = @"";
 }
 
@@ -181,7 +181,7 @@ static void __attribute__((constructor))_init() {
 
 
 - (IBAction)reloadFromServer:(id)sender {
-  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/t/"]];
+  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/"]];
   [_webView.mainFrame loadRequest:req];
 }
 
@@ -284,7 +284,7 @@ static void __attribute__((constructor))_init() {
   window.contentView = webView;
   auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
   [webView.mainFrame loadRequest:req];
-  
+
   window.releasedWhenClosed = YES;
   CFBridgingRetain(window);
   [window makeKeyAndOrderFront:self];
@@ -366,15 +366,15 @@ static void __attribute__((constructor))_init() {
   }
   openPanel.canCreateDirectories = YES;
   openPanel.title = @"Select files";
-  
+
   auto ud = [NSUserDefaults standardUserDefaults];
   auto dirURL = [ud URLForKey:@"open-dialog-url"];
   if (!dirURL) {
     dirURL = [NSURL fileURLWithPath:NSHomeDirectory() isDirectory:YES];
   }
-  
+
   openPanel.directoryURL = dirURL;
-  
+
   auto onComplete = ^(NSInteger result) {
     [ud setURL:openPanel.directoryURL forKey:@"open-dialog-url"];
     if (result == 1) {
@@ -398,13 +398,13 @@ static void __attribute__((constructor))_init() {
 - (void)webView:(WebView *)webView didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame {
   auto ctx = webView.mainFrame.globalContext;
   JSObjectRef globalObj = JSContextGetGlobalObject(ctx);
-  
+
   auto Notifications = JSNotificationsCreate(ctx, 0, nullptr, nullptr);
   JSClass::setProperty(ctx, globalObj, u"_notifications", Notifications);
 
-  
+
   auto NotificationCons = JSObjectMakeConstructor(ctx, JSNotificationJSClass(), JSNotificationConstruct);
-  
+
   auto s = U16JSStr(u"granted");
   JSClass::setProperty(ctx, NotificationCons, u"permission", JSValueMakeString(ctx, s));
   JSStringRelease(s);
@@ -419,12 +419,12 @@ static void __attribute__((constructor))_init() {
   JSStringRelease(s);
 
   JSClass::setProperty(ctx, globalObj, u"Notification", NotificationCons);
-  
+
   // WARNING! Fragile hack to automatically enable desktop notifications:
 //  auto r = [webView.mainFrame.windowObject evaluateWebScript:
 //   @"var v = {__t:(new Date).getTime(),__v:true}; localStorage._cs_desktopNotifsEnabled = v; localStorage.setItem('_cs_desktopNotifsEnabled',JSON.stringify(v));"];
 //  NSLog(@"r: %@", r);
-  
+
   // CSS injection to move the settings gear away from underneath the window controls
   [webView.mainFrame.windowObject evaluateWebScript:
    @"document.addEventListener('DOMContentLoaded', function() {"
@@ -478,7 +478,7 @@ static void __attribute__((constructor))_init() {
       kErrorPNGDataURL]];
   } else {
     [webView.mainFrame.windowObject evaluateWebScript:@""
-     
+
      // This fixes an annoying "beep" sound
      "document.body.onkeypress=function (e) {"
      "  var target = e.target.contentEditable && e.target.querySelector('[data-block]');"
@@ -489,7 +489,7 @@ static void __attribute__((constructor))_init() {
      "    return false;"
      "  }"
      "};"
-     
+
      // The following two statements enable drag-and-drop file sending
      "document.addEventListener('dragover', function(ev) {"
      "  ev.stopPropagation();"
@@ -533,18 +533,18 @@ static void __attribute__((constructor))_init() {
 
 - (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {
   NSString* notificationCount = _lastNotificationCount;
-  
+
   if ([title isEqualToString:@"Messenger"]) {
     notificationCount = @"";
   } else {
     NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"\\(([0-9]+)\\) Messenger" options:0 error:nil];
     NSTextCheckingResult* match = [regex firstMatchInString:title options:0 range:NSMakeRange(0, [title length])];
-    
+
     if (match) {
       notificationCount = [title substringWithRange:[match rangeAtIndex:1]];
     }
   }
-  
+
   if (![notificationCount isEqualTo:_lastNotificationCount]) {
     [[NSApp dockTile] setBadgeLabel: notificationCount];
     _lastNotificationCount = notificationCount;

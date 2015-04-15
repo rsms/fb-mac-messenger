@@ -85,7 +85,6 @@
 		3A9A9C821AD5EA13008FABE9 /* JSObjWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSObjWrapper.h; sourceTree = "<group>"; };
 		3A9A9C831AD5EA13008FABE9 /* JSObjWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSObjWrapper.m; sourceTree = "<group>"; };
 		3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSNotifications.js.mm; sourceTree = "<group>"; };
-		3AEEEB811ADDB7A000F3A659 /* virtual-key-codes.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "virtual-key-codes.hh"; sourceTree = "<group>"; };
 		FC67C61E1AD7027700459263 /* FBMApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMApplication.h; sourceTree = "<group>"; };
 		FC67C61F1AD7027700459263 /* FBMApplication.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBMApplication.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -141,7 +140,6 @@
 				3A9A9C7E1AD5DBD4008FABE9 /* WebPreferences.h */,
 				3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */,
 				3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */,
-				3AEEEB811ADDB7A000F3A659 /* virtual-key-codes.hh */,
 				3A9A9C741AD5D838008FABE9 /* JSAPI */,
 				07DB23D91AD9E23100177F14 /* Categories */,
 				3A9A9C491AD5B407008FABE9 /* Images.xcassets */,

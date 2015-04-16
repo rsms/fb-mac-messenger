@@ -199,7 +199,6 @@ static void __attribute__((constructor))_init() {
 
 - (void)updateWindowTitlebar {
   const CGFloat kTitlebarHeight = 50;
-  const CGFloat kGearIconXOffset = 35;
   const CGFloat kFullScreenButtonYOrigin = 3;
   auto windowFrame = _window.frame;
   BOOL fullScreen = (_window.styleMask & NSFullScreenWindowMask) == NSFullScreenWindowMask;
@@ -222,9 +221,7 @@ static void __attribute__((constructor))_init() {
       kFullScreenButtonYOrigin :
       round((kTitlebarHeight - buttonFrame.size.height) / 2.0);
 
-    // in non-fullscreen, the window buttons should not cover the gear icon
-    // in full screen, they appear on a separate opaque titlebar anyway so no offset is needed.
-    buttonFrame.origin.x = x + (fullScreen ? 0 : kGearIconXOffset);
+    buttonFrame.origin.x = x;
 
     // spacing for next button, matching Safari 8.0 on OS X 10.10.
     x += buttonFrame.size.width + 6;

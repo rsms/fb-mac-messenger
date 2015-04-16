@@ -33,7 +33,8 @@ itembuf = '''
 
 # Load changelog
 changelogFilename =\
-  os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) + '/changelog.xml'
+  os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) +\
+  '/website/changelog.xml'
 with open(changelogFilename, 'r') as f:
   buf = f.read()
 

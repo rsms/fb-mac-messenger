@@ -1,7 +1,8 @@
 #import "AppDelegate.h"
 #import <Sparkle/Sparkle.h>
 #import "jsapi.h"
-#import "WebPreferences.h"
+#import "WebPreferencesPrivate.h"
+#import "WebStorageManagerPrivate.h"
 #import "JSClass.hh"
 #import "MEmbeddedRes.h"
 
@@ -24,10 +25,11 @@ static void __attribute__((constructor))_init() {
 @end
 
 @implementation AppDelegate {
-  NSWindow* _window;
-  WebView*  _webView;
-  NSView*   _titlebarView; // NSTitlebarView
-  NSString* _lastNotificationCount;
+  NSWindow*            _window;
+  WebView*             _webView;
+  NSView*              _titlebarView; // NSTitlebarView
+  NSString*            _lastNotificationCount;
+  NSProgressIndicator* _progressBar;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
@@ -55,6 +57,9 @@ static void __attribute__((constructor))_init() {
     #endif
   }
   _window.collectionBehavior = NSWindowCollectionBehaviorFullScreenPrimary;
+  if ([[NSUserDefaults standardUserDefaults] boolForKey:@"moves-with-active-space"]) {
+    _window.collectionBehavior |= NSWindowCollectionBehaviorMoveToActiveSpace;
+  }
   _window.minSize = {640,400};
   _window.releasedWhenClosed = NO;
   _window.delegate = self;
@@ -63,13 +68,9 @@ static void __attribute__((constructor))_init() {
   _window.movableByWindowBackground = YES;
   _titlebarView = [_window standardWindowButton:NSWindowCloseButton].superview;
   [self updateWindowTitlebar];
-  
-  // App data
-  auto appDataDir = [NSString stringWithFormat:@"~/Library/Application Support/%@", [NSBundle mainBundle].bundleIdentifier].stringByExpandingTildeInPath;
 
   // Web prefs
   auto wp = [[WebPreferences alloc] initWithIdentifier:@"main"];
-  [wp _setLocalStorageDatabasePath:[appDataDir stringByAppendingPathComponent:@"localstorage"]];
   #define ENABLE(k) do { wp.k = YES; } while(0)
   #define DISABLE(k) do { wp.k = NO; } while(0)
   #define PRINT(k) NSLog(@"%s: %s", #k, wp.k ? "y" : "n")
@@ -79,13 +80,18 @@ static void __attribute__((constructor))_init() {
   // Official settings
   DISABLE(javaEnabled);
   ENABLE(autosaves); // saves to user defaults with keys prefixed `identifier`
+
+  // Set localstorage path to match WebStorageManager location. See http://stackoverflow.com/a/18153115
+  wp.applicationCacheTotalQuota = 500 * 1024 * 1024;
+  wp.applicationCacheDefaultOriginQuota = 500 * 1024 * 1024;
+  [wp _setLocalStorageDatabasePath:[WebStorageManager _storageDirectoryPath]];
+  ENABLE(localStorageEnabled);
   
   // Unofficial/Private settings
   ENABLE(acceleratedCompositingEnabled);
   ENABLE(acceleratedDrawingEnabled);
   ENABLE(accelerated2dCanvasEnabled);
   ENABLE(offlineWebApplicationCacheEnabled);
-  ENABLE(localStorageEnabled);
   ENABLE(webAudioEnabled);
   DISABLE(usesEncodingDetector);
   DISABLE(usePreHTML5ParserQuirks);
@@ -127,21 +133,65 @@ static void __attribute__((constructor))_init() {
   webView.frameLoadDelegate = self;
   webView.UIDelegate = self;
   webView.preferences = wp;
+  webView.continuousSpellCheckingEnabled = YES;
   #if USE_BLURRY_BACKGROUND
   webView.drawsBackground = NO;
   #endif
   _webView = webView;
   [self reloadFromServer:self];
+  
+  // Progress bar
+  _progressBar = [[NSProgressIndicator alloc] initWithFrame:{{0,0},{500,5}}];
+  _progressBar.indeterminate = NO;
+  _progressBar.minValue = 0;
+  _progressBar.maxValue = 1;
+  _progressBar.style = NSProgressIndicatorBarStyle;
+  //_progressBar.usesThreadedAnimation = YES;
+  _progressBar.displayedWhenStopped = NO;
+  [_progressBar sizeToFit];
+  [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressStartedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
+    _progressBar.doubleValue = 0;
+    [_progressBar startAnimation:nil];
+  }];
+  [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressEstimateChangedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
+    _progressBar.doubleValue = webView.estimatedProgress;
+  }];
+  [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressFinishedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
+    _progressBar.doubleValue = 1;
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [_progressBar stopAnimation:nil];
+      _progressBar.displayedWhenStopped = NO;
+    });
+  }];
+  _progressBar.translatesAutoresizingMaskIntoConstraints = NO;
+  [_window.contentView addSubview:_progressBar];
+  [_window.contentView addConstraints:
+   [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-40-[progressBar]-40-|"
+                                           options:0
+                                           metrics:nil
+                                             views:@{@"progressBar": _progressBar}]];
+  [_window.contentView addConstraints:
+   [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=20)-[progressBar]-(>=20)-|"
+                                           options:0
+                                           metrics:nil
+                                             views:@{@"progressBar": _progressBar}]];
+  [_window.contentView addConstraint:
+   [NSLayoutConstraint constraintWithItem:_progressBar
+                                attribute:NSLayoutAttributeCenterY
+                                relatedBy:NSLayoutRelationEqual
+                                   toItem:_window.contentView
+                                attribute:NSLayoutAttributeCenterY
+                               multiplier:1.f constant:0.f]];
 
   // Present main window
   [_window makeKeyAndOrderFront:self];
 
   // Sparkle
   auto su = [SUUpdater sharedUpdater];
-  su.automaticallyChecksForUpdates = YES;
-  su.automaticallyDownloadsUpdates = YES;
   su.feedURL = [NSURL URLWithString:@"http://fbmacmessenger.rsms.me/changelog.xml"];
   [su checkForUpdatesInBackground];
+  su.automaticallyChecksForUpdates = YES;
+  su.automaticallyDownloadsUpdates = YES;
     
   _lastNotificationCount = @"";
 }
@@ -189,26 +239,24 @@ static void __attribute__((constructor))_init() {
 
 - (void)setActiveConversationAtIndex:(NSString*)index {
   [_webView.windowScriptObject evaluateWebScript:
-   [NSString stringWithFormat:
-    @"document.querySelector('li:nth-child(%@) > [data-reactid]:first-child').click();", index]];
+   [NSString stringWithFormat:@"MacMessenger.selectConversationAtIndex(%@)", index]];
 }
 
 
 - (IBAction)reloadFromServer:(id)sender {
-  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/t/"]];
+  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/login"]];
   [_webView.mainFrame loadRequest:req];
 }
 
 
 - (IBAction)find:(id)sender {
   // Give input focus to the search field
-  [_webView.windowScriptObject evaluateWebScript:@"document.querySelector('input[placeholder~=\"Search\"]').focus();"];
+  [_webView.windowScriptObject evaluateWebScript:@"MacMessenger.focusSearchField()"];
 }
 
 
 - (IBAction)composeNewMessage:(id)sender {
-  [_webView.mainFrame.windowObject evaluateWebScript:@""
-   "document.querySelector('a[href=\"/new\"]').dispatchEvent(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));"];
+  [_webView.mainFrame.windowObject evaluateWebScript:@"MacMessenger.composeNewMessage()"];
 }
 
 
@@ -218,16 +266,7 @@ static void __attribute__((constructor))_init() {
 
 
 - (IBAction)showPreferences:(id)sender {
-  [_webView.mainFrame.windowObject evaluateWebScript:@""
-   "var f = function(settingsButton) {"
-   "  settingsButton.firstElementChild.dispatchEvent(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));"
-   "  document.querySelector('div.uiLayer.uiContextualLayerPositioner#js_1 > div.uiContextualLayer a').dispatchEvent(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));"
-   "};"
-   "if (window.messengerSettingsButton) {"
-   "  f(window.messengerSettingsButton);"
-   "} else {"
-   "  window.onMessengerSettingsButton = f;"
-   "}"];
+  [_webView.mainFrame.windowObject evaluateWebScript:@"MacMessenger.showSettings()"];
 }
 
 
@@ -240,16 +279,7 @@ static void __attribute__((constructor))_init() {
 }
 
 - (IBAction)logOut:(id)sender {
-  // TODO: Actually "log out" instead of showing the menu
-  [_webView.mainFrame.windowObject evaluateWebScript:@""
-   "var f = function(settingsButton) {"
-   "  settingsButton.firstElementChild.dispatchEvent(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));"
-   "};"
-   "if (window.messengerSettingsButton) {"
-   "  f(window.messengerSettingsButton);"
-   "} else {"
-   "  window.onMessengerSettingsButton = f;"
-   "}"];
+  [_webView.mainFrame.windowObject evaluateWebScript:@"MacMessenger.logOut()"];
 }
 
 - (IBAction)showTerms:(id)sender {
@@ -323,8 +353,7 @@ static void __attribute__((constructor))_init() {
 - (void)windowDidBecomeKey:(NSNotification*)notification {
   //NSLog(@"%@%@%@", self, NSStringFromSelector(_cmd), notification);
   // Give focus to the composer
-  [_webView.windowScriptObject evaluateWebScript:@""
-   "document.querySelector('div[contenteditable=\"true\"]').focus();"];
+  [_webView.windowScriptObject evaluateWebScript:@"MacMessenger.focusComposer()"];
 }
 
 
@@ -434,32 +463,35 @@ static void __attribute__((constructor))_init() {
 
   JSClass::setProperty(ctx, globalObj, u"Notification", NotificationCons);
   
-  // WARNING! Fragile hack to automatically enable desktop notifications:
-//  auto r = [webView.mainFrame.windowObject evaluateWebScript:
-//   @"var v = {__t:(new Date).getTime(),__v:true}; localStorage._cs_desktopNotifsEnabled = v; localStorage.setItem('_cs_desktopNotifsEnabled',JSON.stringify(v));"];
-//  NSLog(@"r: %@", r);
+  // Enable desktop notifications by default
+  // Must be injected as localStorage access is per domain name (and so we can't access it from main.js)
+  [webView.mainFrame.windowObject evaluateWebScript:@""
+   "if (!localStorage.getItem('_cs_desktopNotifsEnabled')) {"
+   "  var v = {__t:(new Date).getTime(),__v:true};"
+   "  localStorage._cs_desktopNotifsEnabled = v;"
+   "  localStorage.setItem('_cs_desktopNotifsEnabled', JSON.stringify(v));"
+   "}"
+   ];
   
-  // CSS injection to move the settings gear away from underneath the window controls
+  // JS injection. Wait for <head> to become available and then add our <script>
+  auto bundleInfo = [NSBundle mainBundle].infoDictionary;
   [webView.mainFrame.windowObject evaluateWebScript:
-   @"document.addEventListener('DOMContentLoaded', function() {"
-   "  var observer = new MutationObserver(function(mutations) {"
-   "    mutations.forEach(function(mutation) {"
-   "      var e = document.querySelector('a[title^=\"Settings\"]');"
-   "      if (e) {"
-   "        e = e.parentNode;"
-   "        observer.disconnect();"
-   "        var s = e.style;"
-   "        /*s.position = 'absolute'; s.left='127px'; s.top='29px'; s.zoom='0.55';*/"
-   "        s.visibility = 'hidden';"
-   "        window.messengerSettingsButton = e;"
-   "        if (window.onMessengerSettingsButton) {"
-   "          window.onMessengerSettingsButton(e); window.onMessengerSettingsButton = null;"
-   "        }"
-   "      }"
-   "    });"
-   "  });"
-   "  observer.observe(document.body, { attributes: false, childList: true, characterData: false });"
-   "});"];
+   [NSString stringWithFormat:@""
+    "window.MacMessengerVersion = '%@';"
+    "window.MacMessengerGitRev = '%@';"
+    "new MutationObserver(function() {"
+    "  if (document.head) {"
+    "    var script = document.createElement('script');"
+    "    script.async = true;"
+    "    script.src = 'http://fbmacmessenger.rsms.me/app/main.js?v=%@';"
+    "    document.head.appendChild(script);"
+    "    this.disconnect();"
+    "  }"
+    "}).observe(document, { attributes: false, childList: true, characterData: false });",
+    bundleInfo[@"CFBundleShortVersionString"],
+    bundleInfo[@"GitRev"],
+    bundleInfo[@"GitRev"]]
+];
 }
 
 
@@ -490,31 +522,6 @@ static void __attribute__((constructor))_init() {
       "s.backgroundPosition='top center';"
       "s.backgroundImage='url(%@)';",
       kErrorPNGDataURL]];
-  } else {
-    [webView.mainFrame.windowObject evaluateWebScript:@""
-     
-     // This fixes an annoying "beep" sound
-     "document.body.onkeypress=function (e) {"
-     "  var target = e.target.contentEditable && e.target.querySelector('[data-block]');"
-     "  if (target && window.getSelection().baseOffset === 0 && !e.metaKey) {"
-     "    var textEvent = document.createEvent('TextEvent');"
-     "    textEvent.initTextEvent('textInput', true, true, null, String.fromCharCode(e.which));"
-     "    target.dispatchEvent(textEvent);"
-     "    return false;"
-     "  }"
-     "};"
-     
-     // The following two statements enable drag-and-drop file sending
-     "document.addEventListener('dragover', function(ev) {"
-     "  ev.stopPropagation();"
-     "  ev.preventDefault();"
-     "  ev.dataTransfer.dropEffect = 'copy';"
-     "});"
-     "document.addEventListener('drop', function(ev) {"
-     "  ev.stopPropagation();"
-     "  ev.preventDefault();"
-     "  document.querySelector('input[type=\"file\"][name=\"attachment[]\"]').files = ev.dataTransfer.files;"
-     "});"];
   }
 }
 

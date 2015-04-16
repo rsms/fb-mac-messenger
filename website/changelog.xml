@@ -6,6 +6,43 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.0.6</title>
+      <description><![CDATA[
+        <ul>
+          <li>Enables spell checking</li>
+          <li>Power-user feature: <code>defaults write me.rsms.fbmessenger moves-with-active-space -bool yes</code> to change spaces behaviour to make the window appear in the active space, rather than a specific space</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 15 Apr 2015 00:59:15 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="186e947e4741dba4"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.6.1429084595-186e947e4741dba4.zip"
+        sparkle:version="0.0.6.1429084595"
+        length="1984129"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.6</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes an issue with messenger.com having changed URL patterns, leading to a "not found" error</li>
+          <li>Stability improvements to Mac-app specific modification to messenger.com</li>
+          <li>Fixes a bug with settings not being persisted between app launches</li>
+          <li>Introduces a progress bar for showing load progress of messenger.com</li>
+          <li>Fixes a bug where ⌘- and ⌘+ did not zoom text in the UI</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 15 Apr 2015 00:29:18 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="e3c045c72240b5e9"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.6.1429082889-e3c045c72240b5e9.zip"
+        sparkle:version="0.0.6.1429082889"
+        length="1983943"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.0.5</title>
       <description><![CDATA[
         <ul>

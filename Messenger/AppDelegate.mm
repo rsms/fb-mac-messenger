@@ -199,7 +199,9 @@ static void __attribute__((constructor))_init() {
 
 - (void)updateWindowTitlebar {
   const CGFloat kTitlebarHeight = 50;
+  const CGFloat kFullScreenButtonYOrigin = 3;
   auto windowFrame = _window.frame;
+  BOOL fullScreen = (_window.styleMask & NSFullScreenWindowMask) == NSFullScreenWindowMask;
 
   // Set size of titlebar container
   auto titlebarContainerView = _titlebarView.superview;
@@ -212,9 +214,18 @@ static void __attribute__((constructor))_init() {
   __block CGFloat x = 12; // initial LHS margin, matching Safari 8.0 on OS X 10.10.
   auto updateButton = ^(NSView* buttonView) {
     auto buttonFrame = buttonView.frame;
-    buttonFrame.origin.y = round((kTitlebarHeight - buttonFrame.size.height) / 2.0);
+
+    // in fullscreen, the titlebar frame is not governed by kTitlebarHeight but rather appears to be fixed by the system.
+    // thus, we set a constant Y origin for the buttons when in fullscreen.
+    buttonFrame.origin.y = fullScreen ?
+      kFullScreenButtonYOrigin :
+      round((kTitlebarHeight - buttonFrame.size.height) / 2.0);
+
     buttonFrame.origin.x = x;
-    x += buttonFrame.size.width + 6; // spacing, matching Safari 8.0 on OS X 10.10.
+
+    // spacing for next button, matching Safari 8.0 on OS X 10.10.
+    x += buttonFrame.size.width + 6;
+
     [buttonView setFrameOrigin:buttonFrame.origin];
   };
   updateButton([_window standardWindowButton:NSWindowCloseButton]);

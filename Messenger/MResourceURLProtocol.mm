@@ -44,7 +44,16 @@ static NSString* MIMETypeForFilename(NSString* filename){
 
     auto host = self.request.URL.host;
     if ([host isEqualToString:@"bundle"]) {
+      #if DEBUG
+      auto sourcePath = [[NSBundle mainBundle].bundlePath stringByAppendingFormat:@"/../../../website/app/%@", path];
+      if ([[NSFileManager defaultManager] fileExistsAtPath:sourcePath isDirectory:nil]) {
+        path = sourcePath;
+      } else {
+        path = [[NSBundle mainBundle].resourcePath stringByAppendingFormat:@"/%@", path];
+      }
+      #else
       path = [[NSBundle mainBundle].resourcePath stringByAppendingFormat:@"/%@", path];
+      #endif
     } else {
       dispatch_async(dispatch_get_main_queue(), ^{
         [self.client URLProtocol:self didFailWithError:[NSError errorWithDomain:@"messenger" code:0 userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"unknown domain \"%@\"", host]}]];
@@ -68,7 +77,7 @@ static NSString* MIMETypeForFilename(NSString* filename){
     }
     auto response = [[NSURLResponse alloc] initWithURL:self.request.URL MIMEType:mimeType expectedContentLength:data.length textEncodingName:nil];
     dispatch_async(dispatch_get_main_queue(), ^{
-      [client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageAllowedInMemoryOnly];
+      [client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
       [client URLProtocol:self didLoadData:data];
       [client URLProtocolDidFinishLoading:self];
     });

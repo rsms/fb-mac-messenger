@@ -472,6 +472,11 @@ static void __attribute__((constructor))_init() {
   
   // JS injection. Wait for <head> to become available and then add our <script>
   auto bundleInfo = [NSBundle mainBundle].infoDictionary;
+  #if DEBUG
+  auto mainJSURLString = @"resource://bundle/main.js";
+  #else
+  auto mainJSURLString = [NSString stringWithFormat:@"http://fbmacmessenger.rsms.me/app/main.js?v=%@", bundleInfo[@"GitRev"]];
+  #endif
   [webView.mainFrame.windowObject evaluateWebScript:
    [NSString stringWithFormat:@""
     "window.MacMessengerVersion = '%@';"
@@ -480,14 +485,14 @@ static void __attribute__((constructor))_init() {
     "  if (document.head) {"
     "    var script = document.createElement('script');"
     "    script.async = true;"
-    "    script.src = 'http://fbmacmessenger.rsms.me/app/main.js?v=%@';"
+    "    script.src = '%@';"
     "    document.head.appendChild(script);"
     "    this.disconnect();"
     "  }"
     "}).observe(document, { attributes: false, childList: true, characterData: false });",
     bundleInfo[@"CFBundleShortVersionString"],
     bundleInfo[@"GitRev"],
-    bundleInfo[@"GitRev"]]
+    mainJSURLString]
 ];
 }
 

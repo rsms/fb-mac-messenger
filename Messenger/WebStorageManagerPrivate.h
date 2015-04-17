@@ -26,8 +26,6 @@
 extern NSString * const WebStorageDirectoryDefaultsKey;
 extern NSString * const WebStorageDidModifyOriginNotification;
 
-static NSString* _storageDirectoryPath();
-
 @class WebSecurityOrigin;
 
 @interface WebStorageManager : NSObject

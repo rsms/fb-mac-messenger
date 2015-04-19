@@ -32,5 +32,7 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>FBMApplication</string>
+	<Key>NSHighResolutionCapable</key>
+	<String>True</string>
 </dict>
 </plist>

@@ -56,7 +56,7 @@ window.MacMessenger = {
     // This fixes an annoying "beep" sound
     document.body.onkeypress = function (e) {
       var target = e.target.contentEditable && e.target.querySelector('[data-block]');
-      if (target && window.getSelection().baseOffset === 0 && !e.metaKey) {
+      if (target && !e.metaKey) {
         var textEvent = document.createEvent('TextEvent');
         textEvent.initTextEvent('textInput', true, true, null, String.fromCharCode(e.which));
         target.dispatchEvent(textEvent);

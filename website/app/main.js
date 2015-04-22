@@ -18,7 +18,7 @@ window.MacMessenger = {
   showSettings: function() {
     this.openGearMenu();
     document.querySelector(
-      'div.uiLayer.uiContextualLayerPositioner#js_1 > div.uiContextualLayer a'
+      'div.uiLayer.uiContextualLayerPositioner#js_2 > div.uiContextualLayer a'
     ).dispatchEvent(
       new MouseEvent('click', {view:window, bubbles:true, cancelable:true})
     );
@@ -66,7 +66,7 @@ window.MacMessenger = {
 
     // Find settings gear
     var tryFindSettingsGear = function() {
-      var e = document.querySelector('[aria-owns="js_1"]');
+      var e = document.querySelector('[aria-owns="js_2"]');
       if (e) {
         e = e.parentNode;
         e.style.visibility = 'hidden';

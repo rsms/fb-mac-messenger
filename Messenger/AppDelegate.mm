@@ -141,23 +141,19 @@ static void __attribute__((constructor))_init() {
   [self reloadFromServer:self];
   
   // Progress bar
-  _progressBar = [[NSProgressIndicator alloc] initWithFrame:{{0,0},{500,5}}];
-  _progressBar.indeterminate = NO;
-  _progressBar.minValue = 0;
-  _progressBar.maxValue = 1;
-  _progressBar.style = NSProgressIndicatorBarStyle;
-  //_progressBar.usesThreadedAnimation = YES;
-  _progressBar.displayedWhenStopped = NO;
+  _progressBar = [[NSProgressIndicator alloc] initWithFrame:{{0,0},{20,20}}];
+  _progressBar.indeterminate = YES;
+  _webView.alphaValue = 0.5;
+  _progressBar.style = NSProgressIndicatorSpinningStyle;
   [_progressBar sizeToFit];
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressStartedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
-    _progressBar.doubleValue = 0;
+    _progressBar.hidden = false;
+    _webView.alphaValue = 0.5;
     [_progressBar startAnimation:nil];
   }];
-  [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressEstimateChangedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
-    _progressBar.doubleValue = webView.estimatedProgress;
-  }];
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressFinishedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
-    _progressBar.doubleValue = 1;
+    _progressBar.hidden = true;
+    _webView.alphaValue = 1;
     dispatch_async(dispatch_get_main_queue(), ^{
       [_progressBar stopAnimation:nil];
       _progressBar.displayedWhenStopped = NO;
@@ -165,22 +161,19 @@ static void __attribute__((constructor))_init() {
   }];
   _progressBar.translatesAutoresizingMaskIntoConstraints = NO;
   [_window.contentView addSubview:_progressBar];
-  [_window.contentView addConstraints:
-   [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-40-[progressBar]-40-|"
-                                           options:0
-                                           metrics:nil
-                                             views:@{@"progressBar": _progressBar}]];
-  [_window.contentView addConstraints:
-   [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=20)-[progressBar]-(>=20)-|"
-                                           options:0
-                                           metrics:nil
-                                             views:@{@"progressBar": _progressBar}]];
   [_window.contentView addConstraint:
    [NSLayoutConstraint constraintWithItem:_progressBar
                                 attribute:NSLayoutAttributeCenterY
                                 relatedBy:NSLayoutRelationEqual
                                    toItem:_window.contentView
                                 attribute:NSLayoutAttributeCenterY
+                               multiplier:1.f constant:0.f]];
+  [_window.contentView addConstraint:
+   [NSLayoutConstraint constraintWithItem:_progressBar
+                                attribute:NSLayoutAttributeCenterX
+                                relatedBy:NSLayoutRelationEqual
+                                   toItem:_window.contentView
+                                attribute:NSLayoutAttributeCenterX
                                multiplier:1.f constant:0.f]];
 
   // Present main window

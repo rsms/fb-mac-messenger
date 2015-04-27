@@ -138,7 +138,6 @@ static void __attribute__((constructor))_init() {
   webView.drawsBackground = NO;
   #endif
   _webView = webView;
-  [self reloadFromServer:self];
   
   // Progress bar
   _progressBar = [[NSProgressIndicator alloc] initWithFrame:{{0,0},{500,5}}];
@@ -146,7 +145,7 @@ static void __attribute__((constructor))_init() {
   _progressBar.minValue = 0;
   _progressBar.maxValue = 1;
   _progressBar.style = NSProgressIndicatorBarStyle;
-  //_progressBar.usesThreadedAnimation = YES;
+  _progressBar.usesThreadedAnimation = YES;
   _progressBar.displayedWhenStopped = NO;
   [_progressBar sizeToFit];
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressStartedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
@@ -194,6 +193,8 @@ static void __attribute__((constructor))_init() {
   su.automaticallyDownloadsUpdates = YES;
     
   _lastNotificationCount = @"";
+
+  [self reloadFromServer:self];
 }
 
 
@@ -471,29 +472,31 @@ static void __attribute__((constructor))_init() {
    ];
   
   // JS injection. Wait for <head> to become available and then add our <script>
-  auto bundleInfo = [NSBundle mainBundle].infoDictionary;
-  #if DEBUG
-  auto mainJSURLString = @"resource://bundle/main.js";
-  #else
-  auto mainJSURLString = [NSString stringWithFormat:@"http://fbmacmessenger.rsms.me/app/main.js?v=%@", bundleInfo[@"GitRev"]];
-  #endif
-  [webView.mainFrame.windowObject evaluateWebScript:
-   [NSString stringWithFormat:@""
-    "window.MacMessengerVersion = '%@';"
-    "window.MacMessengerGitRev = '%@';"
-    "new MutationObserver(function() {"
-    "  if (document.head) {"
-    "    var script = document.createElement('script');"
-    "    script.async = true;"
-    "    script.src = '%@';"
-    "    document.head.appendChild(script);"
-    "    this.disconnect();"
-    "  }"
-    "}).observe(document, { attributes: false, childList: true, characterData: false });",
-    bundleInfo[@"CFBundleShortVersionString"],
-    bundleInfo[@"GitRev"],
-    mainJSURLString]
-];
+  if (![[NSUserDefaults standardUserDefaults] boolForKey:@"main.js/disable"]) {
+    auto bundleInfo = [NSBundle mainBundle].infoDictionary;
+    #if DEBUG
+    auto mainJSURLString = @"resource://bundle/main.js";
+    #else
+    auto mainJSURLString = [NSString stringWithFormat:@"http://fbmacmessenger.rsms.me/app/main.js?v=%@", bundleInfo[@"GitRev"]];
+    #endif
+    [webView.mainFrame.windowObject evaluateWebScript:
+     [NSString stringWithFormat:@""
+      "window.MacMessengerVersion = '%@';"
+      "window.MacMessengerGitRev = '%@';"
+      "new MutationObserver(function() {"
+      "  if (document.head) {"
+      "    var script = document.createElement('script');"
+      "    script.async = true;"
+      "    script.src = '%@';"
+      "    document.head.appendChild(script);"
+      "    this.disconnect();"
+      "  }"
+      "}).observe(document, { attributes: false, childList: true, characterData: false });",
+      bundleInfo[@"CFBundleShortVersionString"],
+      bundleInfo[@"GitRev"],
+      mainJSURLString]
+     ];
+  }
 }
 
 

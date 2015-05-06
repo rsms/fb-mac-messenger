@@ -479,6 +479,7 @@ static void __attribute__((constructor))_init() {
     #else
     auto mainJSURLString = [NSString stringWithFormat:@"http://fbmacmessenger.rsms.me/app/main.js?v=%@", bundleInfo[@"GitRev"]];
     #endif
+    auto mainCSSURLString = @"resource://bundle/main.css";
     [webView.mainFrame.windowObject evaluateWebScript:
      [NSString stringWithFormat:@""
       "window.MacMessengerVersion = '%@';"
@@ -489,12 +490,18 @@ static void __attribute__((constructor))_init() {
       "    script.async = true;"
       "    script.src = '%@';"
       "    document.head.appendChild(script);"
+      "    var link = document.createElement('link');"
+      "    link.href = '%@';"
+      "    link.type = 'text/css';"
+      "    link.rel = 'stylesheet';"
+      "    document.head.appendChild(link);"
       "    this.disconnect();"
       "  }"
       "}).observe(document, { attributes: false, childList: true, characterData: false });",
       bundleInfo[@"CFBundleShortVersionString"],
       bundleInfo[@"GitRev"],
-      mainJSURLString]
+      mainJSURLString,
+      mainCSSURLString]
      ];
   }
 }

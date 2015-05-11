@@ -24,6 +24,7 @@
 		3A9A9C7C1AD5D8ED008FABE9 /* JSNotification.js.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C7B1AD5D8ED008FABE9 /* JSNotification.js.mm */; };
 		3A9A9C841AD5EA13008FABE9 /* JSObjWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C831AD5EA13008FABE9 /* JSObjWrapper.m */; };
 		3A9A9C861AD5EE4E008FABE9 /* JSNotifications.js.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */; };
+		669511411B00A0E600526CFD /* MMFakeDragInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 669511401B00A0E600526CFD /* MMFakeDragInfo.m */; };
 		FC67C6201AD7027700459263 /* FBMApplication.mm in Sources */ = {isa = PBXBuildFile; fileRef = FC67C61F1AD7027700459263 /* FBMApplication.mm */; };
 /* End PBXBuildFile section */
 
@@ -91,6 +92,8 @@
 		3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSNotifications.js.mm; sourceTree = "<group>"; };
 		3AEEEB881ADE3A9800F3A659 /* WebStorageManagerPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebStorageManagerPrivate.h; sourceTree = "<group>"; };
 		3AEEEB891ADE3B0600F3A659 /* WebPreferencesPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebPreferencesPrivate.h; sourceTree = "<group>"; };
+		6695113F1B00A0E600526CFD /* MMFakeDragInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFakeDragInfo.h; sourceTree = "<group>"; };
+		669511401B00A0E600526CFD /* MMFakeDragInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFakeDragInfo.m; sourceTree = "<group>"; };
 		FC67C61E1AD7027700459263 /* FBMApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMApplication.h; sourceTree = "<group>"; };
 		FC67C61F1AD7027700459263 /* FBMApplication.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBMApplication.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -151,6 +154,8 @@
 				3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */,
 				FC67C61E1AD7027700459263 /* FBMApplication.h */,
 				FC67C61F1AD7027700459263 /* FBMApplication.mm */,
+				6695113F1B00A0E600526CFD /* MMFakeDragInfo.h */,
+				669511401B00A0E600526CFD /* MMFakeDragInfo.m */,
 				3AEEEB891ADE3B0600F3A659 /* WebPreferencesPrivate.h */,
 				3AEEEB881ADE3A9800F3A659 /* WebStorageManagerPrivate.h */,
 				3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */,
@@ -298,6 +303,7 @@
 				3A9A9C461AD5B407008FABE9 /* AppDelegate.mm in Sources */,
 				FC67C6201AD7027700459263 /* FBMApplication.mm in Sources */,
 				3A9A9C861AD5EE4E008FABE9 /* JSNotifications.js.mm in Sources */,
+				669511411B00A0E600526CFD /* MMFakeDragInfo.m in Sources */,
 				3A713BA01AD65F6500870D2A /* MEmbeddedRes.m in Sources */,
 				3A9A9C7C1AD5D8ED008FABE9 /* JSNotification.js.mm in Sources */,
 			);

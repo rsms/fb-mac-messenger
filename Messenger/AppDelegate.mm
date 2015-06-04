@@ -595,7 +595,7 @@ decisionListener:(id<WebPolicyDecisionListener>)listener
   {
     [listener use];
   } else if ([[url description] isCaseInsensitiveLike:@"about:blank"]) {
-    NSLog(@"Ignore about:blank request.");
+    // NSLog(@"Ignore about:blank request."); Seems like a dirty workaround and probably needs further investigation.
     [listener ignore];
   } else {
     [self openWorkspaceURL:url];

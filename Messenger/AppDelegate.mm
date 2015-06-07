@@ -145,10 +145,10 @@ static void __attribute__((constructor))_init() {
   _progressBar.minValue = 0;
   _progressBar.maxValue = 1;
   _progressBar.style = NSProgressIndicatorBarStyle;
-  _progressBar.usesThreadedAnimation = YES;
   _progressBar.displayedWhenStopped = NO;
   [_progressBar sizeToFit];
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressStartedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
+    _progressBar.displayedWhenStopped = NO;
     _progressBar.doubleValue = 0;
     [_progressBar startAnimation:nil];
   }];
@@ -588,7 +588,9 @@ decisionListener:(id<WebPolicyDecisionListener>)listener
 {
   //NSLog(@"%@%@ actionInformation=%@ request=%@", self, NSStringFromSelector(_cmd), actionInformation, request);
   NSURL* url = [[actionInformation objectForKey:WebActionOriginalURLKey] absoluteURL];
-  if ([url.host isEqualToString:@"www.messenger.com"] ||
+  if ([url.scheme isEqualToString:@"about"]) {
+    [listener ignore];
+  } else if ([url.host isEqualToString:@"www.messenger.com"] ||
       ([url.host isEqualToString:@"www.facebook.com"] &&
        ([url.path hasPrefix:@"/login/"] || [url.path hasPrefix:@"/checkpoint/"] || [url.path isEqualToString:@"/checkpoint"])
       ) )

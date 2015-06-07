@@ -10,6 +10,8 @@
 	<string>icon</string>
 	<key>CFBundleIdentifier</key>
 	<string>me.rsms.fbmessenger</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

@@ -196,12 +196,12 @@
 
     // This fixes an annoying "beep" sound
     document.body.onkeypress = function (e) {
-      var target = e.target.contentEditable && e.target.querySelector('[data-block]');
-      if (target && window.getSelection().baseOffset === 0 && !e.metaKey) {
+      if (e.target.contentEditable && !e.metaKey) {
+        e.preventDefault();
+ 
         var textEvent = document.createEvent('TextEvent');
         textEvent.initTextEvent('textInput', true, true, null, String.fromCharCode(e.which));
-        target.dispatchEvent(textEvent);
-        return false;
+        e.target.dispatchEvent(textEvent);
       }
     };
 

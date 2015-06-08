@@ -10,6 +10,8 @@
 	<string>icon</string>
 	<key>CFBundleIdentifier</key>
 	<string>me.rsms.fbmessenger</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -17,13 +19,13 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.0.6</string>
+	<string>0.0.8</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.0.6.1429084595</string>
+	<string>0.0.8.1433711909</string>
 	<key>GitRev</key>
-	<string>186e947e4741dba44d4161ab74a6c44868a944a8</string>
+	<string>d640fa4b728ab130a8414a6261a1eb24217c84c6</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSHumanReadableCopyright</key>

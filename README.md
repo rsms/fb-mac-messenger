@@ -2,11 +2,12 @@
 
 Mac app wrapper around [Facebook's stand-alone Messenger](https://www.messenger.com/).
 
+> [Download latest release](http://fbmacmessenger.rsms.me/)
+
 ![Screenshot](http://fbmacmessenger.rsms.me/screenshot.png)
 
-> Disclaimer: This is NOT an official Facebook product, but just a hobby project
-
-Icon courtesy of Sebastiaan de With (Muir v3) <http://pictogram.agency/muir/>
+- Disclaimer: This is NOT an official Facebook product, but just a hobby project
+- Icon courtesy of Sebastiaan de With (Muir v3) <http://pictogram.agency/muir/>
 
 ## MIT license
 

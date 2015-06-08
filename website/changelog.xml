@@ -6,6 +6,41 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.0.8</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes a bug where multiple Finder warning dialogs would appear stating that "There is no application set to open the URL about:blank". Messenger now ignores any "about" URL open requests.</li>
+        </ul>
+      ]]></description>
+      <pubDate>Sun, 07 Jun 2015 14:19:19 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="d640fa4b728ab130"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.8.1433711909-d640fa4b728ab130.zip"
+        sparkle:version="0.0.8.1433711909"
+        length="1993193"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.7</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes a bunch of UI issues related to messenger.com and this app's code injection</li>
+          <li>Fixes an issue where the "app is loading" progress bar would sometimes not show.</li>
+          <li>Introduces a power-user option to disable loading of main.js by setting the defaults property "main.js/disable" to -bool NO</li>
+          <li>Fixes window controls in fullscreen mode</li>
+        </ul>
+      ]]></description>
+      <pubDate>Mon, 27 Apr 2015 12:06:24 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="3a36310384c36809"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.7.1430161367-3a36310384c36809.zip"
+        sparkle:version="0.0.7.1430161367"
+        length="1993267"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.0.6</title>
       <description><![CDATA[
         <ul>

@@ -528,6 +528,9 @@ static void __attribute__((constructor))_init() {
       "s.backgroundImage='url(%@)';",
       kErrorPNGDataURL]];
   }
+  // Disable vertical scroll elasticity on parent webview scrollview
+  NSScrollView *scrollView = webView.mainFrame.frameView.documentView.enclosingScrollView;
+  [scrollView setVerticalScrollElasticity:NSScrollElasticityNone];
 }
 
 -(void)webView:(WebView *)webView didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {

@@ -9,6 +9,22 @@
       <title>Messenger for Mac 0.0.8</title>
       <description><![CDATA[
         <ul>
+          <li>Improves auto updating and logging (no personal data is ever logged, just app version and non-personal device id)</li>
+        </ul>
+      ]]></description>
+      <pubDate>Tue, 09 Jun 2015 16:11:47 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="7f9bb2ca00f85676"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.8.1433891483-7f9bb2ca00f85676.zip"
+        sparkle:version="0.0.8.1433891483"
+        length="1994940"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.8</title>
+      <description><![CDATA[
+        <ul>
           <li>Automatically checks for new updates more often (once every hour)</li>
           <li>UI polish: Adds a "curtain" effect while loading and reloading the app</li>
           <li>Sets the info dict key NSHighResolutionCapable=YES as it might help some people who are seeing the app not getting retina rendered</li>

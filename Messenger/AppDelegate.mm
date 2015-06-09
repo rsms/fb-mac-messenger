@@ -199,9 +199,10 @@ static void __attribute__((constructor))_init() {
   // Sparkle
   auto su = [SUUpdater sharedUpdater];
   su.feedURL = [NSURL URLWithString:@"http://fbmacmessenger.rsms.me/changelog.xml"];
-  [su checkForUpdatesInBackground];
   su.automaticallyChecksForUpdates = YES;
   su.automaticallyDownloadsUpdates = YES;
+  su.updateCheckInterval = 60 * 60; // every hour
+  [su performSelector:@selector(checkForUpdatesInBackground) withObject:nil afterDelay:0.1];
     
   _lastNotificationCount = @"";
 

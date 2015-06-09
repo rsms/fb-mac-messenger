@@ -9,6 +9,24 @@
       <title>Messenger for Mac 0.0.8</title>
       <description><![CDATA[
         <ul>
+          <li>Automatically checks for new updates more often (once every hour)</li>
+          <li>UI polish: Adds a "curtain" effect while loading and reloading the app</li>
+          <li>Sets the info dict key NSHighResolutionCapable=YES as it might help some people who are seeing the app not getting retina rendered</li>
+        </ul>
+      ]]></description>
+      <pubDate>Tue, 09 Jun 2015 14:38:18 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="b8deadac8f169d05"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.8.1433885892-b8deadac8f169d05.zip"
+        sparkle:version="0.0.8.1433885892"
+        length="1993699"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.8</title>
+      <description><![CDATA[
+        <ul>
           <li>Fixes a bug where multiple Finder warning dialogs would appear stating that "There is no application set to open the URL about:blank". Messenger now ignores any "about" URL open requests.</li>
         </ul>
       ]]></description>

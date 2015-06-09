@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
 #import <Sparkle/Sparkle.h>
+#import <IOKit/IOKitLib.h>
 #import "jsapi.h"
 #import "WebPreferencesPrivate.h"
 #import "WebStorageManagerPrivate.h"
@@ -14,6 +15,23 @@ static BOOL kCFIsOSX_10_10_orNewer;
 static void __attribute__((constructor))_init() {
   kCFIsOSX_10_10_orNewer = floor(kCFCoreFoundationVersionNumber) > kCFCoreFoundationVersionNumber10_9;
 }
+
+
+// Returns the serial number as a CFString.
+// It is the caller's responsibility to release the returned CFString when done with it.
+NSString* ReadDeviceID() {
+  NSString* did = nil;
+  io_service_t platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"));
+  if (platformExpert) {
+    CFTypeRef serialNumberAsCFString = IORegistryEntryCreateCFProperty(platformExpert, CFSTR(kIOPlatformSerialNumberKey), kCFAllocatorDefault, 0);
+    CFStringRef sr = (CFStringRef)serialNumberAsCFString;
+    did = (NSString*)CFBridgingRelease(sr);
+    IOObjectRelease(platformExpert);
+  }
+  return did;
+}
+
+
 
 @interface AppDelegate ()
 @property (nonatomic, readonly) BOOL canMakeTextLarger;
@@ -201,6 +219,11 @@ static void __attribute__((constructor))_init() {
   su.feedURL = [NSURL URLWithString:@"http://fbmacmessenger.rsms.me/changelog.xml"];
   su.automaticallyChecksForUpdates = YES;
   su.automaticallyDownloadsUpdates = YES;
+  auto bundleInfo = [NSBundle mainBundle].infoDictionary;
+  su.userAgentString = [NSString stringWithFormat:@"Messenger/%@ Sparkle/%@ Device/%@",
+                        bundleInfo[@"CFBundleVersion"],
+                        [NSBundle bundleForClass:[SUUpdater class]].infoDictionary[@"CFBundleVersion"],
+                        ReadDeviceID()];
   su.updateCheckInterval = 60 * 60; // every hour
   [su performSelector:@selector(checkForUpdatesInBackground) withObject:nil afterDelay:0.1];
     

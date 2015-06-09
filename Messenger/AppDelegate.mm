@@ -30,6 +30,7 @@ static void __attribute__((constructor))_init() {
   NSView*              _titlebarView; // NSTitlebarView
   NSString*            _lastNotificationCount;
   NSProgressIndicator* _progressBar;
+  NSView*              _dimView;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
@@ -139,17 +140,28 @@ static void __attribute__((constructor))_init() {
   #endif
   _webView = webView;
   
+  // Dim effect view
+  auto dimView = [[NSView alloc] initWithFrame:[_window.contentView bounds]];
+  dimView.translatesAutoresizingMaskIntoConstraints = YES;
+  dimView.autoresizesSubviews = YES;
+  dimView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+  dimView.wantsLayer = YES;
+  dimView.layer.backgroundColor = [NSColor whiteColor].CGColor;
+  dimView.layer.opaque = NO;
+  dimView.alphaValue = 1;
+  [_window.contentView addSubview:dimView];
+  _dimView = dimView;
+  
   // Progress bar
   _progressBar = [[NSProgressIndicator alloc] initWithFrame:{{0,0},{500,5}}];
   _progressBar.indeterminate = NO;
   _progressBar.minValue = 0;
   _progressBar.maxValue = 1;
   _progressBar.style = NSProgressIndicatorBarStyle;
-  _progressBar.displayedWhenStopped = NO;
   [_progressBar sizeToFit];
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressStartedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
-    _progressBar.displayedWhenStopped = NO;
     _progressBar.doubleValue = 0;
+    _dimView.alphaValue = 1;
     [_progressBar startAnimation:nil];
   }];
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressEstimateChangedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
@@ -157,28 +169,28 @@ static void __attribute__((constructor))_init() {
   }];
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressFinishedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
     _progressBar.doubleValue = 1;
+    _dimView.animator.alphaValue = 0;
     dispatch_async(dispatch_get_main_queue(), ^{
       [_progressBar stopAnimation:nil];
-      _progressBar.displayedWhenStopped = NO;
     });
   }];
   _progressBar.translatesAutoresizingMaskIntoConstraints = NO;
-  [_window.contentView addSubview:_progressBar];
-  [_window.contentView addConstraints:
+  [_dimView addSubview:_progressBar];
+  [_dimView addConstraints:
    [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-40-[progressBar]-40-|"
                                            options:0
                                            metrics:nil
                                              views:@{@"progressBar": _progressBar}]];
-  [_window.contentView addConstraints:
+  [_dimView addConstraints:
    [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=20)-[progressBar]-(>=20)-|"
                                            options:0
                                            metrics:nil
                                              views:@{@"progressBar": _progressBar}]];
-  [_window.contentView addConstraint:
+  [_dimView addConstraint:
    [NSLayoutConstraint constraintWithItem:_progressBar
                                 attribute:NSLayoutAttributeCenterY
                                 relatedBy:NSLayoutRelationEqual
-                                   toItem:_window.contentView
+                                   toItem:_dimView
                                 attribute:NSLayoutAttributeCenterY
                                multiplier:1.f constant:0.f]];
 
@@ -317,7 +329,7 @@ static void __attribute__((constructor))_init() {
     window.titleVisibility = title == nil ? NSWindowTitleHidden : NSWindowTitleVisible;
     //window.titlebarAppearsTransparent = YES;
   }
-
+  
   auto webView = [[WebView alloc] initWithFrame:{{0,0},{100,100}} frameName:@"main" groupName:identifier];
   [webView setFrame:[window.contentView bounds]];
   webView.translatesAutoresizingMaskIntoConstraints = YES;

@@ -30,7 +30,7 @@ static void __attribute__((constructor))_init() {
   NSView*              _titlebarView; // NSTitlebarView
   NSString*            _lastNotificationCount;
   NSProgressIndicator* _progressBar;
-  NSView*              _dimView;
+  NSView*              _curtainView;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
@@ -141,16 +141,15 @@ static void __attribute__((constructor))_init() {
   _webView = webView;
   
   // Dim effect view
-  auto dimView = [[NSView alloc] initWithFrame:[_window.contentView bounds]];
-  dimView.translatesAutoresizingMaskIntoConstraints = YES;
-  dimView.autoresizesSubviews = YES;
-  dimView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-  dimView.wantsLayer = YES;
-  dimView.layer.backgroundColor = [NSColor whiteColor].CGColor;
-  dimView.layer.opaque = NO;
-  dimView.alphaValue = 1;
-  [_window.contentView addSubview:dimView];
-  _dimView = dimView;
+  _curtainView = [[NSView alloc] initWithFrame:[_window.contentView bounds]];
+  _curtainView.translatesAutoresizingMaskIntoConstraints = YES;
+  _curtainView.autoresizesSubviews = YES;
+  _curtainView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+  _curtainView.wantsLayer = YES;
+  _curtainView.layer.backgroundColor = [NSColor whiteColor].CGColor;
+  _curtainView.layer.opaque = NO;
+  _curtainView.alphaValue = 0.8;
+  [_window.contentView addSubview:_curtainView];
   
   // Progress bar
   _progressBar = [[NSProgressIndicator alloc] initWithFrame:{{0,0},{500,5}}];
@@ -161,7 +160,7 @@ static void __attribute__((constructor))_init() {
   [_progressBar sizeToFit];
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressStartedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
     _progressBar.doubleValue = 0;
-    _dimView.alphaValue = 1;
+    _curtainView.alphaValue = 0.8;
     [_progressBar startAnimation:nil];
   }];
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressEstimateChangedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
@@ -169,28 +168,28 @@ static void __attribute__((constructor))_init() {
   }];
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressFinishedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
     _progressBar.doubleValue = 1;
-    _dimView.animator.alphaValue = 0;
+    _curtainView.animator.alphaValue = 0;
     dispatch_async(dispatch_get_main_queue(), ^{
       [_progressBar stopAnimation:nil];
     });
   }];
   _progressBar.translatesAutoresizingMaskIntoConstraints = NO;
-  [_dimView addSubview:_progressBar];
-  [_dimView addConstraints:
+  [_curtainView addSubview:_progressBar];
+  [_curtainView addConstraints:
    [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-40-[progressBar]-40-|"
                                            options:0
                                            metrics:nil
                                              views:@{@"progressBar": _progressBar}]];
-  [_dimView addConstraints:
+  [_curtainView addConstraints:
    [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=20)-[progressBar]-(>=20)-|"
                                            options:0
                                            metrics:nil
                                              views:@{@"progressBar": _progressBar}]];
-  [_dimView addConstraint:
+  [_curtainView addConstraint:
    [NSLayoutConstraint constraintWithItem:_progressBar
                                 attribute:NSLayoutAttributeCenterY
                                 relatedBy:NSLayoutRelationEqual
-                                   toItem:_dimView
+                                   toItem:_curtainView
                                 attribute:NSLayoutAttributeCenterY
                                multiplier:1.f constant:0.f]];
 

@@ -62,6 +62,14 @@
       document.querySelector('li:nth-child('+index+') > [data-reactid]:first-child').click();
     },
 
+    selectNewerConversation: function () {
+      // as-stable-as-possible logic to select a row above the current selection
+    },
+
+    selectOlderConversation: function () {
+      // as-stable-as-possible logic to select a row below the current selection
+    },
+
     updateThreadIDFromURL: function(url) {
       var m = /\/t\/([^\/]+)$/.exec(url);
       if (m && this.currentThreadID !== m[1]) {

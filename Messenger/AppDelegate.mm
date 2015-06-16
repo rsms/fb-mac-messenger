@@ -538,6 +538,10 @@ NSString* ReadDeviceID() {
       mainJSURLString]
      ];
   }
+  
+  // Disable vertical scroll elasticity on parent webview scrollview
+  webView.mainFrame.frameView.allowsScrolling = NO; // < Note: Doesn't seem to have any effect.
+  webView.mainFrame.frameView.documentView.enclosingScrollView.verticalScrollElasticity = NSScrollElasticityNone;
 }
 
 
@@ -569,9 +573,6 @@ NSString* ReadDeviceID() {
       "s.backgroundImage='url(%@)';",
       kErrorPNGDataURL]];
   }
-  // Disable vertical scroll elasticity on parent webview scrollview
-  NSScrollView *scrollView = webView.mainFrame.frameView.documentView.enclosingScrollView;
-  [scrollView setVerticalScrollElasticity:NSScrollElasticityNone];
 }
 
 -(void)webView:(WebView *)webView didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {

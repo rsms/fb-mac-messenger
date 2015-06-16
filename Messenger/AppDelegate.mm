@@ -179,6 +179,7 @@ NSString* ReadDeviceID() {
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressStartedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
     _progressBar.doubleValue = 0;
     _curtainView.alphaValue = 0.8;
+    _curtainView.hidden = NO;
     [_progressBar startAnimation:nil];
   }];
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressEstimateChangedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
@@ -187,6 +188,11 @@ NSString* ReadDeviceID() {
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressFinishedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
     _progressBar.doubleValue = 1;
     _curtainView.animator.alphaValue = 0;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void){
+      if (_curtainView.alphaValue == 0) {
+        _curtainView.hidden = YES;
+      }
+    });
     dispatch_async(dispatch_get_main_queue(), ^{
       [_progressBar stopAnimation:nil];
     });

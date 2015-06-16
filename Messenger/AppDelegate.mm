@@ -538,6 +538,10 @@ NSString* ReadDeviceID() {
       mainJSURLString]
      ];
   }
+  
+  // Disable vertical scroll elasticity on parent webview scrollview
+  webView.mainFrame.frameView.allowsScrolling = NO; // < Note: Doesn't seem to have any effect.
+  webView.mainFrame.frameView.documentView.enclosingScrollView.verticalScrollElasticity = NSScrollElasticityNone;
 }
 
 

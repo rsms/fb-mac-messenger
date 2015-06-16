@@ -223,15 +223,15 @@ NSString* ReadDeviceID() {
   // Sparkle
   auto su = [SUUpdater sharedUpdater];
   su.feedURL = [NSURL URLWithString:@"http://fbmacmessenger.rsms.me/changelog.xml"];
-  su.automaticallyChecksForUpdates = YES;
-  su.automaticallyDownloadsUpdates = YES;
   auto bundleInfo = [NSBundle mainBundle].infoDictionary;
   su.userAgentString = [NSString stringWithFormat:@"Messenger/%@ Sparkle/%@ Device/%@",
                         bundleInfo[@"CFBundleVersion"],
                         [NSBundle bundleForClass:[SUUpdater class]].infoDictionary[@"CFBundleVersion"],
                         ReadDeviceID()];
   su.updateCheckInterval = 60 * 60; // every hour
-  [su performSelector:@selector(checkForUpdatesInBackground) withObject:nil afterDelay:0.1];
+  su.automaticallyChecksForUpdates = YES;
+  su.automaticallyDownloadsUpdates = YES;
+  [su performSelector:@selector(checkForUpdatesInBackground) withObject:nil afterDelay:1];
     
   _lastNotificationCount = @"";
 

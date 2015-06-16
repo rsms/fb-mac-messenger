@@ -424,6 +424,12 @@ NSString* ReadDeviceID() {
 
 #pragma mark - WebUIDelegate
 
+#if !DEBUG
+-(NSArray *)webView:(WebView *)webView contextMenuItemsForElement:(NSDictionary *)element
+   defaultMenuItems:(NSArray *)defaultMenuItems {
+  return nil;
+}
+#endif
 
 - (NSUInteger)webView:(WebView *)webView dragDestinationActionMaskForDraggingInfo:(id <NSDraggingInfo>)draggingInfo {
   // This method is called periodically as something is dragged over a WebView.

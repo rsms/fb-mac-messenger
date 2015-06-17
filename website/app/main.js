@@ -247,10 +247,8 @@
 
     var css = document.createElement('style');
     css.type = 'text/css';
-    var styles = 'body { overflow: hidden; }';
-    css.appendChild(document.createTextNode(styles));
-    console.log(css);
-    console.log(document.getElementsByTagName('head'))
+    var style = 'body { overflow: hidden; }';
+    css.appendChild(document.createTextNode(style));
     document.getElementsByTagName('head')[0].appendChild(css);
 
   };

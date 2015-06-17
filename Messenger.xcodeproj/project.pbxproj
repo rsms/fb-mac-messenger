@@ -132,7 +132,6 @@
 		3A9A9C361AD5B407008FABE9 = {
 			isa = PBXGroup;
 			children = (
-				3A649B7E1B31E08300428884 /* SystemConfiguration.framework */,
 				3A9A9C411AD5B407008FABE9 /* Messenger */,
 				3A9A9C661AD5C30A008FABE9 /* Deps */,
 				3A9A9C6C1AD5CA29008FABE9 /* xcode-config */,
@@ -186,6 +185,7 @@
 		3A9A9C661AD5C30A008FABE9 /* Deps */ = {
 			isa = PBXGroup;
 			children = (
+				3A649B7E1B31E08300428884 /* SystemConfiguration.framework */,
 				3A9A9C791AD5D8D2008FABE9 /* JavaScriptCore.framework */,
 				3A9A9C621AD5B4CD008FABE9 /* WebKit.framework */,
 				3A9A9C641AD5C307008FABE9 /* Sparkle.framework */,
@@ -344,10 +344,6 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -411,7 +407,7 @@
 		};
 		3A9A9C5E1AD5B407008FABE9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3A9A9C701AD5CA29008FABE9 /* messenger-debug.xcconfig */;
+			baseConfigurationReference = 3A9A9C711AD5CA29008FABE9 /* messenger-release.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (

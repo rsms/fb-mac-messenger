@@ -1,0 +1,15 @@
+See: http://docs.aws.amazon.com/AmazonS3/latest/dev/LogFormat.html
+
+Download:
+
+1a29fc66c131f7de fbmacmessenger.rsms.me [09/Jun/2015:20:15:34 +0000] 192.0.2.3 - 80FAE85B36FBD19D WEBSITE.GET.OBJECT dist/Messenger-0.0.8.1433711909-d640fa4b728ab130.zip "GET /dist/Messenger-0.0.8.1433711909-d640fa4b728ab130.zip HTTP/1.1" 200 - 1993193 1993193 50 28 "-" "Messenger/0.0.7 Sparkle/0b186dc" -
+
+
+Check for update: (with device ID)
+
+8cbaf34e757ea8e3 fbmacmessenger.rsms.me [17/Jun/2015:17:39:13 +0000] 192.0.2.3 - 6400F2842757E0AB WEBSITE.GET.OBJECT changelog.xml "GET /changelog.xml HTTP/1.1" 200 - 14637 14637 31 31 "-" "Messenger/0.0.9.1434562330 Sparkle/0b186dc Device/ABCDEFGH12345" -
+
+
+Check for update: (pre-device ID)
+
+1a29fc66c131f7de fbmacmessenger.rsms.me [09/Jun/2015:20:15:29 +0000] 192.0.2.3 - 2C4F9EB7509D4209 WEBSITE.GET.OBJECT changelog.xml "GET /changelog.xml HTTP/1.1" 200 - 11645 11645 37 36 "-" "Messenger/0.0.7 Sparkle/0b186dc" -

@@ -49,6 +49,8 @@ NSString* ReadDeviceID() {
   NSString*            _lastNotificationCount;
   NSProgressIndicator* _progressBar;
   NSView*              _curtainView;
+  NSTimer*             _reloadWhenIdleTimer;
+  NSDate*              _lastReloadDate;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
@@ -232,7 +234,7 @@ NSString* ReadDeviceID() {
   su.automaticallyChecksForUpdates = YES;
   su.automaticallyDownloadsUpdates = YES;
   [su performSelector:@selector(checkForUpdatesInBackground) withObject:nil afterDelay:1];
-    
+
   _lastNotificationCount = @"";
 
   [self reloadFromServer:self];
@@ -283,8 +285,14 @@ NSString* ReadDeviceID() {
 
 
 - (IBAction)reloadFromServer:(id)sender {
-  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/login"]];
-  [_webView.mainFrame loadRequest:req];
+  _lastReloadDate = [NSDate date];
+  if (_webView.mainFrame.DOMDocument != nil && _webView.mainFrame.DOMDocument.URL.length != 0) {
+    NSLog(@"Reloading app");
+    [_webView.mainFrame reloadFromOrigin];
+  } else {
+    auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/login"]];
+    [_webView.mainFrame loadRequest:req];
+  }
 }
 
 
@@ -336,7 +344,47 @@ NSString* ReadDeviceID() {
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification {
+  // Note: Becomes active after unlocking computer when app was active while the computer was locked
   [_window makeKeyAndOrderFront:self];
+  [self cancelReloadTimer];
+}
+
+- (void)applicationDidResignActive:(NSNotification *)notification {
+  [self restartReloadTimer];
+}
+
+#pragma mark - Background auto-reload
+
+- (void)restartReloadTimer {
+  static NSTimeInterval kReloadInterval    = 60 * 15;
+  static NSTimeInterval kMinReloadInterval = 4;   // wait at least N to reload
+
+  NSTimeInterval timeSinceLastReload = -_lastReloadDate.timeIntervalSinceNow;
+  NSTimeInterval reloadInterval = 0;
+
+  if (timeSinceLastReload >= kReloadInterval) {
+    reloadInterval = kMinReloadInterval;
+  } else {
+    reloadInterval = (kReloadInterval - timeSinceLastReload) + kMinReloadInterval;
+  }
+
+  [self cancelReloadTimer];
+  //NSLog(@"reloading app in %.2f seconds", reloadInterval);
+  _reloadWhenIdleTimer = [NSTimer scheduledTimerWithTimeInterval:reloadInterval target:self selector:@selector(reloadTimerTriggered) userInfo:nil repeats:NO];
+  _reloadWhenIdleTimer.tolerance = 1;
+}
+
+
+- (void)reloadTimerTriggered {
+  [self reloadFromServer:self];
+  [self cancelReloadTimer];
+}
+
+- (void)cancelReloadTimer {
+  if (_reloadWhenIdleTimer != nil) {
+    [_reloadWhenIdleTimer invalidate];
+    _reloadWhenIdleTimer = nil;
+  }
 }
 
 
@@ -542,6 +590,12 @@ NSString* ReadDeviceID() {
   // Disable vertical scroll elasticity on parent webview scrollview
   webView.mainFrame.frameView.allowsScrolling = NO; // < Note: Doesn't seem to have any effect.
   webView.mainFrame.frameView.documentView.enclosingScrollView.verticalScrollElasticity = NSScrollElasticityNone;
+  
+  // Restart reload timer?
+  auto app = [NSApplication sharedApplication];
+  if (!app.isActive || app.isHidden) {
+    [self restartReloadTimer];
+  }
 }
 
 

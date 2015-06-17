@@ -19,13 +19,13 @@
           <li>Improvements to native-app auto update mechanism</li>
         </ul>
       ]]></description>
-      <pubDate>Wed, 17 Jun 2015 10:37:35 -0700</pubDate>
+      <pubDate>Wed, 17 Jun 2015 10:44:07 -0700</pubDate>
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
-        gitrev="c9b5bdf234f7a73c"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434562330-c9b5bdf234f7a73c.zip"
-        sparkle:version="0.0.9.1434562330"
-        length="1998907"
+        gitrev="3641cfadfed59607"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434563040-3641cfadfed59607.zip"
+        sparkle:version="0.0.9.1434563040"
+        length="1969299"
         type="application/octet-stream" />
     </item>
     <item>

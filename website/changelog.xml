@@ -9,6 +9,22 @@
       <title>Messenger for Mac 0.0.9</title>
       <description><![CDATA[
         <ul>
+          <li>Performance improvements, especially when switching conversations</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 17 Jun 2015 11:59:49 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="6f94ffc94d941402"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434567577-6f94ffc94d941402.zip"
+        sparkle:version="0.0.9.1434567577"
+        length="1969397"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.9</title>
+      <description><![CDATA[
+        <ul>
           <li>More reliable main.js injection</li>
         </ul>
       ]]></description>

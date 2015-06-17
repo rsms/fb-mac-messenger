@@ -9,6 +9,22 @@
       <title>Messenger for Mac 0.0.9</title>
       <description><![CDATA[
         <ul>
+          <li>More reliable main.js injection</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 17 Jun 2015 10:51:42 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="52aaec14b08d4790"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434563496-52aaec14b08d4790.zip"
+        sparkle:version="0.0.9.1434563496"
+        length="1969336"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.9</title>
+      <description><![CDATA[
+        <ul>
           <li>Fixes gear icon and settings keyboard shortcut & main menu prefs item</li>
           <li>Fixes a minor bug where you could vertically-scroll the entire app</li>
           <li>Automatically reloads messenger.com when the app is inactive, keeping you up-to-date with the latest version of messenger.com.<br>

@@ -654,15 +654,22 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
      [NSString stringWithFormat:@""
       "window.MacMessengerVersion = '%@';"
       "window.MacMessengerGitRev = '%@';"
-      "new MutationObserver(function() {"
-      "  if (document.head) {"
+      "function injectMainJS() {"
+      "  if (document.head || document.documentElement) {"
       "    var script = document.createElement('script');"
       "    script.async = true;"
       "    script.src = '%@';"
-      "    document.head.appendChild(script);"
-      "    this.disconnect();"
+      "    (document.head || document.documentElement).appendChild(script);"
+      "    return true;"
       "  }"
-      "}).observe(document, { attributes: false, childList: true, characterData: false });",
+      "}"
+      "if (!injectMainJS()) {"
+      "  new MutationObserver(function() {"
+      "    if (injectMainJS()) {"
+      "      this.disconnect();"
+      "    }"
+      "  }).observe(document, { attributes: false, childList: true, characterData: false });"
+      "}",
       bundleInfo[@"CFBundleShortVersionString"],
       bundleInfo[@"GitRev"],
       mainJSURLString]

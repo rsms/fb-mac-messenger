@@ -605,7 +605,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
 
 - (void)webView:(WebView *)webView didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame {
-  if (webView != _webView) {
+  if (webView != _webView || frame != _webView.mainFrame) {
     return;
   }
   auto ctx = webView.mainFrame.globalContext;

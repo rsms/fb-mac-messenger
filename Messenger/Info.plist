@@ -17,13 +17,13 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.0.8</string>
+	<string>0.0.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.0.8.1433891483</string>
+	<string>0.0.9.1434562330</string>
 	<key>GitRev</key>
-	<string>7f9bb2ca00f85676d92903c4725430110f298edc</string>
+	<string>c9b5bdf234f7a73c67a4b31a5cdc52c9b3b7556e</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSHighResolutionCapable</key>

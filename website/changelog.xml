@@ -6,6 +6,29 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.0.9</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes gear icon and settings keyboard shortcut & main menu prefs item</li>
+          <li>Fixes a minor bug where you could vertically-scroll the entire app</li>
+          <li>Automatically reloads messenger.com when the app is inactive, keeping you up-to-date with the latest version of messenger.com.<br>
+            <em><small>
+              The strategy is to reload messenger.com when the app is in the background or hidden (or while the computer is locked or displaying a screensaver.) A timer is used to wait for a certain amount of time to avoid reloading immediately when the app is 'backgrounded' as well as not reloading it too often. It's currently set to reload every 15 minutes, where the act of reloading only happens after at least 4 seconds of the app being continuosly 'backgrounded'.
+            </small></em>
+          </li>
+          <li>Improvements to native-app auto update mechanism</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 17 Jun 2015 10:37:35 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="c9b5bdf234f7a73c"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434562330-c9b5bdf234f7a73c.zip"
+        sparkle:version="0.0.9.1434562330"
+        length="1998907"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.0.8</title>
       <description><![CDATA[
         <ul>

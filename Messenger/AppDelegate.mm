@@ -1,6 +1,8 @@
 #import "AppDelegate.h"
 #import <Sparkle/Sparkle.h>
 #import <IOKit/IOKitLib.h>
+#import <dispatch/dispatch.h>
+#import <SystemConfiguration/SCNetworkReachability.h>
 #import "jsapi.h"
 #import "WebPreferencesPrivate.h"
 #import "WebStorageManagerPrivate.h"
@@ -40,7 +42,22 @@ NSString* ReadDeviceID() {
 - (IBAction)makeTextSmaller:(id)sender;
 @property (nonatomic, readonly) BOOL canMakeTextStandardSize;
 - (IBAction)makeTextStandardSize:(id)sender;
+- (void)updateNetReach:(SCNetworkConnectionFlags)flags;
 @end
+
+
+static void NetReachCallback(SCNetworkReachabilityRef target,
+                             SCNetworkConnectionFlags flags,
+                             void* userdata)
+{
+  // Observed flags:
+  // - nearly gone: kSCNetworkFlagsReachable alone (ignored)
+  // - gone: kSCNetworkFlagsTransientConnection | kSCNetworkFlagsReachable | kSCNetworkFlagsConnectionRequired
+  // - connected: kSCNetworkFlagsIsDirect | kSCNetworkFlagsReachable
+  auto self = (__bridge AppDelegate*)userdata;
+  [self updateNetReach:flags];
+}
+
 
 @implementation AppDelegate {
   NSWindow*            _window;
@@ -51,6 +68,10 @@ NSString* ReadDeviceID() {
   NSView*              _curtainView;
   NSTimer*             _reloadWhenIdleTimer;
   NSDate*              _lastReloadDate;
+  SCNetworkReachabilityRef _netReachRef;
+  BOOL                 _isOnline;
+  BOOL                 _needsReload;
+  BOOL                 _webAppIsFunctional;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
@@ -236,8 +257,10 @@ NSString* ReadDeviceID() {
   [su performSelector:@selector(checkForUpdatesInBackground) withObject:nil afterDelay:1];
 
   _lastNotificationCount = @"";
+  _isOnline = YES; // initially assume we are online and can access messenger.com
 
   [self reloadFromServer:self];
+  [self initNetReachObservation];
 }
 
 
@@ -278,6 +301,59 @@ NSString* ReadDeviceID() {
 }
 
 
+- (void)dealloc {
+  [self disableNetReachObservation];
+}
+
+
+- (void)initNetReachObservation {
+  _netReachRef = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "www.messenger.com");
+  assert(_netReachRef != nullptr); // FIXME
+  SCNetworkReachabilityContext context = {0, (__bridge void*)self, NULL, NULL, NULL};
+  SCNetworkReachabilitySetCallback(_netReachRef, NetReachCallback, &context);
+  auto queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+  SCNetworkReachabilitySetDispatchQueue(_netReachRef, queue);
+  // Get initial flags
+//  CFRetain(_netReachRef);
+//  dispatch_async(queue, ^{
+//    SCNetworkConnectionFlags flags;
+//    if (_netReachRef != nil) {
+//      if (SCNetworkReachabilityGetFlags(_netReachRef, &flags)) {
+//        [self updateNetReach:flags];
+//      }
+//      CFRelease(_netReachRef);
+//    }
+//  });
+}
+
+
+- (void)updateNetReach:(SCNetworkConnectionFlags)flags {
+  BOOL isOnline = ( (flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired) );
+  if (isOnline != _isOnline) {
+    // changed
+    _isOnline = isOnline;
+    NSLog(@"netreach changed to %@", isOnline ? @"online" : @"offline");
+    if (isOnline && _needsReload) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        if (!_webAppIsFunctional || [NSApplication sharedApplication].isActive) {
+          [self reloadFromServer:self];
+        }
+      });
+    }
+  }
+}
+
+
+- (void)disableNetReachObservation {
+  if (_netReachRef) {
+    SCNetworkReachabilityUnscheduleFromRunLoop(_netReachRef, CFRunLoopGetMain(), kCFRunLoopCommonModes);
+    SCNetworkReachabilitySetCallback(_netReachRef, NULL, NULL);
+    CFRelease(_netReachRef);
+    _netReachRef = nil;
+  }
+}
+
+
 - (void)setActiveConversationAtIndex:(NSString*)index {
   [_webView.windowScriptObject evaluateWebScript:
    [NSString stringWithFormat:@"MacMessenger.selectConversationAtIndex(%@)", index]];
@@ -285,7 +361,6 @@ NSString* ReadDeviceID() {
 
 
 - (IBAction)reloadFromServer:(id)sender {
-  _lastReloadDate = [NSDate date];
   if (_webView.mainFrame.DOMDocument != nil && _webView.mainFrame.DOMDocument.URL.length != 0) {
     NSLog(@"Reloading app");
     [_webView.mainFrame reloadFromOrigin];
@@ -293,6 +368,7 @@ NSString* ReadDeviceID() {
     auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/login"]];
     [_webView.mainFrame loadRequest:req];
   }
+  _lastReloadDate = [NSDate date];
 }
 
 
@@ -356,13 +432,13 @@ NSString* ReadDeviceID() {
 #pragma mark - Background auto-reload
 
 - (void)restartReloadTimer {
-  static NSTimeInterval kReloadInterval    = 60 * 15;
+  static NSTimeInterval kReloadInterval    = 60 * 30;
   static NSTimeInterval kMinReloadInterval = 4;   // wait at least N to reload
 
   NSTimeInterval timeSinceLastReload = -_lastReloadDate.timeIntervalSinceNow;
   NSTimeInterval reloadInterval = 0;
 
-  if (timeSinceLastReload >= kReloadInterval) {
+  if (_needsReload || timeSinceLastReload >= kReloadInterval) {
     reloadInterval = kMinReloadInterval;
   } else {
     reloadInterval = (kReloadInterval - timeSinceLastReload) + kMinReloadInterval;
@@ -376,8 +452,11 @@ NSString* ReadDeviceID() {
 
 
 - (void)reloadTimerTriggered {
-  [self reloadFromServer:self];
-  [self cancelReloadTimer];
+  _reloadWhenIdleTimer = nil;
+  _needsReload = YES;
+  if (_isOnline) {
+    [self reloadFromServer:self];
+  }
 }
 
 - (void)cancelReloadTimer {
@@ -526,6 +605,9 @@ NSString* ReadDeviceID() {
 
 
 - (void)webView:(WebView *)webView didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame {
+  if (webView != _webView) {
+    return;
+  }
   auto ctx = webView.mainFrame.globalContext;
   JSObjectRef globalObj = JSContextGetGlobalObject(ctx);
   
@@ -590,6 +672,13 @@ NSString* ReadDeviceID() {
   // Disable vertical scroll elasticity on parent webview scrollview
   webView.mainFrame.frameView.allowsScrolling = NO; // < Note: Doesn't seem to have any effect.
   webView.mainFrame.frameView.documentView.enclosingScrollView.verticalScrollElasticity = NSScrollElasticityNone;
+}
+
+
+- (void)webView:(WebView *)sender didCommitLoadForFrame:(WebFrame *)frame {
+  // Called when the web view starts loading (NOT called if loading failed)
+  _needsReload = NO;
+  _webAppIsFunctional = YES;
   
   // Restart reload timer?
   auto app = [NSApplication sharedApplication];
@@ -603,6 +692,8 @@ NSString* ReadDeviceID() {
   auto rsp = frame.dataSource.response;
   if ([rsp isKindOfClass:[NSHTTPURLResponse class]] && ((NSHTTPURLResponse*)rsp).statusCode == 400) {
     NSLog(@"%@%@ frame.dataSource.response=%@", self, NSStringFromSelector(_cmd), frame.dataSource.response);
+    _needsReload = YES;
+    _webAppIsFunctional = NO;
     [webView.mainFrame.windowObject evaluateWebScript:
      [NSString stringWithFormat:@""
       "document.body.innerText = '';"
@@ -630,7 +721,7 @@ NSString* ReadDeviceID() {
 }
 
 -(void)webView:(WebView *)webView didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
-  NSLog(@"%@%@ error=%@", self, NSStringFromSelector(_cmd), error);
+  NSLog(@"%@ error=%@", NSStringFromSelector(_cmd), error);
   [webView.mainFrame.windowObject evaluateWebScript:
    [NSString stringWithFormat:@""
     "document.body.innerText = '';"
@@ -654,6 +745,12 @@ NSString* ReadDeviceID() {
     "s.backgroundPosition='top center';"
     "s.backgroundImage='url(%@)';",
     kErrorPNGDataURL]];
+
+  _webAppIsFunctional = NO;
+  _needsReload = YES;
+  if (_isOnline) {
+    [self restartReloadTimer];
+  }
 }
 
 - (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {

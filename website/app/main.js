@@ -27,7 +27,7 @@
 
   window.MacMessenger = {
     openGearMenu: function() {
-      this.gearButton.firstElementChild.dispatchEvent(
+      this.gearButton.firstElementChild.firstElementChild.dispatchEvent(
         new MouseEvent('click', {view:window, bubbles:true, cancelable:true})
       );
     },
@@ -40,8 +40,10 @@
 
     showSettings: function() {
       this.openGearMenu();
-      console.log('settings element:', document.querySelector('#js_2 > div.uiContextualLayer a'));
-      document.querySelector('#js_2 > div.uiContextualLayer a').click();
+      var sel =
+        'div.uiContextualLayerPositioner.uiLayer > ' +
+        'div.uiContextualLayer.uiContextualLayerBelowLeft li > a';
+      document.querySelector(sel).click();
     },
 
     composeNewMessage: function() {
@@ -177,7 +179,7 @@
       var reactToMutations = function() {
         clearTimeout(latencyTimer);
         latencyTimer = null;
-        console.log('convo content changed: reactToMutations');
+        //console.log('convo content changed: reactToMutations');
         MacMessenger.augmentConversation(convoContainer);
       };
       observer = new MutationObserver(function() {
@@ -206,7 +208,6 @@
     document.body.onkeypress = function (e) {
       if (e.target.contentEditable && !e.metaKey) {
         e.preventDefault();
- 
         var textEvent = document.createEvent('TextEvent');
         textEvent.initTextEvent('textInput', true, true, null, String.fromCharCode(e.which));
         e.target.dispatchEvent(textEvent);
@@ -215,7 +216,7 @@
 
     // Find settings gear
     var tryFindSettingsGear = function() {
-      var e = document.querySelector('[aria-owns="js_2"]');
+      var e = document.querySelector('div[title^="Settings"]');
       if (e) {
         e = e.parentNode;
         e.style.visibility = 'hidden';

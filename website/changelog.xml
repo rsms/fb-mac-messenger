@@ -9,6 +9,22 @@
       <title>Messenger for Mac 0.0.9</title>
       <description><![CDATA[
         <ul>
+          <li>Fixes a bug where a different conversation would be selected after the app had been in the background for more than 15 minutes (auto-reload would cause a state issue in messenger.com.)</li>
+        </ul>
+      ]]></description>
+      <pubDate>Thu, 18 Jun 2015 12:30:46 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="20a46b37192bfacc"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434655833-20a46b37192bfacc.zip"
+        sparkle:version="0.0.9.1434655833"
+        length="1969402"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.9</title>
+      <description><![CDATA[
+        <ul>
           <li>Performance improvements, especially when switching conversations</li>
         </ul>
       ]]></description>

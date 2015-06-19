@@ -1,5 +1,50 @@
 (function () {
 
+  function findReactDOMNode(options, instances) {
+    var React = require("React");
+    var ReactMount = require("ReactMount");
+    var ret = null;
+
+    if (!instances) instances = ReactMount._instancesByReactRootID;
+
+    for (n in instances) {
+      var instance = instances[n];
+
+      if (!instance) continue;
+      var element = instance._currentElement;
+
+      if (options.name) {
+        if (element && element.type && element.type.displayName == options.name) {
+          return instance.getPublicInstance().getDOMNode();
+        }
+      } else if (options.id) {
+        if (instance._rootNodeID == options.id) {
+          // if (element.type.displayName) {
+          //   console.log(element.type.displayName);
+          // } else {
+          //   console.log(element.type);
+          // }
+          return instance;
+        }
+      }
+      if (typeof instance._stringText === 'string') continue;
+
+      if (instance._renderedComponent) {
+        ret = findReactDOMNode(options, { a: instance._renderedComponent });
+      }
+
+      var children = instance._renderedChildren;
+      if (!ret && children) {
+        ret = findReactDOMNode(options, children);
+      }
+
+      if (ret) return ret;
+    }
+
+    return null;
+  }
+
+
   // observeElement
   var observeElement = function(baseElement, selector, handler) {
     var e = baseElement.querySelector(selector);
@@ -198,11 +243,21 @@
 
 
   // Things that need the DOM to be loaded
+  var didLoad = false;
   var onDocumentLoaded = function() {
+    if (didLoad) {
+      return;
+    }
+    if (window.require === undefined || !require("React") || !require("ReactMount")) {
+      // React not yet loaded. We need it for findReactDOMNode to function
+      setTimeout(onDocumentLoaded, 100);
+      return;
+    }
     if (document.readyState === "loading") {
       return; // still loading
     }
     document.removeEventListener('readystatechange', onDocumentLoaded);
+    didLoad = true;
 
     // This fixes an annoying "beep" sound
     document.body.onkeypress = function (e) {
@@ -216,7 +271,7 @@
 
     // Find settings gear
     var tryFindSettingsGear = function() {
-      var e = document.querySelector('div[title^="Settings"]');
+      var e = findReactDOMNode({ name: "MessengerSettingsMenu" });
       if (e) {
         e = e.parentNode;
         e.style.visibility = 'hidden';

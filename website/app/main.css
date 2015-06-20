@@ -1,0 +1,11 @@
+* {
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+._hh7 span, input, ._54-z * {
+    -webkit-user-select: text;
+    user-select: text;
+    cursor: text;
+}

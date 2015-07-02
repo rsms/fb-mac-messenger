@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		07DB23D81AD9E22E00177F14 /* NSImage+RoundCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = 07DB23D71AD9E22E00177F14 /* NSImage+RoundCorner.m */; };
 		22C40EB11AD5C5E100FE12C1 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 22C40EB01AD5C5E100FE12C1 /* icon.icns */; };
+		3A649B7F1B31E08300428884 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A649B7E1B31E08300428884 /* SystemConfiguration.framework */; };
 		3A6757221AE0A25300BDC7C5 /* MResourceURLProtocol.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A6757211AE0A25300BDC7C5 /* MResourceURLProtocol.mm */; };
 		3A6757241AE0A52400BDC7C5 /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 3A6757231AE0A52400BDC7C5 /* main.js */; };
 		3A713BA01AD65F6500870D2A /* MEmbeddedRes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */; };
@@ -60,6 +61,7 @@
 		07DB23D61AD9E22E00177F14 /* NSImage+RoundCorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+RoundCorner.h"; sourceTree = "<group>"; };
 		07DB23D71AD9E22E00177F14 /* NSImage+RoundCorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+RoundCorner.m"; sourceTree = "<group>"; };
 		22C40EB01AD5C5E100FE12C1 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
+		3A649B7E1B31E08300428884 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3A6757201AE0A25300BDC7C5 /* MResourceURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MResourceURLProtocol.h; sourceTree = "<group>"; };
 		3A6757211AE0A25300BDC7C5 /* MResourceURLProtocol.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MResourceURLProtocol.mm; sourceTree = "<group>"; };
 		3A6757231AE0A52400BDC7C5 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = main.js; path = website/app/main.js; sourceTree = SOURCE_ROOT; };
@@ -103,6 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A649B7F1B31E08300428884 /* SystemConfiguration.framework in Frameworks */,
 				3A9A9C7A1AD5D8D2008FABE9 /* JavaScriptCore.framework in Frameworks */,
 				3A9A9C631AD5B4CD008FABE9 /* WebKit.framework in Frameworks */,
 				3A9A9C651AD5C307008FABE9 /* Sparkle.framework in Frameworks */,
@@ -187,6 +190,7 @@
 		3A9A9C661AD5C30A008FABE9 /* Deps */ = {
 			isa = PBXGroup;
 			children = (
+				3A649B7E1B31E08300428884 /* SystemConfiguration.framework */,
 				3A9A9C791AD5D8D2008FABE9 /* JavaScriptCore.framework */,
 				3A9A9C621AD5B4CD008FABE9 /* WebKit.framework */,
 				3A9A9C641AD5C307008FABE9 /* Sparkle.framework */,
@@ -346,10 +350,6 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -413,7 +413,7 @@
 		};
 		3A9A9C5E1AD5B407008FABE9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3A9A9C701AD5CA29008FABE9 /* messenger-debug.xcconfig */;
+			baseConfigurationReference = 3A9A9C711AD5CA29008FABE9 /* messenger-release.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (

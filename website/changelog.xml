@@ -6,6 +6,146 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.0.9</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes a bug where a different conversation would be selected after the app had been in the background for more than 15 minutes (auto-reload would cause a state issue in messenger.com.)</li>
+        </ul>
+      ]]></description>
+      <pubDate>Thu, 18 Jun 2015 12:30:46 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="20a46b37192bfacc"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434655833-20a46b37192bfacc.zip"
+        sparkle:version="0.0.9.1434655833"
+        length="1969402"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.9</title>
+      <description><![CDATA[
+        <ul>
+          <li>Performance improvements, especially when switching conversations</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 17 Jun 2015 11:59:49 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="6f94ffc94d941402"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434567577-6f94ffc94d941402.zip"
+        sparkle:version="0.0.9.1434567577"
+        length="1969397"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.9</title>
+      <description><![CDATA[
+        <ul>
+          <li>More reliable main.js injection</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 17 Jun 2015 10:51:42 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="52aaec14b08d4790"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434563496-52aaec14b08d4790.zip"
+        sparkle:version="0.0.9.1434563496"
+        length="1969336"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.9</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes gear icon and settings keyboard shortcut & main menu prefs item</li>
+          <li>Fixes a minor bug where you could vertically-scroll the entire app</li>
+          <li>Automatically reloads messenger.com when the app is inactive, keeping you up-to-date with the latest version of messenger.com.<br>
+            <em><small>
+              The strategy is to reload messenger.com when the app is in the background or hidden (or while the computer is locked or displaying a screensaver.) A timer is used to wait for a certain amount of time to avoid reloading immediately when the app is 'backgrounded' as well as not reloading it too often. It's currently set to reload every 15 minutes, where the act of reloading only happens after at least 4 seconds of the app being continuosly 'backgrounded'.
+            </small></em>
+          </li>
+          <li>Improvements to native-app auto update mechanism</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 17 Jun 2015 10:44:07 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="3641cfadfed59607"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434563040-3641cfadfed59607.zip"
+        sparkle:version="0.0.9.1434563040"
+        length="1969299"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.8</title>
+      <description><![CDATA[
+        <ul>
+          <li>Improves auto updating and logging (no personal data is ever logged, just app version and non-personal device id)</li>
+        </ul>
+      ]]></description>
+      <pubDate>Tue, 09 Jun 2015 16:11:47 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="7f9bb2ca00f85676"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.8.1433891483-7f9bb2ca00f85676.zip"
+        sparkle:version="0.0.8.1433891483"
+        length="1994940"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.8</title>
+      <description><![CDATA[
+        <ul>
+          <li>Automatically checks for new updates more often (once every hour)</li>
+          <li>UI polish: Adds a "curtain" effect while loading and reloading the app</li>
+          <li>Sets the info dict key NSHighResolutionCapable=YES as it might help some people who are seeing the app not getting retina rendered</li>
+        </ul>
+      ]]></description>
+      <pubDate>Tue, 09 Jun 2015 14:38:18 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="b8deadac8f169d05"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.8.1433885892-b8deadac8f169d05.zip"
+        sparkle:version="0.0.8.1433885892"
+        length="1993699"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.8</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes a bug where multiple Finder warning dialogs would appear stating that "There is no application set to open the URL about:blank". Messenger now ignores any "about" URL open requests.</li>
+        </ul>
+      ]]></description>
+      <pubDate>Sun, 07 Jun 2015 14:19:19 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="d640fa4b728ab130"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.8.1433711909-d640fa4b728ab130.zip"
+        sparkle:version="0.0.8.1433711909"
+        length="1993193"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.0.7</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes a bunch of UI issues related to messenger.com and this app's code injection</li>
+          <li>Fixes an issue where the "app is loading" progress bar would sometimes not show.</li>
+          <li>Introduces a power-user option to disable loading of main.js by setting the defaults property "main.js/disable" to -bool NO</li>
+          <li>Fixes window controls in fullscreen mode</li>
+        </ul>
+      ]]></description>
+      <pubDate>Mon, 27 Apr 2015 12:06:24 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="3a36310384c36809"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.7.1430161367-3a36310384c36809.zip"
+        sparkle:version="0.0.7.1430161367"
+        length="1993267"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.0.6</title>
       <description><![CDATA[
         <ul>

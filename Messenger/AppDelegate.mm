@@ -1,5 +1,8 @@
 #import "AppDelegate.h"
 #import <Sparkle/Sparkle.h>
+#import <IOKit/IOKitLib.h>
+#import <dispatch/dispatch.h>
+#import <SystemConfiguration/SCNetworkReachability.h>
 #import "jsapi.h"
 #import "WebPreferencesPrivate.h"
 #import "WebStorageManagerPrivate.h"
@@ -15,6 +18,23 @@ static void __attribute__((constructor))_init() {
   kCFIsOSX_10_10_orNewer = floor(kCFCoreFoundationVersionNumber) > kCFCoreFoundationVersionNumber10_9;
 }
 
+
+// Returns the serial number as a CFString.
+// It is the caller's responsibility to release the returned CFString when done with it.
+NSString* ReadDeviceID() {
+  NSString* did = nil;
+  io_service_t platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"));
+  if (platformExpert) {
+    CFTypeRef serialNumberAsCFString = IORegistryEntryCreateCFProperty(platformExpert, CFSTR(kIOPlatformSerialNumberKey), kCFAllocatorDefault, 0);
+    CFStringRef sr = (CFStringRef)serialNumberAsCFString;
+    did = (NSString*)CFBridgingRelease(sr);
+    IOObjectRelease(platformExpert);
+  }
+  return did;
+}
+
+
+
 @interface AppDelegate ()
 @property (nonatomic, readonly) BOOL canMakeTextLarger;
 - (IBAction)makeTextLarger:(id)sender;
@@ -22,7 +42,22 @@ static void __attribute__((constructor))_init() {
 - (IBAction)makeTextSmaller:(id)sender;
 @property (nonatomic, readonly) BOOL canMakeTextStandardSize;
 - (IBAction)makeTextStandardSize:(id)sender;
+- (void)updateNetReach:(SCNetworkConnectionFlags)flags;
 @end
+
+
+static void NetReachCallback(SCNetworkReachabilityRef target,
+                             SCNetworkConnectionFlags flags,
+                             void* userdata)
+{
+  // Observed flags:
+  // - nearly gone: kSCNetworkFlagsReachable alone (ignored)
+  // - gone: kSCNetworkFlagsTransientConnection | kSCNetworkFlagsReachable | kSCNetworkFlagsConnectionRequired
+  // - connected: kSCNetworkFlagsIsDirect | kSCNetworkFlagsReachable
+  auto self = (__bridge AppDelegate*)userdata;
+  [self updateNetReach:flags];
+}
+
 
 @implementation AppDelegate {
   NSWindow*            _window;
@@ -30,6 +65,13 @@ static void __attribute__((constructor))_init() {
   NSView*              _titlebarView; // NSTitlebarView
   NSString*            _lastNotificationCount;
   NSProgressIndicator* _progressBar;
+  NSView*              _curtainView;
+  NSTimer*             _reloadWhenIdleTimer;
+  NSDate*              _lastReloadDate;
+  SCNetworkReachabilityRef _netReachRef;
+  BOOL                 _isOnline;
+  BOOL                 _needsReload;
+  BOOL                 _webAppIsFunctional;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
@@ -139,17 +181,28 @@ static void __attribute__((constructor))_init() {
   #endif
   _webView = webView;
   
+  // Dim effect view
+  _curtainView = [[NSView alloc] initWithFrame:[_window.contentView bounds]];
+  _curtainView.translatesAutoresizingMaskIntoConstraints = YES;
+  _curtainView.autoresizesSubviews = YES;
+  _curtainView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+  _curtainView.wantsLayer = YES;
+  _curtainView.layer.backgroundColor = [NSColor whiteColor].CGColor;
+  _curtainView.layer.opaque = NO;
+  _curtainView.alphaValue = 0.8;
+  [_window.contentView addSubview:_curtainView];
+  
   // Progress bar
   _progressBar = [[NSProgressIndicator alloc] initWithFrame:{{0,0},{500,5}}];
   _progressBar.indeterminate = NO;
   _progressBar.minValue = 0;
   _progressBar.maxValue = 1;
   _progressBar.style = NSProgressIndicatorBarStyle;
-  _progressBar.usesThreadedAnimation = YES;
-  _progressBar.displayedWhenStopped = NO;
   [_progressBar sizeToFit];
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressStartedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
     _progressBar.doubleValue = 0;
+    _curtainView.alphaValue = 0.8;
+    _curtainView.hidden = NO;
     [_progressBar startAnimation:nil];
   }];
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressEstimateChangedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
@@ -157,28 +210,33 @@ static void __attribute__((constructor))_init() {
   }];
   [[NSNotificationCenter defaultCenter] addObserverForName:WebViewProgressFinishedNotification object:webView queue:nil usingBlock:^(NSNotification *note) {
     _progressBar.doubleValue = 1;
+    _curtainView.animator.alphaValue = 0;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void){
+      if (_curtainView.alphaValue == 0) {
+        _curtainView.hidden = YES;
+      }
+    });
     dispatch_async(dispatch_get_main_queue(), ^{
       [_progressBar stopAnimation:nil];
-      _progressBar.displayedWhenStopped = NO;
     });
   }];
   _progressBar.translatesAutoresizingMaskIntoConstraints = NO;
-  [_window.contentView addSubview:_progressBar];
-  [_window.contentView addConstraints:
+  [_curtainView addSubview:_progressBar];
+  [_curtainView addConstraints:
    [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-40-[progressBar]-40-|"
                                            options:0
                                            metrics:nil
                                              views:@{@"progressBar": _progressBar}]];
-  [_window.contentView addConstraints:
+  [_curtainView addConstraints:
    [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=20)-[progressBar]-(>=20)-|"
                                            options:0
                                            metrics:nil
                                              views:@{@"progressBar": _progressBar}]];
-  [_window.contentView addConstraint:
+  [_curtainView addConstraint:
    [NSLayoutConstraint constraintWithItem:_progressBar
                                 attribute:NSLayoutAttributeCenterY
                                 relatedBy:NSLayoutRelationEqual
-                                   toItem:_window.contentView
+                                   toItem:_curtainView
                                 attribute:NSLayoutAttributeCenterY
                                multiplier:1.f constant:0.f]];
 
@@ -188,13 +246,21 @@ static void __attribute__((constructor))_init() {
   // Sparkle
   auto su = [SUUpdater sharedUpdater];
   su.feedURL = [NSURL URLWithString:@"http://fbmacmessenger.rsms.me/changelog.xml"];
-  [su checkForUpdatesInBackground];
+  auto bundleInfo = [NSBundle mainBundle].infoDictionary;
+  su.userAgentString = [NSString stringWithFormat:@"Messenger/%@ Sparkle/%@ Device/%@",
+                        bundleInfo[@"CFBundleVersion"],
+                        [NSBundle bundleForClass:[SUUpdater class]].infoDictionary[@"CFBundleVersion"],
+                        ReadDeviceID()];
+  su.updateCheckInterval = 60 * 60; // every hour
   su.automaticallyChecksForUpdates = YES;
   su.automaticallyDownloadsUpdates = YES;
-    
+  [su performSelector:@selector(checkForUpdatesInBackground) withObject:nil afterDelay:1];
+
   _lastNotificationCount = @"";
+  _isOnline = YES; // initially assume we are online and can access messenger.com
 
   [self reloadFromServer:self];
+  [self initNetReachObservation];
 }
 
 
@@ -235,6 +301,59 @@ static void __attribute__((constructor))_init() {
 }
 
 
+- (void)dealloc {
+  [self disableNetReachObservation];
+}
+
+
+- (void)initNetReachObservation {
+  _netReachRef = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "www.messenger.com");
+  assert(_netReachRef != nullptr); // FIXME
+  SCNetworkReachabilityContext context = {0, (__bridge void*)self, NULL, NULL, NULL};
+  SCNetworkReachabilitySetCallback(_netReachRef, NetReachCallback, &context);
+  auto queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+  SCNetworkReachabilitySetDispatchQueue(_netReachRef, queue);
+  // Get initial flags
+//  CFRetain(_netReachRef);
+//  dispatch_async(queue, ^{
+//    SCNetworkConnectionFlags flags;
+//    if (_netReachRef != nil) {
+//      if (SCNetworkReachabilityGetFlags(_netReachRef, &flags)) {
+//        [self updateNetReach:flags];
+//      }
+//      CFRelease(_netReachRef);
+//    }
+//  });
+}
+
+
+- (void)updateNetReach:(SCNetworkConnectionFlags)flags {
+  BOOL isOnline = ( (flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired) );
+  if (isOnline != _isOnline) {
+    // changed
+    _isOnline = isOnline;
+    NSLog(@"netreach changed to %@", isOnline ? @"online" : @"offline");
+    if (isOnline && _needsReload) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        if (!_webAppIsFunctional || [NSApplication sharedApplication].isActive) {
+          [self reloadFromServer:self];
+        }
+      });
+    }
+  }
+}
+
+
+- (void)disableNetReachObservation {
+  if (_netReachRef) {
+    SCNetworkReachabilityUnscheduleFromRunLoop(_netReachRef, CFRunLoopGetMain(), kCFRunLoopCommonModes);
+    SCNetworkReachabilitySetCallback(_netReachRef, NULL, NULL);
+    CFRelease(_netReachRef);
+    _netReachRef = nil;
+  }
+}
+
+
 - (void)setActiveConversationAtIndex:(NSString*)index {
   [_webView.windowScriptObject evaluateWebScript:
    [NSString stringWithFormat:@"MacMessenger.selectConversationAtIndex(%@)", index]];
@@ -242,8 +361,16 @@ static void __attribute__((constructor))_init() {
 
 
 - (IBAction)reloadFromServer:(id)sender {
-  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.messenger.com/login"]];
+  NSString* url = nil;
+  if (_webView.mainFrame.DOMDocument != nil && _webView.mainFrame.DOMDocument.URL.length != 0) {
+    NSLog(@"Reloading app");
+    url = _webView.mainFrame.DOMDocument.URL;
+  } else {
+    url = @"https://www.messenger.com/login";
+  }
+  auto req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
   [_webView.mainFrame loadRequest:req];
+  _lastReloadDate = [NSDate date];
 }
 
 
@@ -340,7 +467,50 @@ static void __attribute__((constructor))_init() {
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification {
+  // Note: Becomes active after unlocking computer when app was active while the computer was locked
   [_window makeKeyAndOrderFront:self];
+  [self cancelReloadTimer];
+}
+
+- (void)applicationDidResignActive:(NSNotification *)notification {
+  [self restartReloadTimer];
+}
+
+#pragma mark - Background auto-reload
+
+- (void)restartReloadTimer {
+  static NSTimeInterval kReloadInterval    = 60 * 30;
+  static NSTimeInterval kMinReloadInterval = 4;   // wait at least N to reload
+
+  NSTimeInterval timeSinceLastReload = -_lastReloadDate.timeIntervalSinceNow;
+  NSTimeInterval reloadInterval = 0;
+
+  if (_needsReload || timeSinceLastReload >= kReloadInterval) {
+    reloadInterval = kMinReloadInterval;
+  } else {
+    reloadInterval = (kReloadInterval - timeSinceLastReload) + kMinReloadInterval;
+  }
+
+  [self cancelReloadTimer];
+  //NSLog(@"reloading app in %.2f seconds", reloadInterval);
+  _reloadWhenIdleTimer = [NSTimer scheduledTimerWithTimeInterval:reloadInterval target:self selector:@selector(reloadTimerTriggered) userInfo:nil repeats:NO];
+  _reloadWhenIdleTimer.tolerance = 1;
+}
+
+
+- (void)reloadTimerTriggered {
+  _reloadWhenIdleTimer = nil;
+  _needsReload = YES;
+  if (_isOnline) {
+    [self reloadFromServer:self];
+  }
+}
+
+- (void)cancelReloadTimer {
+  if (_reloadWhenIdleTimer != nil) {
+    [_reloadWhenIdleTimer invalidate];
+    _reloadWhenIdleTimer = nil;
+  }
 }
 
 
@@ -362,7 +532,7 @@ static void __attribute__((constructor))_init() {
     window.titleVisibility = title == nil ? NSWindowTitleHidden : NSWindowTitleVisible;
     //window.titlebarAppearsTransparent = YES;
   }
-
+  
   auto webView = [[WebView alloc] initWithFrame:{{0,0},{100,100}} frameName:@"main" groupName:identifier];
   [webView setFrame:[window.contentView bounds]];
   webView.translatesAutoresizingMaskIntoConstraints = YES;
@@ -482,6 +652,9 @@ static void __attribute__((constructor))_init() {
 
 
 - (void)webView:(WebView *)webView didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame {
+  if (webView != _webView || frame != _webView.mainFrame) {
+    return;
+  }
   auto ctx = webView.mainFrame.globalContext;
   JSObjectRef globalObj = JSContextGetGlobalObject(ctx);
   
@@ -528,19 +701,43 @@ static void __attribute__((constructor))_init() {
      [NSString stringWithFormat:@""
       "window.MacMessengerVersion = '%@';"
       "window.MacMessengerGitRev = '%@';"
-      "new MutationObserver(function() {"
-      "  if (document.head) {"
+      "function injectMainJS() {"
+      "  if (document.head || document.documentElement) {"
       "    var script = document.createElement('script');"
       "    script.async = true;"
       "    script.src = '%@';"
-      "    document.head.appendChild(script);"
-      "    this.disconnect();"
+      "    (document.head || document.documentElement).appendChild(script);"
+      "    return true;"
       "  }"
-      "}).observe(document, { attributes: false, childList: true, characterData: false });",
+      "}"
+      "if (!injectMainJS()) {"
+      "  new MutationObserver(function() {"
+      "    if (injectMainJS()) {"
+      "      this.disconnect();"
+      "    }"
+      "  }).observe(document, { attributes: false, childList: true, characterData: false });"
+      "}",
       bundleInfo[@"CFBundleShortVersionString"],
       bundleInfo[@"GitRev"],
       mainJSURLString]
      ];
+  }
+  
+  // Disable vertical scroll elasticity on parent webview scrollview
+  webView.mainFrame.frameView.allowsScrolling = NO; // < Note: Doesn't seem to have any effect.
+  webView.mainFrame.frameView.documentView.enclosingScrollView.verticalScrollElasticity = NSScrollElasticityNone;
+}
+
+
+- (void)webView:(WebView *)sender didCommitLoadForFrame:(WebFrame *)frame {
+  // Called when the web view starts loading (NOT called if loading failed)
+  _needsReload = NO;
+  _webAppIsFunctional = YES;
+  
+  // Restart reload timer?
+  auto app = [NSApplication sharedApplication];
+  if (!app.isActive || app.isHidden) {
+    [self restartReloadTimer];
   }
 }
 
@@ -549,6 +746,8 @@ static void __attribute__((constructor))_init() {
   auto rsp = frame.dataSource.response;
   if ([rsp isKindOfClass:[NSHTTPURLResponse class]] && ((NSHTTPURLResponse*)rsp).statusCode == 400) {
     NSLog(@"%@%@ frame.dataSource.response=%@", self, NSStringFromSelector(_cmd), frame.dataSource.response);
+    _needsReload = YES;
+    _webAppIsFunctional = NO;
     [webView.mainFrame.windowObject evaluateWebScript:
      [NSString stringWithFormat:@""
       "document.body.innerText = '';"
@@ -576,7 +775,7 @@ static void __attribute__((constructor))_init() {
 }
 
 -(void)webView:(WebView *)webView didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
-  NSLog(@"%@%@ error=%@", self, NSStringFromSelector(_cmd), error);
+  NSLog(@"%@ error=%@", NSStringFromSelector(_cmd), error);
   [webView.mainFrame.windowObject evaluateWebScript:
    [NSString stringWithFormat:@""
     "document.body.innerText = '';"
@@ -600,6 +799,12 @@ static void __attribute__((constructor))_init() {
     "s.backgroundPosition='top center';"
     "s.backgroundImage='url(%@)';",
     kErrorPNGDataURL]];
+
+  _webAppIsFunctional = NO;
+  _needsReload = YES;
+  if (_isOnline) {
+    [self restartReloadTimer];
+  }
 }
 
 - (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {
@@ -633,7 +838,9 @@ decisionListener:(id<WebPolicyDecisionListener>)listener
 {
   //NSLog(@"%@%@ actionInformation=%@ request=%@", self, NSStringFromSelector(_cmd), actionInformation, request);
   NSURL* url = [[actionInformation objectForKey:WebActionOriginalURLKey] absoluteURL];
-  if ([url.host isEqualToString:@"www.messenger.com"] ||
+  if ([url.scheme isEqualToString:@"about"]) {
+    [listener ignore];
+  } else if ([url.host isEqualToString:@"www.messenger.com"] ||
       ([url.host isEqualToString:@"www.facebook.com"] &&
        ([url.path hasPrefix:@"/login/"] || [url.path hasPrefix:@"/checkpoint/"] || [url.path isEqualToString:@"/checkpoint"])
       ) )

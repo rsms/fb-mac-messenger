@@ -17,15 +17,17 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.0.6</string>
+	<string>0.0.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.0.6.1429084595</string>
+	<string>0.0.9.1434655833</string>
 	<key>GitRev</key>
-	<string>186e947e4741dba44d4161ab74a6c44868a944a8</string>
+	<string>20a46b37192bfacc8ca705f05891dcb8a6ba29a9</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2015 Rsms. All rights reserved.</string>
 	<key>NSMainNibFile</key>

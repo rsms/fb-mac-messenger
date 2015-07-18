@@ -4,6 +4,7 @@
 
 - (IBAction)checkForUpdates:(id)sender;
 - (void)setActiveConversationAtIndex:(NSString *)index;
+- (void)setFocusToSearchField;
 
 @end
 

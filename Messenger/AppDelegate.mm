@@ -359,6 +359,9 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
    [NSString stringWithFormat:@"MacMessenger.selectConversationAtIndex(%@)", index]];
 }
 
+- (void)setFocusToSearchField {
+  [_webView.windowScriptObject evaluateWebScript:@"MacMessenger.focusSearchField()"];  
+}
 
 - (IBAction)reloadFromServer:(id)sender {
   NSString* url = nil;

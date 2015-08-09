@@ -449,6 +449,9 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   [self showWebViewWindowWithID:@"privacy-policy" title:@"Messenger Privacy Policy" URL:@"https://www.facebook.com/help/cookies"];
 }
 
+- (IBAction)showMainWindow:(id)sender {
+  [_window makeKeyAndOrderFront:sender];
+}
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag {
   [_window makeKeyAndOrderFront:self];

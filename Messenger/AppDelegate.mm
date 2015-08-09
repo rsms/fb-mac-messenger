@@ -373,6 +373,27 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 }
 
 
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+  SEL action = [menuItem action];
+  if (action == @selector(selectNewerConversation:)) {
+    return [[self evaluateJavaScript:@"MacMessenger.canSelectNewerConversation()"] boolValue];
+  } else if (action == @selector(selectOlderConversation:)) {
+    return [[self evaluateJavaScript:@"MacMessenger.canSelectOlderConversation()"] boolValue];
+  } else {
+    return YES;
+  }
+}
+
+- (IBAction)selectNewerConversation:(id)sender {
+  [self evaluateJavaScript:@"MacMessenger.selectNewerConversation()"];
+}
+
+
+- (IBAction)selectOlderConversation:(id)sender {
+  [self evaluateJavaScript:@"MacMessenger.selectOlderConversation()"];
+}
+
+
 - (IBAction)reloadFromServer:(id)sender {
   NSString* url = nil;
   if (_webView.mainFrame.DOMDocument != nil && _webView.mainFrame.DOMDocument.URL.length != 0) {

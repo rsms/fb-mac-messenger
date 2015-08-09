@@ -109,12 +109,30 @@
       document.querySelector('li:nth-child('+index+') > [data-reactid]:first-child').click();
     },
 
+    currentConversationItem: function() {
+      return document.querySelector('li[role="log"]');
+    },
+
+    canSelectNewerConversation: function () {
+      return (this.currentConversationItem().previousElementSibling != null);
+    },
+
     selectNewerConversation: function () {
-      // as-stable-as-possible logic to select a row above the current selection
+      var newer = this.currentConversationItem().previousElementSibling;
+      if (newer) {
+        newer.querySelector('[data-reactid]:first-child').click();
+      }
+    },
+
+    canSelectOlderConversation: function () {
+      return (this.currentConversationItem().nextElementSibling != null);
     },
 
     selectOlderConversation: function () {
-      // as-stable-as-possible logic to select a row below the current selection
+      var newer = this.currentConversationItem().nextElementSibling;
+      if (newer) {
+        newer.querySelector('[data-reactid]:first-child').click();
+      }
     },
 
     updateThreadIDFromURL: function(url) {

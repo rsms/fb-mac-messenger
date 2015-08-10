@@ -306,19 +306,6 @@
       observer.observe(document.body, { childList: true });
     }
 
-    // The following two statements enable drag-and-drop file sending
-    document.addEventListener('dragover', function(ev) {
-      ev.stopPropagation();
-      ev.preventDefault();
-      ev.dataTransfer.dropEffect = 'copy';
-    });
-    document.addEventListener('drop', function(ev) {
-      ev.stopPropagation();
-      ev.preventDefault();
-      document.querySelector('input[type="file"][name="attachment[]"]').files =
-        ev.dataTransfer.files;
-    });
-
 
   };
   document.addEventListener('readystatechange', onDocumentLoaded);

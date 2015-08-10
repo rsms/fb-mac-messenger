@@ -175,6 +175,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   webView.frameLoadDelegate = self;
   webView.UIDelegate = self;
   webView.preferences = wp;
+  webView.maintainsBackForwardList = NO;
   webView.continuousSpellCheckingEnabled = YES;
   #if USE_BLURRY_BACKGROUND
   webView.drawsBackground = NO;

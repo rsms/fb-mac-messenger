@@ -109,12 +109,30 @@
       document.querySelector('li:nth-child('+index+') > [data-reactid]:first-child').click();
     },
 
+    currentConversationItem: function() {
+      return document.querySelector('li[role="log"]');
+    },
+
+    canSelectNewerConversation: function () {
+      return (this.currentConversationItem().previousElementSibling != null);
+    },
+
     selectNewerConversation: function () {
-      // as-stable-as-possible logic to select a row above the current selection
+      var newer = this.currentConversationItem().previousElementSibling;
+      if (newer) {
+        newer.querySelector('[data-reactid]:first-child').click();
+      }
+    },
+
+    canSelectOlderConversation: function () {
+      return (this.currentConversationItem().nextElementSibling != null);
     },
 
     selectOlderConversation: function () {
-      // as-stable-as-possible logic to select a row below the current selection
+      var newer = this.currentConversationItem().nextElementSibling;
+      if (newer) {
+        newer.querySelector('[data-reactid]:first-child').click();
+      }
     },
 
     updateThreadIDFromURL: function(url) {
@@ -287,19 +305,6 @@
       });
       observer.observe(document.body, { childList: true });
     }
-
-    // The following two statements enable drag-and-drop file sending
-    document.addEventListener('dragover', function(ev) {
-      ev.stopPropagation();
-      ev.preventDefault();
-      ev.dataTransfer.dropEffect = 'copy';
-    });
-    document.addEventListener('drop', function(ev) {
-      ev.stopPropagation();
-      ev.preventDefault();
-      document.querySelector('input[type="file"][name="attachment[]"]').files =
-        ev.dataTransfer.files;
-    });
 
 
   };

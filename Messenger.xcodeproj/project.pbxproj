@@ -63,13 +63,13 @@
 		3A649B7E1B31E08300428884 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3A6757201AE0A25300BDC7C5 /* MResourceURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MResourceURLProtocol.h; sourceTree = "<group>"; };
 		3A6757211AE0A25300BDC7C5 /* MResourceURLProtocol.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MResourceURLProtocol.mm; sourceTree = "<group>"; };
-		3A6757231AE0A52400BDC7C5 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = main.js; path = website/app/main.js; sourceTree = SOURCE_ROOT; };
+		3A6757231AE0A52400BDC7C5 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.javascript; name = main.js; path = website/app/main.js; sourceTree = SOURCE_ROOT; tabWidth = 2; usesTabs = 0; };
 		3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEmbeddedRes.h; sourceTree = "<group>"; };
 		3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEmbeddedRes.m; sourceTree = "<group>"; };
 		3A9A9C3F1AD5B407008FABE9 /* Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A9A9C431AD5B407008FABE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A9A9C441AD5B407008FABE9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
+		3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
 		3A9A9C471AD5B407008FABE9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3A9A9C491AD5B407008FABE9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		3A9A9C4C1AD5B407008FABE9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };

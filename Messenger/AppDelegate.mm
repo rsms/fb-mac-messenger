@@ -175,6 +175,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   webView.frameLoadDelegate = self;
   webView.UIDelegate = self;
   webView.preferences = wp;
+  webView.maintainsBackForwardList = NO;
   webView.continuousSpellCheckingEnabled = YES;
   #if USE_BLURRY_BACKGROUND
   webView.drawsBackground = NO;
@@ -354,9 +355,43 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 }
 
 
+- (id)evaluateJavaScript:(NSString *)script
+{
+  WebScriptObject *scriptObject = _webView.windowScriptObject;
+  static NSString * const kErrorPrefix = @"Exception raised during -evaluateWebScript: ";
+  script = [NSString stringWithFormat:
+            @"try { %@ } catch (e) { \"%@\"+e.sourceURL+\":\"+e.line+\": \"+e.toString() }", script, kErrorPrefix];
+  id result = [scriptObject evaluateWebScript:script];
+  if ([result isKindOfClass:[NSString class]] && [result hasPrefix:kErrorPrefix]) {
+    [NSException raise:NSGenericException format:@"%@", result];
+  }
+  return result;
+}
+
+
 - (void)setActiveConversationAtIndex:(NSString*)index {
-  [_webView.windowScriptObject evaluateWebScript:
-   [NSString stringWithFormat:@"MacMessenger.selectConversationAtIndex(%@)", index]];
+  [self evaluateJavaScript:[NSString stringWithFormat:@"MacMessenger.selectConversationAtIndex(%@)", index]];
+}
+
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+  SEL action = [menuItem action];
+  if (action == @selector(selectNewerConversation:)) {
+    return [[self evaluateJavaScript:@"MacMessenger.canSelectNewerConversation()"] boolValue];
+  } else if (action == @selector(selectOlderConversation:)) {
+    return [[self evaluateJavaScript:@"MacMessenger.canSelectOlderConversation()"] boolValue];
+  } else {
+    return YES;
+  }
+}
+
+- (IBAction)selectNewerConversation:(id)sender {
+  [self evaluateJavaScript:@"MacMessenger.selectNewerConversation()"];
+}
+
+
+- (IBAction)selectOlderConversation:(id)sender {
+  [self evaluateJavaScript:@"MacMessenger.selectOlderConversation()"];
 }
 
 
@@ -376,12 +411,12 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
 - (IBAction)find:(id)sender {
   // Give input focus to the search field
-  [_webView.windowScriptObject evaluateWebScript:@"MacMessenger.focusSearchField()"];
+  [self evaluateJavaScript:@"MacMessenger.focusSearchField()"];
 }
 
 
 - (IBAction)composeNewMessage:(id)sender {
-  [_webView.mainFrame.windowObject evaluateWebScript:@"MacMessenger.composeNewMessage()"];
+  [self evaluateJavaScript:@"MacMessenger.composeNewMessage()"];
 }
 
 
@@ -391,7 +426,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
 
 - (IBAction)showPreferences:(id)sender {
-  [_webView.mainFrame.windowObject evaluateWebScript:@"MacMessenger.showSettings()"];
+  [self evaluateJavaScript:@"MacMessenger.showSettings()"];
 }
 
 
@@ -404,7 +439,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 }
 
 - (IBAction)logOut:(id)sender {
-  [_webView.mainFrame.windowObject evaluateWebScript:@"MacMessenger.logOut()"];
+  [self evaluateJavaScript:@"MacMessenger.logOut()"];
 }
 
 - (IBAction)showTerms:(id)sender {
@@ -415,6 +450,9 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   [self showWebViewWindowWithID:@"privacy-policy" title:@"Messenger Privacy Policy" URL:@"https://www.facebook.com/help/cookies"];
 }
 
+- (IBAction)showMainWindow:(id)sender {
+  [_window makeKeyAndOrderFront:sender];
+}
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag {
   [_window makeKeyAndOrderFront:self];
@@ -514,14 +552,13 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 - (BOOL)canMakeTextStandardSize { return _webView.canMakeTextStandardSize; }
 - (IBAction)makeTextStandardSize:(id)sender { [_webView makeTextStandardSize:sender]; }
 
-
 #pragma mark - NSWindowDelegate
 
 
 - (void)windowDidBecomeKey:(NSNotification*)notification {
   //NSLog(@"%@%@%@", self, NSStringFromSelector(_cmd), notification);
   // Give focus to the composer
-  [_webView.windowScriptObject evaluateWebScript:@"MacMessenger.focusComposer()"];
+  [self evaluateJavaScript:@"(typeof MacMessenger != 'undefined') && MacMessenger.focusComposer()"];
 }
 
 

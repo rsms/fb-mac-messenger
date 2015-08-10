@@ -138,6 +138,8 @@
 				3A9A9C401AD5B407008FABE9 /* Products */,
 			);
 			sourceTree = "<group>";
+			tabWidth = 2;
+			usesTabs = 0;
 		};
 		3A9A9C401AD5B407008FABE9 /* Products */ = {
 			isa = PBXGroup;

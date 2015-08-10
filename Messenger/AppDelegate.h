@@ -4,6 +4,10 @@
 
 - (IBAction)checkForUpdates:(id)sender;
 - (void)setActiveConversationAtIndex:(NSString *)index;
+- (BOOL)canSelectNewerConversation;
+- (IBAction)selectNewerConversation:(id)sender;
+- (BOOL)canSelectOlderConversation;
+- (IBAction)selectOlderConversation:(id)sender;
 
 @end
 

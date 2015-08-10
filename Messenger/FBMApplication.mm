@@ -13,6 +13,22 @@
           [((AppDelegate*)self.delegate) setActiveConversationAtIndex:event.characters];
           return;
         }
+        case u']': {
+          AppDelegate* delegate = (AppDelegate*)[self delegate];
+          if ([delegate canSelectOlderConversation]) {
+            [delegate selectOlderConversation:self];
+            return;
+          }
+          break;
+        }
+        case u'[': {
+          AppDelegate* delegate = (AppDelegate*)[self delegate];
+          if ([delegate canSelectNewerConversation]) {
+            [delegate selectNewerConversation:self];
+            return;
+          }
+          break;
+        }
         default: {
           break;
         }

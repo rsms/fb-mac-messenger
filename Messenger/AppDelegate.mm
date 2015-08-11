@@ -175,6 +175,14 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   webView.frameLoadDelegate = self;
   webView.UIDelegate = self;
   webView.preferences = wp;
+  NSString *webKitVersion = [[NSBundle bundleForClass:[WebView class]]
+                             objectForInfoDictionaryKey:(__bridge NSString *)kCFBundleVersionKey];
+  NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge NSString *)kCFBundleVersionKey];
+  webView.applicationNameForUserAgent = [NSString stringWithFormat:@"fb-mac-messenger/%@, like Safari/%@",
+                                         version, webKitVersion];
+  #if 0
+  webView.customUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/600.7.12 (KHTML, like Gecko) Version/8.0.7 Safari/600.7.12";
+  #endif // 0
   webView.continuousSpellCheckingEnabled = YES;
   #if USE_BLURRY_BACKGROUND
   webView.drawsBackground = NO;
@@ -792,6 +800,13 @@ decidePolicyForNavigationAction:(NSDictionary *)actionInformation
 decisionListener:(id<WebPolicyDecisionListener>)listener
 {
   //NSLog(@"%@%@ actionInformation=%@ request=%@", self, NSStringFromSelector(_cmd), actionInformation, request);
+#if DEBUG
+  static BOOL sAlreadyReported = NO;
+  if (!sAlreadyReported) {
+    NSLog(@"My user agent is %@", [request valueForHTTPHeaderField:@"User-Agent"]);
+    sAlreadyReported = YES;
+  }
+#endif // DEBUG
   NSURL* url = [[actionInformation objectForKey:WebActionOriginalURLKey] absoluteURL];
   if ([url.scheme isEqualToString:@"about"]) {
     [listener ignore];

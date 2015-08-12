@@ -6,6 +6,28 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.1.0</title>
+      <description><![CDATA[
+        <ul>
+          <li>
+            Adds config for hiding traffic light and controlling autoreload
+            <ul>
+              <li>Defaults key <code>autoreload</code> can be set to a positive fractional number-of-seconds to enable automatic reloading of messenger.com while the app is not active (screensaver running, screen locked, app hidden, app in background, app minimized, etc). A zero or negative value, or absence of a value causes autoreload to be disabled. E.g. <code>defaults write me.rsms.fbmessenger autoreload -float 21600</code> to make the app reload messenger.com when it has been inactive continuously for at least 6 hours.</li>
+              <li>Defaults key <code>traffic-lights/disable</code> can be set to boolean YES to hide the window controls (close, minimize, zoom). E.g. <code>defaults write me.rsms.fbmessenger traffic-lights/disable -bool YES</code> then close and open the window</li>
+            </ul>
+          </li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 12 Aug 2015 14:04:48 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="0b4651ac573332db"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.1.0.1439413265-0b4651ac573332db.zip"
+        sparkle:version="0.1.0.1439413265"
+        length="1970061"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.0.9</title>
       <description><![CDATA[
         <ul>

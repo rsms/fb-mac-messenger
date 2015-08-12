@@ -276,6 +276,8 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   titlebarContainerFrame.origin.y = windowFrame.size.height - kTitlebarHeight;
   titlebarContainerFrame.size.height = kTitlebarHeight;
   titlebarContainerView.frame = titlebarContainerFrame;
+  
+  auto hidden = [[NSUserDefaults standardUserDefaults] boolForKey:@"traffic-lights/hidden"];
 
   // Set position of window buttons
   __block CGFloat x = 12; // initial LHS margin, matching Safari 8.0 on OS X 10.10.
@@ -294,6 +296,10 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
     x += buttonFrame.size.width + 6;
 
     [buttonView setFrameOrigin:buttonFrame.origin];
+    
+    if (hidden) {
+      buttonView.hidden = YES;
+    }
   };
   updateButton([_window standardWindowButton:NSWindowCloseButton]);
   updateButton([_window standardWindowButton:NSWindowMiniaturizeButton]);
@@ -434,16 +440,24 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 #pragma mark - Background auto-reload
 
 - (void)restartReloadTimer {
-  static NSTimeInterval kReloadInterval    = 60 * 30;
   static NSTimeInterval kMinReloadInterval = 4;   // wait at least N to reload
+  
+  NSTimeInterval interval = [[NSUserDefaults standardUserDefaults] floatForKey:@"autoreload"];
+  if (isnan(interval) || interval < 0 || interval == +0.0 || interval == -0.0) {
+    return;
+  }
+
+  if (interval < kMinReloadInterval) {
+    interval = kMinReloadInterval;
+  }
 
   NSTimeInterval timeSinceLastReload = -_lastReloadDate.timeIntervalSinceNow;
   NSTimeInterval reloadInterval = 0;
 
-  if (_needsReload || timeSinceLastReload >= kReloadInterval) {
+  if (_needsReload || timeSinceLastReload >= interval) {
     reloadInterval = kMinReloadInterval;
   } else {
-    reloadInterval = (kReloadInterval - timeSinceLastReload) + kMinReloadInterval;
+    reloadInterval = (interval - timeSinceLastReload) + kMinReloadInterval;
   }
 
   [self cancelReloadTimer];

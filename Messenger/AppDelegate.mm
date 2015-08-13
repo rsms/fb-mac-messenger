@@ -254,17 +254,23 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   // Present main window
   [_window makeKeyAndOrderFront:self];
 
+  auto bundleInfo = [NSBundle mainBundle].infoDictionary;
+  NSString* appVersion = bundleInfo[@"CFBundleVersion"];
+  assert([appVersion isKindOfClass:[NSString class]]);
+
   // Sparkle
   auto su = [SUUpdater sharedUpdater];
+  if ([appVersion hasPrefix:@"0.1.2."] || [appVersion hasPrefix:@"0.1.1."] || [appVersion hasPrefix:@"0.1.0."] || [appVersion hasPrefix:@"0.0."]) {
+    // Revert previous behaviour of Sparkle which prevented "new version" dialog to appear automatically
+    su.automaticallyDownloadsUpdates = NO;
+  }
   su.feedURL = [NSURL URLWithString:@"http://fbmacmessenger.rsms.me/changelog.xml"];
-  auto bundleInfo = [NSBundle mainBundle].infoDictionary;
   su.userAgentString = [NSString stringWithFormat:@"Messenger/%@ Sparkle/%@ Device/%@",
-                        bundleInfo[@"CFBundleVersion"],
+                        appVersion,
                         [NSBundle bundleForClass:[SUUpdater class]].infoDictionary[@"CFBundleVersion"],
                         ReadDeviceID()];
   su.updateCheckInterval = 60 * 60; // every hour
   su.automaticallyChecksForUpdates = YES;
-  su.automaticallyDownloadsUpdates = YES;
   [su performSelector:@selector(checkForUpdatesInBackground) withObject:nil afterDelay:1];
 
   _lastNotificationCount = @"";

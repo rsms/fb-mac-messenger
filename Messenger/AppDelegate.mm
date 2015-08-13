@@ -876,7 +876,7 @@ decisionListener:(id<WebPolicyDecisionListener>)listener
 #if DEBUG
   static BOOL sAlreadyReported = NO;
   if (!sAlreadyReported) {
-    NSLog(@"My user agent is %@", [request valueForHTTPHeaderField:@"User-Agent"]);
+    NSLog(@"DEBUG: request header User-Agent: %@", [request valueForHTTPHeaderField:@"User-Agent"]);
     sAlreadyReported = YES;
   }
 #endif // DEBUG

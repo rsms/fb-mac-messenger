@@ -62,6 +62,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 @implementation AppDelegate {
   NSWindow*            _window;
   WebView*             _webView;
+  WebView*             _dummyExternalWebView;
   NSView*              _titlebarView; // NSTitlebarView
   NSString*            _lastNotificationCount;
   NSProgressIndicator* _progressBar;
@@ -659,6 +660,16 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   [openPanel beginSheetModalForWindow:_window completionHandler:onComplete];
 }
 
+
+- (WebView *)webView:(WebView *)sender createWebViewWithRequest:(NSURLRequest *)request {
+  // When window.open() is used, request will be nil, so we have to create a dummy WebView and wait for the policy
+  // delegate call:
+  if (!_dummyExternalWebView) {
+    _dummyExternalWebView = [WebView new];
+    [_dummyExternalWebView setPolicyDelegate:self];
+  }
+  return _dummyExternalWebView;
+}
 
 
 #pragma mark - WebFrameLoadDelegate

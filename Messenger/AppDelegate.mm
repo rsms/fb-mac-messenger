@@ -426,7 +426,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 }
 
 
-- (IBAction)find:(id)sender {
+- (IBAction)findPeopleAndGroups:(id)sender {
   // Give input focus to the search field
   [self evaluateJavaScript:@"MacMessenger.focusSearchField()"];
 }
@@ -465,6 +465,10 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
 - (IBAction)showPrivacyPolicy:(id)sender {
   [self showWebViewWindowWithID:@"privacy-policy" title:@"Messenger Privacy Policy" URL:@"https://www.facebook.com/help/cookies"];
+}
+
+- (IBAction)toggleFullscreen:(id)sender {
+  [_window toggleFullScreen:sender];
 }
 
 

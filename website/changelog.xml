@@ -6,6 +6,28 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.1.1</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes an issue with the conversation list sidebar where it wouldn't resize, or simply be too wide.</li>
+          <li>Fixes an issue with videos not playing</li>
+          <li>Fixes an issue where opening a link "in a new window" would do nothing or replace the app. Now currently opens the link in a new tab/window in the default web browser.</li>
+          <li>Adds "Toggle Fullscreen" menu item, bound to ⌃⌘F</li>
+          <li>Changes the behaviour of "Window" menu items for zooming to scale everything instead of just changing the text size. Text size can still be changed with the same keyboard shortcuts used with ⌥.</li>
+          <li>Enables navigating between conversations using ⌘] or ⌃⇥ (older conversation), ⌘[ or ⌃⇧⇥ (newer conversation)</li>
+          <li>Allows the window to grow smaller than before</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 12 Aug 2015 19:56:24 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="5583b4fc775d0804"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.1.1.1439432949-5583b4fc775d0804.zip"
+        sparkle:version="0.1.1.1439432949"
+        length="1972563"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.1.0</title>
       <description><![CDATA[
         <ul>

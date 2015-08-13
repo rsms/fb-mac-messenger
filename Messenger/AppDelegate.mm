@@ -6,6 +6,7 @@
 #import "jsapi.h"
 #import "WebPreferencesPrivate.h"
 #import "WebStorageManagerPrivate.h"
+#import "WebViewPrivate.h"
 #import "JSClass.hh"
 #import "MEmbeddedRes.h"
 
@@ -586,6 +587,24 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 - (IBAction)makeTextSmaller:(id)sender { [_webView makeTextSmaller:sender]; }
 - (BOOL)canMakeTextStandardSize { return _webView.canMakeTextStandardSize; }
 - (IBAction)makeTextStandardSize:(id)sender { [_webView makeTextStandardSize:sender]; }
+
+// Warning: The following methods are internal to WebView and might change at any time
+- (IBAction)zoomPageIn:(id)sender {
+  [_webView zoomPageIn:sender];
+  // Possible alternate way, which would require some fairly advanced layout code:
+  // auto clipView = _webView.mainFrame.frameView.documentView.superview;
+  // [clipView scaleUnitSquareToSize:NSMakeSize(1.1, 1.1)];
+  // [clipView setNeedsDisplay:YES];
+}
+- (IBAction)zoomPageOut:(id)sender { [_webView zoomPageOut:sender]; }
+- (BOOL)canZoomPageIn { return [_webView canZoomPageIn]; }
+- (IBAction)resetPageZoom:(id)sender {
+  [_webView resetPageZoom:sender];
+  // We also reset text size
+  [_webView makeTextStandardSize:sender];
+}
+- (BOOL)canZoomPageOut { return [_webView canZoomPageOut]; }
+- (BOOL)canResetPageZoom { return [_webView canResetPageZoom] || [self canMakeTextStandardSize]; }
 
 #pragma mark - NSWindowDelegate
 

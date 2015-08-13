@@ -91,6 +91,7 @@
 		3A9A9C821AD5EA13008FABE9 /* JSObjWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSObjWrapper.h; sourceTree = "<group>"; };
 		3A9A9C831AD5EA13008FABE9 /* JSObjWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSObjWrapper.m; sourceTree = "<group>"; };
 		3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSNotifications.js.mm; sourceTree = "<group>"; };
+		3AC5B7B41B7C357F00BCF9D0 /* WebViewPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewPrivate.h; sourceTree = "<group>"; };
 		3AEEEB881ADE3A9800F3A659 /* WebStorageManagerPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebStorageManagerPrivate.h; sourceTree = "<group>"; };
 		3AEEEB891ADE3B0600F3A659 /* WebPreferencesPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebPreferencesPrivate.h; sourceTree = "<group>"; };
 		FC67C61E1AD7027700459263 /* FBMApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMApplication.h; sourceTree = "<group>"; };
@@ -157,6 +158,7 @@
 				FC67C61E1AD7027700459263 /* FBMApplication.h */,
 				FC67C61F1AD7027700459263 /* FBMApplication.mm */,
 				3AEEEB891ADE3B0600F3A659 /* WebPreferencesPrivate.h */,
+				3AC5B7B41B7C357F00BCF9D0 /* WebViewPrivate.h */,
 				3AEEEB881ADE3A9800F3A659 /* WebStorageManagerPrivate.h */,
 				3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */,
 				3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */,

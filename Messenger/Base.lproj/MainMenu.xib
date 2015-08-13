@@ -286,8 +286,22 @@
                         <items>
                             <menuItem title="Actual Size" keyEquivalent="0" id="eXY-OU-NbL">
                                 <connections>
-                                    <action selector="makeTextStandardSize:" target="Voe-Tx-rLC" id="z4Q-KA-gWl"/>
-                                    <binding destination="Voe-Tx-rLC" name="enabled" keyPath="canMakeTextStandardSize" id="IAq-vf-acA">
+                                    <action selector="resetPageZoom:" target="Voe-Tx-rLC" id="S0z-wu-gO4"/>
+                                    <binding destination="Voe-Tx-rLC" name="enabled" keyPath="canResetPageZoom" id="twB-Ec-BUK">
+                                        <dictionary key="options">
+                                            <integer key="NSMultipleValuesPlaceholder" value="1"/>
+                                            <integer key="NSNoSelectionPlaceholder" value="1"/>
+                                            <integer key="NSNotApplicablePlaceholder" value="1"/>
+                                            <integer key="NSNullPlaceholder" value="1"/>
+                                        </dictionary>
+                                    </binding>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Reset Text Size" alternate="YES" keyEquivalent="0" id="BvI-Td-Abl">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="makeTextStandardSize:" target="Voe-Tx-rLC" id="UW2-5E-i6t"/>
+                                    <binding destination="Voe-Tx-rLC" name="enabled" keyPath="canMakeTextStandardSize" id="PqC-cP-WFE">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="1"/>
                                             <integer key="NSNoSelectionPlaceholder" value="1"/>
@@ -299,8 +313,22 @@
                             </menuItem>
                             <menuItem title="Zoom In" keyEquivalent="+" id="Z4w-BN-CrW">
                                 <connections>
-                                    <action selector="makeTextLarger:" target="Voe-Tx-rLC" id="MMZ-US-i67"/>
+                                    <action selector="zoomPageIn:" target="Voe-Tx-rLC" id="xGi-Ah-Ost"/>
                                     <binding destination="Voe-Tx-rLC" name="enabled" keyPath="canMakeTextLarger" id="09h-bn-pzB">
+                                        <dictionary key="options">
+                                            <integer key="NSMultipleValuesPlaceholder" value="1"/>
+                                            <integer key="NSNoSelectionPlaceholder" value="1"/>
+                                            <integer key="NSNotApplicablePlaceholder" value="1"/>
+                                            <integer key="NSNullPlaceholder" value="1"/>
+                                        </dictionary>
+                                    </binding>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Increase Text Size" alternate="YES" keyEquivalent="+" id="l8i-33-lWl">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="makeTextLarger:" target="Voe-Tx-rLC" id="wLx-uN-m5y"/>
+                                    <binding destination="Voe-Tx-rLC" name="enabled" keyPath="canMakeTextLarger" id="mcl-0t-4FD">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="1"/>
                                             <integer key="NSNoSelectionPlaceholder" value="1"/>
@@ -312,8 +340,22 @@
                             </menuItem>
                             <menuItem title="Zoom Out" keyEquivalent="-" id="fQb-3Z-C0i">
                                 <connections>
-                                    <action selector="makeTextSmaller:" target="Voe-Tx-rLC" id="0FV-ng-7YM"/>
+                                    <action selector="zoomPageOut:" target="Voe-Tx-rLC" id="wpj-uO-P8R"/>
                                     <binding destination="Voe-Tx-rLC" name="enabled" keyPath="canMakeTextSmaller" id="poh-Ha-p4o">
+                                        <dictionary key="options">
+                                            <integer key="NSMultipleValuesPlaceholder" value="1"/>
+                                            <integer key="NSNoSelectionPlaceholder" value="1"/>
+                                            <integer key="NSNotApplicablePlaceholder" value="1"/>
+                                            <integer key="NSNullPlaceholder" value="1"/>
+                                        </dictionary>
+                                    </binding>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Decrease Test Size" alternate="YES" keyEquivalent="-" id="1Zh-f3-iOo">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="makeTextSmaller:" target="Voe-Tx-rLC" id="TtP-Js-gIS"/>
+                                    <binding destination="Voe-Tx-rLC" name="enabled" keyPath="canMakeTextSmaller" id="JYC-xm-aLa">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="1"/>
                                             <integer key="NSNoSelectionPlaceholder" value="1"/>

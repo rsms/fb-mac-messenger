@@ -6,6 +6,22 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.1.2</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes an issue with automatic updates where upon a new version being available, the "new version" dialog would not be shown</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 12 Aug 2015 20:13:24 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="3df9691554b45d1f"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.1.2.1439435587-3df9691554b45d1f.zip"
+        sparkle:version="0.1.2.1439435587"
+        length="1972648"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.1.1</title>
       <description><![CDATA[
         <ul>

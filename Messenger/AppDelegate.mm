@@ -9,7 +9,7 @@
 #import "WebViewPrivate.h"
 #import "JSClass.hh"
 #import "MEmbeddedRes.h"
-
+#import "MMFakeDragInfo.h"
 
 #define USE_BLURRY_BACKGROUND 0
 
@@ -447,6 +447,51 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   [self evaluateJavaScript:@"MacMessenger.focusSearchField()"];
 }
 
+- (IBAction)paste:(id)sender {
+  NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+
+  // If we've got an image, let's paste it!
+  // Ain't nobody got time for dirty hax with React.
+  if ([pasteboard canReadObjectForClasses:@[[NSImage class]] options:nil]) {
+    NSImage *pastedImage = [[pasteboard readObjectsForClasses:@[[NSImage class]] options:nil] firstObject];
+
+    // Try to grab the URL to the image being pasted (if it's available) to just repurpose the already useable pasteboard.
+    NSURL *pastedFileURL = [[pasteboard readObjectsForClasses:@[[NSURL class]] options:nil] firstObject];
+
+    // If we haven't got a file URL (screenshot), we need to write it out first.
+    if (pastedFileURL == nil) {
+      // Convert the pasteboard image to a PNG.
+      NSRect proposedRect = NSMakeRect(0, 0, pastedImage.size.width, pastedImage.size.height);
+      CGImageRef pastedImageRef = [pastedImage CGImageForProposedRect:&proposedRect
+                                                              context:NULL
+                                                                hints:nil];
+      NSBitmapImageRep *bitmapImageRep = [[NSBitmapImageRep alloc] initWithCGImage:pastedImageRef];
+      NSData *PNGImageData = [bitmapImageRep representationUsingType:NSPNGFileType properties:nil];
+
+      // Save it (temporarily with a new name).
+      NSString *uniqueFilename = [[NSUUID UUID].UUIDString stringByAppendingString:@".png"];
+      NSString *tmpPath = [NSTemporaryDirectory() stringByAppendingPathComponent:uniqueFilename];
+      [PNGImageData writeToFile:tmpPath atomically:YES];
+
+      pastedFileURL = [NSURL fileURLWithPath:tmpPath];
+
+      // Write our newly saved file to the pasteboard.
+      [pasteboard clearContents];
+      [pasteboard declareTypes:@[NSFilenamesPboardType] owner:self];
+      [pasteboard writeObjects:@[pastedFileURL]];
+    }
+
+    if (pastedFileURL != nil) {
+      // Fire off a completely falsified (and bs) drag+drop event. >:D
+      MMFakeDragInfo *info = [[MMFakeDragInfo alloc] initWithImage:pastedImage pasteboard:pasteboard];
+      [_webView draggingEntered:info];
+      [_webView draggingUpdated:info];
+      [_webView performDragOperation:info];
+    }
+  } else {
+    [[NSApplication sharedApplication] sendAction:@selector(paste:) to:nil from:self];
+  }
+}
 
 - (IBAction)composeNewMessage:(id)sender {
   [self evaluateJavaScript:@"MacMessenger.composeNewMessage()"];

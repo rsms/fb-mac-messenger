@@ -756,6 +756,18 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 }
 
 
+- (NSArray *)webView:(WebView *)sender
+contextMenuItemsForElement:(NSDictionary *)element
+    defaultMenuItems:(NSArray *)defaultMenuItems {
+  #if DEBUG
+    if (([NSEvent modifierFlags] & NSControlKeyMask) == NSControlKeyMask) {
+      return defaultMenuItems;
+    }
+  #endif // DEBUG
+  return nil;
+}
+
+
 #pragma mark - WebFrameLoadDelegate
 
 

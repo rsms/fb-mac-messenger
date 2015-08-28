@@ -756,14 +756,12 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 }
 
 
-- (NSArray *)webView:(WebView *)sender
-contextMenuItemsForElement:(NSDictionary *)element
-    defaultMenuItems:(NSArray *)defaultMenuItems {
+- (NSArray*)webView:(WebView*)sender contextMenuItemsForElement:(NSDictionary *)element defaultMenuItems:(NSArray *)defaultMenuItems {
   #if DEBUG
-    if (([NSEvent modifierFlags] & NSControlKeyMask) == NSControlKeyMask) {
-      return defaultMenuItems;
-    }
-  #endif // DEBUG
+  if (NSEvent.modifierFlags & NSAlternateKeyMask) {
+    return defaultMenuItems;
+  }
+  #endif
   return nil;
 }
 

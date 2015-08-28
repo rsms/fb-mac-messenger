@@ -186,6 +186,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   #if 0
   webView.customUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/600.7.12 (KHTML, like Gecko) Version/8.0.7 Safari/600.7.12";
   #endif // 0
+  webView.maintainsBackForwardList = NO;
   webView.continuousSpellCheckingEnabled = YES;
   #if USE_BLURRY_BACKGROUND
   webView.drawsBackground = NO;
@@ -752,6 +753,16 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
     [_dummyExternalWebView setPolicyDelegate:self];
   }
   return _dummyExternalWebView;
+}
+
+
+- (NSArray*)webView:(WebView*)sender contextMenuItemsForElement:(NSDictionary *)element defaultMenuItems:(NSArray *)defaultMenuItems {
+  #if DEBUG
+  if (NSEvent.modifierFlags & NSAlternateKeyMask) {
+    return defaultMenuItems;
+  }
+  #endif
+  return nil;
 }
 
 

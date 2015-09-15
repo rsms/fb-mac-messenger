@@ -131,6 +131,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   wp.applicationCacheDefaultOriginQuota = 500 * 1024 * 1024;
   [wp _setLocalStorageDatabasePath:[WebStorageManager _storageDirectoryPath]];
   ENABLE(localStorageEnabled);
+  ENABLE(databasesEnabled);
   
   // Unofficial/Private settings
   ENABLE(acceleratedCompositingEnabled);

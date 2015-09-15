@@ -404,6 +404,9 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
     return [self canSelectNewerConversation];
   } else if (action == @selector(selectOlderConversation:)) {
     return [self canSelectOlderConversation];
+//  } else if (action == @selector(showAbout:)) {
+//    menuItem.title = [NSString stringWithFormat:@"About Messenger %@", [NSBundle mainBundle].infoDictionary[@"CFBundleVersion"]];
+//    return YES;
   } else {
     return YES;
   }
@@ -515,7 +518,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 }
 
 - (IBAction)showAbout:(id)sender {
-  [self showWebViewWindowWithID:@"about" title:@"About Messenger" URL:@"https://www.messenger.com/about"];
+  [self showWebViewWindowWithID:@"about" title:[NSString stringWithFormat:@"About Messenger %@", [NSBundle mainBundle].infoDictionary[@"CFBundleVersion"]] URL:@"https://www.messenger.com/about"];
 }
 
 - (IBAction)logOut:(id)sender {

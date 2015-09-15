@@ -226,6 +226,7 @@ setInterval(function() {
 
 
 function reldate(date) {
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Sep','Oct','Nov','Dec'];
   var ms = Math.abs((new Date) - date);
   if (ms < 60000)         return 'just now';
   if (ms == 60000)        return 'a minute ago';
@@ -237,10 +238,10 @@ function reldate(date) {
   if (ms == 604800000)    return 'a week ago';
   if (ms < 2628000000)    return Math.ceil(ms / 604800000) + ' weeks ago';
   if (ms == 2628000000)   return 'a month ago';
-  //if (ms < 31536000000)   return Math.ceil(ms / 2628000000) + ' months ago';
+  if (ms < 31536000000)   return months[date.getMonth()] + ' ' + date.getDate();
   //if (ms == 31536000000)  return 'a year ago';
   // Math.round(ms / 31536000000) + ' years ago';
-  return date.toLocaleString();
+  return date.toLocaleString ? date.toLocaleString() : date.toString();
 }
 
     </script>

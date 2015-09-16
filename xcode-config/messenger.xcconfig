@@ -1,7 +1,5 @@
 PRODUCT_NAME = Messenger
 
-SDKROOT = macosx  // aka "latest"
-MACOSX_DEPLOYMENT_TARGET = 10.9
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks
 
 INFOPLIST_FILE = Messenger/Info.plist
@@ -15,3 +13,6 @@ GCC_PREFIX_HEADER = Messenger/Prefix.pch
 //CODE_SIGN_IDENTITY = Mac Developer
 
 SYMROOT = $(SRCROOT)/build
+
+// Build a potentially fat image for standard archs. Probably just x86_64.
+ARCHS = $(ARCHS_STANDARD)

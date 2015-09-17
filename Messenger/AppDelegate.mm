@@ -36,7 +36,20 @@ NSString* ReadDeviceID() {
   return did;
 }
 
+@interface DraggableView : NSView {}
+@property (nonatomic, weak) NSWindow* draggingWindow;
+@end
 
+@implementation DraggableView
+@synthesize draggingWindow;
+-(void)mouseDragged:(NSEvent *)theEvent {
+  NSWindow * w = self.draggingWindow;
+  CGRect frame = w.frame;
+  frame.origin.x += theEvent.deltaX;
+  frame.origin.y -= theEvent.deltaY;
+  [w setFrameOrigin:frame.origin];
+}
+@end
 
 @interface AppDelegate ()
 @property (nonatomic, readonly) BOOL canMakeTextLarger;
@@ -73,6 +86,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   NSTimer*             _reloadWhenIdleTimer;
   NSDate*              _lastReloadDate;
   SCNetworkReachabilityRef _netReachRef;
+  DraggableView*       _draggableView;
   BOOL                 _isOnline;
   BOOL                 _needsReload;
   BOOL                 _webAppIsFunctional;
@@ -114,6 +128,10 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   _window.frameAutosaveName = @"main";
   _window.movableByWindowBackground = YES;
   _titlebarView = [_window standardWindowButton:NSWindowCloseButton].superview;
+  
+  _draggableView = [[DraggableView alloc] init];
+  _draggableView.draggingWindow = _window;
+  
   [self updateWindowTitlebar];
 
   // Web prefs
@@ -195,6 +213,8 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   webView.drawsBackground = NO;
   #endif
   _webView = webView;
+
+  [_window.contentView addSubview:_draggableView];
   
   // Dim effect view
   _curtainView = [[NSView alloc] initWithFrame:[_window.contentView bounds]];
@@ -325,6 +345,9 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   updateButton([_window standardWindowButton:NSWindowCloseButton]);
   updateButton([_window standardWindowButton:NSWindowMiniaturizeButton]);
   updateButton([_window standardWindowButton:NSWindowZoomButton]);
+  
+  [_draggableView setFrame:[_titlebarView convertRect:_titlebarView.bounds toView:_window.contentView]];
+  _draggableView.hidden = fullScreen;
 }
 
 

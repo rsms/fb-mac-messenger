@@ -11,6 +11,8 @@
 #import "MEmbeddedRes.h"
 #import "MMFakeDragInfo.h"
 
+extern NSString* kMainJSDataURL; // implemented in generated file MainJSDataURL.m
+
 #define USE_BLURRY_BACKGROUND 0
 
 static BOOL kCFIsOSX_10_10_orNewer;
@@ -814,11 +816,12 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   // JS injection. Wait for <head> to become available and then add our <script>
   if (![[NSUserDefaults standardUserDefaults] boolForKey:@"main.js/disable"]) {
     auto bundleInfo = [NSBundle mainBundle].infoDictionary;
-    #if DEBUG
-    auto mainJSURLString = @"resource://bundle/main.js";
-    #else
-    auto mainJSURLString = [NSString stringWithFormat:@"http://fbmacmessenger.rsms.me/app/main.js?v=%@", bundleInfo[@"GitRev"]];
-    #endif
+
+    // Note: 10.11 introduces "App Transport Security" which blocks custom URL protocols from
+    // being used in web views, and also prohibits non-HTTPS from loading in HTTPS context.
+    // So, we have to inject main.js.
+    auto mainJSURLString = kMainJSDataURL;
+
     [webView.mainFrame.windowObject evaluateWebScript:
      [NSString stringWithFormat:@""
       "window.MacMessengerVersion = '%@';"
@@ -826,7 +829,6 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
       "function injectMainJS() {"
       "  if (document.head || document.documentElement) {"
       "    var script = document.createElement('script');"
-      "    script.async = true;"
       "    script.src = '%@';"
       "    (document.head || document.documentElement).appendChild(script);"
       "    return true;"
@@ -951,6 +953,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
 
 #pragma mark - WebPolicyDelegate
+
 
 - (void)webView:(WebView *)sender
 decidePolicyForNavigationAction:(NSDictionary *)actionInformation

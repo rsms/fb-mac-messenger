@@ -310,7 +310,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "python > ${BUILD_ROOT}/MainJSDataURL.m << END\nimport base64\nprint \"NSString* kMainJSDataURL = @\\\"data:image/png;base64,\" + base64.b64encode(open(\"website/app/main.js\", \"rb\").read()) + \"\\\";\"\nEND";
+			shellScript = "python > ${BUILD_ROOT}/MainJSDataURL.m << END\nimport base64\nprint \"NSString* kMainJSDataURL = @\\\"data:application/javascript;base64,\" + base64.b64encode(open(\"website/app/main.js\", \"rb\").read()) + \"\\\";\"\nEND";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -257,7 +257,7 @@
 		3A9A9C371AD5B407008FABE9 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Rsms;
 				TargetAttributes = {
 					3A9A9C3E1AD5B407008FABE9 = {
@@ -351,6 +351,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -410,6 +411,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/sparkle",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = me.rsms.fbmessenger;
 			};
 			name = Debug;
 		};
@@ -422,6 +424,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/sparkle",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = me.rsms.fbmessenger;
 			};
 			name = Release;
 		};

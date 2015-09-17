@@ -34,5 +34,5 @@ WARNING_CFLAGS = -Wall
 
 CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
 
-SDKROOT = macosx10.10
+SDKROOT = macosx // aka "latest"
 MACOSX_DEPLOYMENT_TARGET = 10.10

@@ -471,7 +471,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
                                                               context:NULL
                                                                 hints:nil];
       NSBitmapImageRep *bitmapImageRep = [[NSBitmapImageRep alloc] initWithCGImage:pastedImageRef];
-      NSData *PNGImageData = [bitmapImageRep representationUsingType:NSPNGFileType properties:nil];
+      NSData *PNGImageData = [bitmapImageRep representationUsingType:NSPNGFileType properties:@{}];
 
       // Save it (temporarily with a new name).
       NSString *uniqueFilename = [[NSUUID UUID].UUIDString stringByAppendingString:@".png"];

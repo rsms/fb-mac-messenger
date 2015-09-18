@@ -68,6 +68,10 @@
   return @[@"test.image.png"];
 }
 
+- (NSSpringLoadingHighlight)springLoadingHighlight {
+  return NSSpringLoadingHighlightStandard;
+}
+
 #pragma mark - Unimplemented
 - (void)slideDraggedImageTo:(NSPoint)screenPoint {}
 - (void)enumerateDraggingItemsWithOptions:(NSDraggingItemEnumerationOptions)enumOpts forView:(NSView *)view classes:(NSArray *)classArray searchOptions:(NSDictionary *)searchOptions usingBlock:(void (^)(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop))block NS_AVAILABLE_MAC(10_7) {}

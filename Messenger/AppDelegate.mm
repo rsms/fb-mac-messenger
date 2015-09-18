@@ -693,7 +693,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 - (void)windowDidBecomeKey:(NSNotification*)notification {
   //NSLog(@"%@%@%@", self, NSStringFromSelector(_cmd), notification);
   // Give focus to the composer
-  [self evaluateJavaScript:@"(typeof MacMessenger != 'undefined') && MacMessenger.focusComposer()"];
+  [self evaluateJavaScript:@"try { (typeof MacMessenger != 'undefined') && MacMessenger.focusComposer(); } catch(_) {}"];
 }
 
 

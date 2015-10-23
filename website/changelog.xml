@@ -6,6 +6,22 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.1.5</title>
+      <description><![CDATA[
+        <ul>
+          <li>Adds support for Mac OS 10.11 "El Capitan‎"</li>
+        </ul>
+      ]]></description>
+      <pubDate>Fri, 23 Oct 2015 12:14:24 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="8f43a2f9c4d47b7b"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.1.5.1442536116-8f43a2f9c4d47b7b.zip"
+        sparkle:version="0.1.5.1442536116"
+        length="1987903"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.1.4</title>
       <description><![CDATA[
         <ul>

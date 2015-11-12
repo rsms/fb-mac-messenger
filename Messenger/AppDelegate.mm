@@ -215,7 +215,8 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   #endif
   _webView = webView;
 
-  _webViewZoomController = [[WebViewZoomController alloc] initWithWebView:webView];
+  _webViewZoomController = [[WebViewZoomController alloc] initWithWebView:webView userDefaults:[NSUserDefaults standardUserDefaults]];
+  [_webViewZoomController restoreSavedZoomLevels];
 
   [_window.contentView addSubview:_draggableView];
   

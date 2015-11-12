@@ -13,7 +13,9 @@
 
 @interface WebViewZoomController : NSObject
 
-- (instancetype)initWithWebView:(WebView *)webView;
+- (instancetype)initWithWebView:(WebView *)webView userDefaults:(NSUserDefaults *)userDefaults;
+
+- (void)restoreSavedZoomLevels;
 
 
 #pragma mark - WebView Proxy API

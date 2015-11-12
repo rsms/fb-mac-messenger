@@ -1,4 +1,6 @@
-#pragma once
+#import <WebKit/WebKit.h>
+
+
 @interface WebView (MacMessengerPrivate)
 
 - (IBAction)zoomPageIn:(id)sender;

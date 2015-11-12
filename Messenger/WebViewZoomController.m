@@ -33,29 +33,77 @@
 
 #pragma mark - WebView Proxy API
 
-- (BOOL)canMakeTextLarger { return _webView.canMakeTextLarger; }
-- (IBAction)makeTextLarger:(id)sender { [_webView makeTextLarger:sender]; }
-- (BOOL)canMakeTextSmaller { return _webView.canMakeTextSmaller; }
-- (IBAction)makeTextSmaller:(id)sender { [_webView makeTextSmaller:sender]; }
-- (BOOL)canMakeTextStandardSize { return _webView.canMakeTextStandardSize; }
-- (IBAction)makeTextStandardSize:(id)sender { [_webView makeTextStandardSize:sender]; }
+- (BOOL)canMakeTextLarger {
+  return self.webView.canMakeTextLarger;
+}
+
+- (IBAction)makeTextLarger:(id)sender {
+  if (self.canMakeTextLarger) {
+    [self.webView makeTextLarger:sender];
+  }
+}
+
+
+- (BOOL)canMakeTextSmaller {
+  return self.webView.canMakeTextSmaller;
+}
+
+- (IBAction)makeTextSmaller:(id)sender {
+  if (self.canMakeTextSmaller) {
+    [self.webView makeTextSmaller:sender];
+  }
+}
+
+
+- (BOOL)canMakeTextStandardSize {
+  return self.webView.canMakeTextStandardSize;
+}
+
+- (IBAction)makeTextStandardSize:(id)sender {
+  if (self.canMakeTextStandardSize) {
+    [self.webView makeTextStandardSize:sender];
+  }
+}
+
 
 // Warning: The following methods are internal to WebView and might change at any time
+
+- (BOOL)canZoomPageIn {
+  return [self.webView canZoomPageIn];
+}
+
 - (IBAction)zoomPageIn:(id)sender {
-  [_webView zoomPageIn:sender];
   // Possible alternate way, which would require some fairly advanced layout code:
-  // auto clipView = _webView.mainFrame.frameView.documentView.superview;
+  // auto clipView = self.webView.mainFrame.frameView.documentView.superview;
   // [clipView scaleUnitSquareToSize:NSMakeSize(1.1, 1.1)];
   // [clipView setNeedsDisplay:YES];
+
+  if (self.canZoomPageIn) {
+    [self.webView zoomPageIn:sender];
+  }
 }
-- (IBAction)zoomPageOut:(id)sender { [_webView zoomPageOut:sender]; }
-- (BOOL)canZoomPageIn { return [_webView canZoomPageIn]; }
+
+- (BOOL)canZoomPageOut {
+  return [self.webView canZoomPageOut];
+}
+
+- (IBAction)zoomPageOut:(id)sender {
+  if (self.canZoomPageOut) {
+    [self.webView zoomPageOut:sender];
+  }
+}
+
+
+- (BOOL)canResetPageZoom {
+  return [self.webView canResetPageZoom] || [self canMakeTextStandardSize];
+}
+
 - (IBAction)resetPageZoom:(id)sender {
-  [_webView resetPageZoom:sender];
   // We also reset text size
-  [_webView makeTextStandardSize:sender];
+  if (self.canResetPageZoom) {
+    [self.webView resetPageZoom:sender];
+    [self.webView makeTextStandardSize:sender];
+  }
 }
-- (BOOL)canZoomPageOut { return [_webView canZoomPageOut]; }
-- (BOOL)canResetPageZoom { return [_webView canResetPageZoom] || [self canMakeTextStandardSize]; }
 
 @end

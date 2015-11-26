@@ -106,7 +106,7 @@
     },
 
     selectConversationAtIndex: function(index) {
-      document.querySelector('div[aria-label="Conversations"] li:nth-child(' + (index + 1) +') a').click();
+      document.querySelector('div[aria-label="Conversations"] li:nth-child(' + index +') a').click();
     },
 
     currentConversationItem: function() {

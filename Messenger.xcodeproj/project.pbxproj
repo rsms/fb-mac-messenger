@@ -63,7 +63,7 @@
 		22C40EB01AD5C5E100FE12C1 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		3A0B9CD21BAB4C660067C9AB /* MainJSDataURL.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MainJSDataURL.m; path = ../build/MainJSDataURL.m; sourceTree = "<group>"; };
 		3A649B7E1B31E08300428884 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		3A6757231AE0A52400BDC7C5 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = main.js; path = website/app/main.js; sourceTree = SOURCE_ROOT; };
+		3A6757231AE0A52400BDC7C5 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = main.js; path = website/app/main.js; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEmbeddedRes.h; sourceTree = "<group>"; };
 		3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEmbeddedRes.m; sourceTree = "<group>"; };
 		3A9A9C3F1AD5B407008FABE9 /* Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger.app; sourceTree = BUILT_PRODUCTS_DIR; };

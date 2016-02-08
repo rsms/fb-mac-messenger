@@ -703,6 +703,12 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   }
 }
 
+- (void)windowDidExitFullScreen:(NSNotification *)notification {
+  if (_window.isVisible) {
+    [self updateWindowTitlebar];
+  }
+}
+
 
 #pragma mark - NSUserNotificationCenterDelegate
 

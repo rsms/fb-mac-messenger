@@ -40,6 +40,7 @@ static NSString * const zoomKey = @"WebViewZoomController zoomLevel";
 
   id sender = nil;
   [self resetPageZoom:sender];
+  
 
   while (self.canMakeTextSmaller && textSizeLevelDelta < 0) {
     [self makeTextSmaller:sender];
@@ -51,6 +52,7 @@ static NSString * const zoomKey = @"WebViewZoomController zoomLevel";
     textSizeLevelDelta -= 1;
   }
 
+
   while (self.canZoomPageOut && zoomLevelDelta < 0) {
     [self zoomPageOut:sender];
     zoomLevelDelta += 1;
@@ -60,6 +62,7 @@ static NSString * const zoomKey = @"WebViewZoomController zoomLevel";
     [self zoomPageIn:sender];
     zoomLevelDelta -= 1;
   }
+
 }
 
 - (NSInteger)textSizeLevel {
@@ -156,10 +159,9 @@ static NSString * const zoomKey = @"WebViewZoomController zoomLevel";
   if (self.canResetPageZoom) {
     [self.webView resetPageZoom:sender];
     [self.webView makeTextStandardSize:sender];
-
-    self.textSizeLevel = 0;
-    self.zoomLevel = 0;
   }
+  self.textSizeLevel = 0;
+  self.zoomLevel = 0;
 }
 
 @end

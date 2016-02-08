@@ -99,7 +99,7 @@
     },
 
     focusSearchField: function() {
-      document.querySelector('input[placeholder~="Search"]').focus();
+      document.querySelector('input[aria-autocomplete="list"]').focus();
     },
 
     focusComposer: function() {

@@ -440,7 +440,7 @@
         newConversation.style.marginRight = matches ? "-49px" : null;
         newConversation.style.float = matches ? "right" : null;
         newConversation.style.position = matches ? "relative" : null;
-        newConversation.style.zIndex = matches ? "10" : null;
+        newConversation.style.zIndex = matches ? "300" : null;
       }
     });
     styleComponent("MessengerRecentContainer", {

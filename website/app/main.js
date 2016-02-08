@@ -2,6 +2,7 @@
 
   function findReactDOMNode(options, instances) {
     var React = require("React");
+    var ReactDOM = require("ReactDOM");
     var ReactMount = require("ReactMount");
     var ret = null;
 
@@ -15,7 +16,7 @@
 
       if (options.name) {
         if (element && element.type && element.type.displayName == options.name) {
-          return instance.getPublicInstance().getDOMNode();
+          return ReactDOM.findDOMNode(instance.getPublicInstance());
         }
       } else if (options.id) {
         if (instance._rootNodeID == options.id) {

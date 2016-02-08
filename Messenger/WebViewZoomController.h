@@ -1,13 +1,3 @@
-//
-//  WebViewZoomController.h
-//  Messenger
-//
-//  Created by Maciej Konieczny on 12/11/15.
-//  Copyright © 2015 Rsms. All rights reserved.
-//
-
-#import <Foundation/Foundation.h>
-
 @class WebView;
 
 

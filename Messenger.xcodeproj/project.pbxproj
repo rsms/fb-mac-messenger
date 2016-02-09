@@ -142,6 +142,7 @@
 				3A9A9C6C1AD5CA29008FABE9 /* xcode-config */,
 				3A9A9C401AD5B407008FABE9 /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
 			tabWidth = 2;
 			usesTabs = 0;

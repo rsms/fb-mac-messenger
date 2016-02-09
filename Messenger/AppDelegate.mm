@@ -97,6 +97,10 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   // Register ourselves as the default-user-notification center delegate
   [NSUserNotificationCenter defaultUserNotificationCenter].delegate = self;
 
+  // Register user defaults
+  auto ud = [NSUserDefaults standardUserDefaults];
+  [ud registerDefaults:@{@"WebContinuousSpellCheckingEnabled": @YES}];
+
   // Create main window
   NSUInteger windowStyle = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
   if (kCFIsOSX_10_10_orNewer) {
@@ -118,7 +122,8 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
     #endif
   }
   _window.collectionBehavior = NSWindowCollectionBehaviorFullScreenPrimary;
-  if ([[NSUserDefaults standardUserDefaults] boolForKey:@"moves-with-active-space"]) {
+
+  if ([ud boolForKey:@"moves-with-active-space"]) {
     _window.collectionBehavior |= NSWindowCollectionBehaviorMoveToActiveSpace;
   }
   _window.minSize = {605,300};
@@ -209,7 +214,6 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   webView.customUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/600.7.12 (KHTML, like Gecko) Version/8.0.7 Safari/600.7.12";
   #endif // 0
   webView.maintainsBackForwardList = NO;
-  webView.continuousSpellCheckingEnabled = YES;
   #if USE_BLURRY_BACKGROUND
   webView.drawsBackground = NO;
   #endif

@@ -790,12 +790,28 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
 
 - (NSArray*)webView:(WebView*)sender contextMenuItemsForElement:(NSDictionary *)element defaultMenuItems:(NSArray *)defaultMenuItems {
-  #if DEBUG
-  if (NSEvent.modifierFlags & NSAlternateKeyMask) {
-    return defaultMenuItems;
+  //NSLog(@"contextMenuItemsForElement: element = %@, menu items = %@, tags = %@", element, defaultMenuItems, [defaultMenuItems valueForKey:@"tag"]);
+  
+  // Filter menu items based on option key being pressed or not
+  NSMutableArray *menuItems = [NSMutableArray new];
+  for (NSMenuItem *menuItem in defaultMenuItems) {
+    if (menuItem.isSeparatorItem && !menuItems.count) {
+      // Skip separators at the very top
+      // (as an effect of filtering out other items at the top of the menu)
+      continue;
+    }
+    switch (menuItem.tag) {
+      case WebMenuItemTagReload:
+        continue;
+      case 2024: // Inspect Element
+        if (NSEvent.modifierFlags & NSAlternateKeyMask) {
+          break;
+        }
+        continue;
+    }
+    [menuItems addObject:menuItem];
   }
-  #endif
-  return nil;
+  return ([menuItems count]) ? menuItems : nil;
 }
 
 

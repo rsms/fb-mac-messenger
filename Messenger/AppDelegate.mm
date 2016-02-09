@@ -126,8 +126,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   if ([ud boolForKey:@"moves-with-active-space"]) {
     _window.collectionBehavior |= NSWindowCollectionBehaviorMoveToActiveSpace;
   }
-  _window.minSize = {605,300};
-    // note: as of 2015-08-12, 604pt is as narrow as messenger.com allows the view to be, before body starts scrolling.
+  _window.minSize = {320,300};
   _window.releasedWhenClosed = NO;
   _window.delegate = self;
   [_window center];

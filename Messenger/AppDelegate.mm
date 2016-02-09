@@ -155,8 +155,13 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   wp.applicationCacheTotalQuota = 500 * 1024 * 1024;
   wp.applicationCacheDefaultOriginQuota = 500 * 1024 * 1024;
   [wp _setLocalStorageDatabasePath:[WebStorageManager _storageDirectoryPath]];
+  #if DEBUG
+  NSLog(@"[WebStorageManager _storageDirectoryPath] = '%@'", [WebStorageManager _storageDirectoryPath]);
+  #endif
+  
   ENABLE(localStorageEnabled);
   ENABLE(databasesEnabled);
+  ENABLE(webGLEnabled);
   
   // Unofficial/Private settings
   ENABLE(acceleratedCompositingEnabled);
@@ -847,11 +852,18 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   
   // Enable desktop notifications by default
   // Must be injected as localStorage access is per domain name (and so we can't access it from main.js)
+  // Note: Since OS X 10.11.3(?) localStorage persistency as implemented by this app is broken.
+  // The most important feature that use, which depends on localStorage, is desktop notifications.
+  // So when the app starts with an empty localStorage, we turn on notifications.
+  // The user can still turn off notifications in System Preferences.
+  // Eventually we will migrate to the next-gen webview WKWebView, which has stable support for
+  // local storage in apps.
   [webView.mainFrame.windowObject evaluateWebScript:@""
    "if (!localStorage.getItem('_cs_desktopNotifsEnabled')) {"
    "  var v = {__t:(new Date).getTime(),__v:true};"
    "  localStorage._cs_desktopNotifsEnabled = v;"
    "  localStorage.setItem('_cs_desktopNotifsEnabled', JSON.stringify(v));"
+   "  localStorage.setItem('CacheStorageVersion', '3b');"  // until we migrate to WKWebView
    "}"
    ];
   

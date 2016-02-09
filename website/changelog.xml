@@ -6,6 +6,32 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.1.6</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes a bug where desktop notifications would get disabled between app launches on OS X 10.11.3.</li>
+          <li>Fixes switching between conversations with ⌘1…9</li>
+          <li>Fixes a bug where after the window has exited fullscreen mode, the window controls would be incorrectly positioned.</li>
+          <li>Fixes a bug where the context menu (aka right-click menu) would not show. Holding the option key brings up "Inspect Element" to access developer tools.</li>
+          <li>Fixes a bug where ⌘F would not give focus to the search bar.</li>
+          <li>Fixes a bug where scrollbars would appear visually broken when an external mouse is plugged in.</li>
+          <li>The window can now shrink down to 320pt wide.</li>
+          <li>When the window is in "small mode", the "New Conversation" button is no longer obscured by the window controls.</li>
+          <li>Zooming (cmd-, cmd=) of the apps UI now persists between app launches.</li>
+          <li>Introduces the shortcut ⌘R for "Reload App from Server".</li>
+          <li>Spell checking is now enabled by default, but when configured e.g. via Edit menu, the settings persist between app launches.</li>
+        </ul>
+      ]]></description>
+      <pubDate>Tue, 09 Feb 2016 09:43:00 -0800</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="1a2c4f98e1dad409"
+        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.1.6.1455039740-1a2c4f98e1dad409.zip"
+        sparkle:version="0.1.6.1455039740"
+        length="1993937"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.1.5</title>
       <description><![CDATA[
         <ul>

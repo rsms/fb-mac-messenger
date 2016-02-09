@@ -66,6 +66,22 @@
     findElement();
     return observer;
   };
+  
+  // Returns a new object with new values for each key
+  var mapObject = function(original, eachFn) {
+    var res = {};
+    for (var key in original) {
+      res[key] = eachFn(key, original[key]);
+    }
+    return res;
+  };
+  
+  // Runs the specified function for each key-value pair
+  var eachKey = function(object, eachFn) {
+    for (var key in object) {
+      eachFn(key, object[key]);
+    }
+  };
 
   // Note:
   //   window.MacMessengerVersion will be defined to a string e.g. to "0.1.2"
@@ -314,6 +330,170 @@
     var style = 'body { overflow: hidden; }';
     css.appendChild(document.createTextNode(style));
     document.getElementsByTagName('head')[0].appendChild(css);
+ 
+    // Keep track of media query event listeners
+    var styles = {
+      queries: {},
+      add: function(responsesBySize) {
+        eachKey(responsesBySize, function(size, response) {
+          // Add media query and list of listeners if nothing listens for this size yet
+          if (!styles.queries[size]) {
+            styles.queries[size] = {
+              query: window.matchMedia(size),
+              listeners: new Set(),
+              queryResponse: function(query) {
+                // On a width change, run all listeners
+                styles.queries[size].listeners.forEach(function(response) {
+                  response(query.matches);
+                });
+              }
+            };
+            
+            styles.queries[size].query.addListener(styles.queries[size].queryResponse);
+          }
+          
+          styles.queries[size].listeners.add(response);
+        });
+      },
+      remove: function(responsesBySize) {
+        eachKey(responsesBySize, function(size, response) {
+          if (!styles.queries[size]) return;
+          styles.queries[size].listeners.delete(response);
+
+          // Remove media query listener if there are no responses to run
+          if (styles.queries[size].listeners.length === 0) {
+            styles.queries[size].query.removeListener(styles.queries[size].queryResponse);
+            delete styles.queries[size];
+          }
+        });
+      },
+      queryMatches: function(size) {
+        return styles.queries[size] ? styles.queries[size].query.matches : null;
+      }
+    };
+    
+    // Add styles and media query listeners to a React component
+    var styleComponent = function(reactClass, queryResponses, options) {
+      var tryFindUIComponent = function() {
+        var e = findReactDOMNode({ name: reactClass });
+        if (e) {
+          var responses = mapObject(
+            queryResponses,
+            function(size, response) {
+              return function(query) { response(e, query); }
+            }
+          );
+          styles.add(responses);
+          
+          var runAll = function() {
+            eachKey(responses, function(size, response) {
+              response(styles.queryMatches(size));
+            });
+          };
+          runAll();
+          
+          // Reapply styles if any children change
+          var childrenObserver = new MutationObserver(runAll);
+          childrenObserver.observe(e, options || { childList: true });
+          
+          // Remove listeners and start fresh if the element is removed from the DOM
+          var parentObserver = new MutationObserver(function(mutations) {
+            mutations.some(function(mutation) {
+              if (mutation.type == "childList" && [].indexOf.call(mutation.removedNodes, e) != -1) {
+                styles.remove(responses);
+                childrenObserver.disconnect();
+                parentObserver.disconnect();
+                styleComponent(reactClass, queryResponses, options); // Find new React component
+                return true; // Stop iterating through mutations
+              }
+              return false;
+            });
+          });
+          parentObserver.observe(e.parentNode, { childList: true });
+          
+          return true;
+        }
+      }
+   
+      if (!tryFindUIComponent()) {
+        var observer = new MutationObserver(function(mutations) {
+          if (tryFindUIComponent()) {
+            observer.disconnect();
+          }
+        });
+        observer.observe(document.body, { childList: true });
+      }
+    }
+    styleComponent("MessengerMasterView", {
+      "(max-width: 640px)": function(el, matches) {
+        // Allow sidebar to go smaller
+        el.parentNode.style.minWidth = matches ? null : "280px";
+      }
+    });
+    styleComponent("MessengerMasterViewHeader", {
+      "(max-width: 640px)": function(el, matches) {
+        // Make banner contain children correctly
+        el.style.display = matches ? "block" : null;
+        
+        // Move over New Conversation button
+        var newConversation = el.querySelector("a[href='/new']");
+        newConversation.style.marginRight = matches ? "-49px" : null;
+        newConversation.style.float = matches ? "right" : null;
+        newConversation.style.position = matches ? "relative" : null;
+        newConversation.style.zIndex = matches ? "300" : null;
+      }
+    });
+    styleComponent("MessengerRecentContainer", {
+      "(max-width: 640px)": function(el, matches) {
+        Array.prototype.forEach.call(el.querySelectorAll("ul li"), function(thread) {
+          Array.prototype.forEach.call(
+            thread.querySelectorAll("div[aria-label='Conversation actions'], div[aria-label='Actions'] img"),
+            function(child) {
+              // Make settings gear have better contrast and appear in the same position
+              // as the read receipt
+              var color = thread.hasAttribute("aria-relevant") ? "#F6F6F6" : "white";
+              child.style.backgroundColor = matches ? color : null;
+              child.style.border = matches ? ("2px solid " + color) : null;
+              child.style.borderRadius = matches ? "50%" : null;
+              child.style.marginTop = matches ? "-44px" : null;
+              child.style.marginRight = matches ? "-2px" : null;
+            }
+          );
+        });
+      }
+    }, {
+      // Listen for the selected thread changing in the element subtree
+      childList: true,
+      attributes: true,
+      attributeFilter: ["aria-relevant"],
+      subtree: true
+    });
+    styleComponent("MessengerDetailView", {
+      "(max-width: 640px)": function(el, matches) {
+        // Move border from entire right pane to just the conversation
+        el.style.borderLeft = matches ? "0" : null;
+        el.querySelector(":scope > div:last-child").style.borderLeft =
+          matches ? "1px solid rgba(0, 0, 0, .20)" : null;
+      }
+    });
+    styleComponent("MessengerDetailViewHeaderContainer", {
+      "(max-width: 640px)": function(el, matches) {
+        // Move over search bar to accomodate New Conversation button
+        el.style.paddingLeft = matches ? "49px" : null;
+        
+        // Make sure conversation title doesn't overlap buttons
+        var titleText = el.querySelector("h2");
+        if (titleText) {
+          titleText.parentNode.style.paddingRight = matches ? "41px" : null;
+          titleText.parentNode.style.boxSizing = matches ? "border-box" : null;
+          titleText.parentNode.style.paddingLeft = matches ? "7px" : null;
+          titleText.parentNode.style.minWidth = matches ? "100%" : null;
+          titleText.style.overflow = matches ? "hidden" : null;
+          titleText.style.textOverflow = matches ? "ellipsis" : null;
+          titleText.style.width = matches ? "100%" : null;
+        }
+      }
+    });
 
   };
   document.addEventListener('readystatechange', onDocumentLoaded);

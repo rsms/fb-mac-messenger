@@ -494,6 +494,13 @@
         }
       }
     });
+    styleComponent("MessengerBanner", {
+      "(max-width: 640px)": function(el, matches) {
+        // Move over search bar to accomodate New Conversation button
+        el.style.display = 'none';
+      }
+    });
+ 
 
   };
   document.addEventListener('readystatechange', onDocumentLoaded);

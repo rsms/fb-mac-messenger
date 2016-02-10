@@ -9,7 +9,10 @@
 #ifndef SUAPPCASTITEM_H
 #define SUAPPCASTITEM_H
 
-@interface SUAppcastItem : NSObject
+#import <Foundation/Foundation.h>
+#import "SUExport.h"
+
+SU_EXPORT @interface SUAppcastItem : NSObject
 @property (copy, readonly) NSString *title;
 @property (copy, readonly) NSDate *date;
 @property (copy, readonly) NSString *itemDescription;
@@ -29,6 +32,7 @@
 
 @property (getter=isDeltaUpdate, readonly) BOOL deltaUpdate;
 @property (getter=isCriticalUpdate, readonly) BOOL criticalUpdate;
+@property (getter=isInformationOnlyUpdate, readonly) BOOL informationOnlyUpdate;
 
 // Returns the dictionary provided in initWithDictionary; this might be useful later for extensions.
 @property (readonly, copy) NSDictionary *propertiesDictionary;

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		07DB23D81AD9E22E00177F14 /* NSImage+RoundCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = 07DB23D71AD9E22E00177F14 /* NSImage+RoundCorner.m */; };
-		22C40EB11AD5C5E100FE12C1 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 22C40EB01AD5C5E100FE12C1 /* icon.icns */; };
 		3A0B9CD31BAB4C660067C9AB /* MainJSDataURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A0B9CD21BAB4C660067C9AB /* MainJSDataURL.m */; };
 		3A649B7F1B31E08300428884 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A649B7E1B31E08300428884 /* SystemConfiguration.framework */; };
 		3A713BA01AD65F6500870D2A /* MEmbeddedRes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */; };
@@ -60,7 +59,6 @@
 /* Begin PBXFileReference section */
 		07DB23D61AD9E22E00177F14 /* NSImage+RoundCorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+RoundCorner.h"; sourceTree = "<group>"; };
 		07DB23D71AD9E22E00177F14 /* NSImage+RoundCorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+RoundCorner.m"; sourceTree = "<group>"; };
-		22C40EB01AD5C5E100FE12C1 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		3A0B9CD21BAB4C660067C9AB /* MainJSDataURL.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MainJSDataURL.m; path = ../build/MainJSDataURL.m; sourceTree = "<group>"; };
 		3A649B7E1B31E08300428884 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3A6757231AE0A52400BDC7C5 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = main.js; path = website/app/main.js; sourceTree = SOURCE_ROOT; };
@@ -176,7 +174,6 @@
 				07DB23D91AD9E23100177F14 /* Categories */,
 				3A9A9C491AD5B407008FABE9 /* Images.xcassets */,
 				3A9A9C4B1AD5B407008FABE9 /* MainMenu.xib */,
-				22C40EB01AD5C5E100FE12C1 /* icon.icns */,
 				3A6757251AE0A52800BDC7C5 /* app */,
 				3A9A9C421AD5B407008FABE9 /* Supporting Files */,
 			);
@@ -295,7 +292,6 @@
 			files = (
 				3A9A9C4A1AD5B407008FABE9 /* Images.xcassets in Resources */,
 				3A9A9C4D1AD5B407008FABE9 /* MainMenu.xib in Resources */,
-				22C40EB11AD5C5E100FE12C1 /* icon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,6 +425,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3A9A9C701AD5CA29008FABE9 /* messenger-debug.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -442,6 +439,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3A9A9C711AD5CA29008FABE9 /* messenger-release.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

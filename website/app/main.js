@@ -494,6 +494,12 @@
         }
       }
     });
+    styleComponent("MessengerBanner", {
+      "(max-width: 640px)": function(el, matches) {
+        el.style.display = 'none';
+      }
+    });
+ 
 
   };
   document.addEventListener('readystatechange', onDocumentLoaded);

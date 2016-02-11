@@ -698,6 +698,11 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   [self evaluateJavaScript:@"try { (typeof MacMessenger != 'undefined') && MacMessenger.focusComposer(); } catch(_) {}"];
 }
 
+- (void)windowDidResignKey:(NSNotification *)notification {
+  // Make sure a blur event is triggered when the app is on another workspace
+  [self evaluateJavaScript:@"window.dispatchEvent(new Event('blur'));"];
+}
+
 
 - (void)windowDidResize:(NSNotification *)notification {
   if (_window.isVisible) {

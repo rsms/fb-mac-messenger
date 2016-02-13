@@ -696,11 +696,14 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   //NSLog(@"%@%@%@", self, NSStringFromSelector(_cmd), notification);
   // Give focus to the composer
   [self evaluateJavaScript:@"try { (typeof MacMessenger != 'undefined') && MacMessenger.focusComposer(); } catch(_) {}"];
+  
+  // Make sure a focus event is always triggered when the window becomes active
+  [self evaluateJavaScript:@"try { verifyWindowActive && verifyWindowActive(); } catch(_) {}"];
 }
 
 - (void)windowDidResignKey:(NSNotification *)notification {
-  // Make sure a blur event is triggered when the app is on another workspace
-  [self evaluateJavaScript:@"window.dispatchEvent(new Event('blur'));"];
+  // Make sure a blur event is always triggered when the window becomes inactive
+  [self evaluateJavaScript:@"try { verifyWindowInactive && verifyWindowInactive(); } catch(_) {}"];
 }
 
 

@@ -155,9 +155,6 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   wp.applicationCacheTotalQuota = 500 * 1024 * 1024;
   wp.applicationCacheDefaultOriginQuota = 500 * 1024 * 1024;
   [wp _setLocalStorageDatabasePath:[WebStorageManager _storageDirectoryPath]];
-  #if DEBUG
-  NSLog(@"[WebStorageManager _storageDirectoryPath] = '%@'", [WebStorageManager _storageDirectoryPath]);
-  #endif
   
   ENABLE(localStorageEnabled);
   ENABLE(databasesEnabled);

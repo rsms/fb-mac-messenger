@@ -567,6 +567,12 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   [self showWebViewWindowWithID:@"privacy-policy" title:@"Messenger Privacy Policy" URL:@"https://www.facebook.com/help/cookies"];
 }
 
+
+- (IBAction)showMessageRequests:(id)sender {
+  [self evaluateJavaScript:@"MacMessenger.showMessageRequests()"];
+}
+
+
 - (IBAction)toggleFullscreen:(id)sender {
   [_window toggleFullScreen:sender];
 }

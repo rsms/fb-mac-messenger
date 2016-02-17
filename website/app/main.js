@@ -20,11 +20,6 @@
         }
       } else if (options.id) {
         if (instance._rootNodeID == options.id) {
-          // if (element.type.displayName) {
-          //   console.log(element.type.displayName);
-          // } else {
-          //   console.log(element.type);
-          // }
           return instance;
         }
       }
@@ -46,7 +41,6 @@
   }
 
 
-  // observeElement
   var observeElement = function(baseElement, selector, handler) {
     var e = baseElement.querySelector(selector);
     var observer;
@@ -107,6 +101,15 @@
         'div.uiContextualLayer.uiContextualLayerBelowLeft li > a';
       document.querySelector(sel).click();
     },
+ 
+    showMessageRequests: function() {
+      this.openGearMenu();
+      var menuItems = document.querySelectorAll(
+        'div.uiContextualLayerPositioner.uiLayer > ' +
+        'div.uiContextualLayer.uiContextualLayerBelowLeft li [role="menuitem"]'
+      );
+      menuItems[1].click();
+    },
 
     composeNewMessage: function() {
       document.querySelector('a[href="/new"]').dispatchEvent(
@@ -164,75 +167,6 @@
       //console.log('Thread changed to', this.currentThreadID);
     },
 
-    augmentConversation: function(baseElement){
-      // var convoContainer = document.querySelector(
-      //   'div.uiScrollableArea.fade.contentBefore.contentAfter'+
-      //   '>div.uiScrollableAreaWrap'+
-      //   '>div.uiScrollableAreaBody'+
-      //   '>div.uiScrollableAreaContent'
-      // );
-      // if (!convoContainer) {
-      //   return;
-      // }
-      var dropboxSharedLinks = baseElement.querySelectorAll(
-        'div[aria-owns^="js_"][tabindex]>span '+
-        'a[href^="https://www.dropbox.com/s/"]:not([data-dbxaugmented])'
-      );
-
-      var imageFileExtensions = {
-        'jpg':1,'jpeg':1,'png':1,
-      };
-
-      //var messages = document.querySelectorAll('div[aria-owns^="js_"][tabindex]>span');
-      Array.prototype.forEach.call(dropboxSharedLinks, function (e) {
-        //var reactID = msg.getAttribute('data-reactid');
-        e.setAttribute('data-dbxaugmented', ''); // mark as "processed" so we don't try again
-        var m = /\/s\/[^\/]+\/([^\/\?]+)/.exec(e.href);
-        if (m) {
-          var filename = decodeURI(m[1]);
-          var ext = /\.([^\.]+)$/.exec(filename);
-          if (ext) { ext = ext[1]; }
-          if (ext && imageFileExtensions[ext.toLowerCase()]) {
-            var downloadURL = e.href.replace(/\?dl=0/, '?dl=1');
-            var img = document.createElement('img');
-            img.src = downloadURL;
-            img.onload = function() {
-              //console.log(filename, img.width, img.height);
-              img.style.maxWidth = '200px';
-              img.style.maxHeight = '200px';
-              e.innerText = '';
-              e.appendChild(img);
-            };
-            e.style.display = 'block';
-            // e.style.width = '100%';
-            e.style.minWidth = '100px';
-            e.style.minHeight = '100px';
-            // //e.style.backgroundColor = 'rgba(0,0,0,0.1)';
-            // e.style.backgroundImage = 'url("' + downloadURL + '")';
-            // e.style.backgroundSize = 'contain';
-            // e.style.backgroundPosition = 'center center';
-            // e.style.backgroundRepeat = 'no-repeat';
-            // e.style.textDecoration = 'none';
-            // e.style.color = 'transparent';
-            // e.innerHTML = ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'+
-            //               ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'+
-            //               ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'+
-            //               ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'+
-            //               ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'+
-            //               ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'+
-            //               ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'+
-            //               ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;';
-            e.title = filename;
-          } else {
-            var icon = document.createElement('div');
-            icon.className = '_2uf5';
-            e.parentNode.insertBefore(icon, e);
-          }
-          e.innerText = filename;
-        }
-      });
-    },
-
   };
 
 
@@ -244,37 +178,6 @@
     MacMessenger.updateThreadIDFromURL(url);
   };
   MacMessenger.updateThreadIDFromURL(document.location.href);
-
-
-  // observe conversation content switch
-  observeElement(
-    document,
-    '[data-reactid=".0.1.$1.0.1.$0.0.0.0.0.0.0.1"]',
-    function (convoContainer) {
-      //console.log('convoContainer:', convoContainer);
-      if (!convoContainer) {
-        return;
-      }
-      var latencyTimer, reactionLatency = 100;
-      var reactToMutations = function() {
-        clearTimeout(latencyTimer);
-        latencyTimer = null;
-        //console.log('convo content changed: reactToMutations');
-        MacMessenger.augmentConversation(convoContainer);
-      };
-      observer = new MutationObserver(function() {
-        if (!latencyTimer) {
-          latencyTimer = setTimeout(reactToMutations, reactionLatency);
-        }
-      });
-      observer.observe(convoContainer, {
-        // attributes: true,
-        childList: true,
-        subtree: true,
-      });
-    }
-  );
-  setInterval(function(){ MacMessenger.augmentConversation(document); }, 2000);
 
 
   // Things that need the DOM to be loaded
@@ -294,7 +197,7 @@
     document.removeEventListener('readystatechange', onDocumentLoaded);
     didLoad = true;
 
-    // This fixes an annoying "beep" sound
+    // This fixes an annoying "beep" sound in the message composer
     document.body.addEventListener('keypress', function (e) {
       if (e.target.contentEditable && !e.metaKey) {
         e.preventDefault();

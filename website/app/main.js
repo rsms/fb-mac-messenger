@@ -1,21 +1,97 @@
 (function () {
 
+  // Dumps a tree of react components with references to DOM elements:
+  // console.log((function dumpReactComponents() {
+  //   var ReactDOM = require("ReactDOM");
+  //   var add = function(components, r) {
+  //     var k, m = components;
+  //     if (r.name) {
+  //       if (!m) { m = {}; }
+  //       m[r.name] = r;
+  //     } else if (r.children) {
+  //       if (!m) { m = {}; }
+  //       for (k in r.children) {
+  //         m[k] = r.children;
+  //       }
+  //     }
+  //     return m;
+  //   };
+  //   var visitCI = function(ci) {
+  //     var k, e = ci._currentElement, unnamed = 0;
+  //     var r2, r = {name:null, element:null, children:null};
+  //     if (e && e.type && e.type.displayName) {
+  //       r.name = e.type.displayName;
+  //       r.element = ReactDOM.findDOMNode(ci.getPublicInstance());
+  //     }
+  //     if (ci._renderedComponent) {
+  //       r2 = visitCI(ci._renderedComponent);
+  //       r.children = add(r.children, r2);
+  //     }
+  //     if (ci._renderedChildren) {
+  //       for (k in ci._renderedChildren) {
+  //         r2 = visitCI(ci._renderedChildren[k]);
+  //         r.children = add(r.children, r2);
+  //       }
+  //     }
+  //     return r;
+  //   };
+  //   var ReactMount = require("ReactMount"), k, ci, r, unnamed = 0;
+  //   var components = {};
+  //   for (k in ReactMount._instancesByReactRootID) {
+  //     r = visitCI(ReactMount._instancesByReactRootID[k]);
+  //     components = add(components, r);
+  //   }
+  //   return components;
+  // })());
+
+
+  function findReactDOMNodePath(namePath, parentInstance) {
+    var ReactDOM = require("ReactDOM");
+    var name = namePath[0];
+    var pci = parentInstance ? {a:parentInstance} : null;
+    var ci = findReactDOMNode({name:name, returnInstance:true}, pci);
+    if (ci) {
+      if (namePath.length > 1) {
+        return findReactDOMNodePath(namePath.slice(1), ci);
+      }
+      return ReactDOM.findDOMNode(ci.getPublicInstance());
+    }
+    return null;
+  }
+
+  // setTimeout(function(){
+  //   var e = findReactDOMNodePath([
+  //     'MessengerDetailView',
+  //     'MessengerDetailView',
+  //     'MessengerDetailViewHeaderContainer',
+  //     'MessengerDetailViewHeader',
+  //     'MercuryThreadTitle',
+  //   ]);
+  //   console.log('findReactDOMNodePath =>', e);
+  // }, 4000)
+
   function findReactDOMNode(options, instances) {
-    var React = require("React");
     var ReactDOM = require("ReactDOM");
     var ReactMount = require("ReactMount");
-    var ret = null;
+    var k, ret = null, instance, element, children;
 
-    if (!instances) instances = ReactMount._instancesByReactRootID;
+    if (!instances) {
+      instances = ReactMount._instancesByReactRootID;
+    }
 
-    for (n in instances) {
-      var instance = instances[n];
+    for (k in instances) {
+      instance = instances[k];
 
-      if (!instance) continue;
-      var element = instance._currentElement;
+      if (!instance) {
+        continue;
+      }
+      element = instance._currentElement;
 
       if (options.name) {
         if (element && element.type && element.type.displayName == options.name) {
+          if (options.returnInstance) {
+            return instance;
+          }
           return ReactDOM.findDOMNode(instance.getPublicInstance());
         }
       } else if (options.id) {
@@ -23,18 +99,22 @@
           return instance;
         }
       }
-      if (typeof instance._stringText === 'string') continue;
+      if (typeof instance._stringText === 'string') {
+        continue;
+      }
 
       if (instance._renderedComponent) {
         ret = findReactDOMNode(options, { a: instance._renderedComponent });
       }
 
-      var children = instance._renderedChildren;
+      children = instance._renderedChildren;
       if (!ret && children) {
         ret = findReactDOMNode(options, children);
       }
 
-      if (ret) return ret;
+      if (ret) {
+        return ret;
+      }
     }
 
     return null;
@@ -155,16 +235,68 @@
       }
     },
 
-    updateThreadIDFromURL: function(url) {
-      var m = /\/t\/([^\/]+)$/.exec(url);
-      if (m && this.currentThreadID !== m[1]) {
-        this.currentThreadID = m[1];
+    locationChanged: function(url) {
+      // https://www.messenger.com/requests/t/1234
+      var c = url.split(/\/+/); // [0:"https:", 1:"www.messenger.com", 2:"requests", 3:"t", 4:"1234"]
+      var i = 2;
+      if (c[i] === 'requests') {
+        console.log('in requests'); // WIP
+        ++i;
+      } else if (c[i] === 'filtered') {
+        console.log('in filtered'); // WIP
+        ++i;
+      }
+      if (c[i] === 't' && c[i+1]) {
+        this.currentThreadID = c[1];
+        this.onThreadChange();
+      } else if (this.currentThreadID) {
+        this.currentThreadID = null;
         this.onThreadChange();
       }
     },
 
+    onThreadTitleChange: function(title) {
+      //console.log('onThreadTitleChange', title);
+      window.SetMainWindowTitle(title);
+    },
+
     onThreadChange: function() {
-      //console.log('Thread changed to', this.currentThreadID);
+      //console.log('Thread changed to', this.currentThreadID, document.title);
+      clearTimeout(this._threadChangeTimer);
+
+      var e, limit;
+
+      // if (this._threadTitleNode && this._threadTitleNode !== e) {
+      //   console.log('_threadTitleNode !== e');
+      //   this._threadTitleNode = null;
+      //   if (this._threadTitleObserver) {
+      //     this._threadTitleObserver.disconnect();
+      //     this._threadTitleObserver = null;
+      //   }
+      // }
+
+      if (!this._threadTitleNode) {
+        e = findReactDOMNodePath([
+          'MessengerDetailView',
+          'MessengerDetailView',
+          'MessengerDetailViewHeaderContainer',
+          'MessengerDetailViewHeader',
+          'MercuryThreadTitle',
+        ]);
+        if (!e) {
+          this._threadChangeTimer = setTimeout(this.onThreadChange.bind(this), 500);
+          return;
+        }
+        var onThreadTitleChange = this.onThreadTitleChange.bind(this);
+        this._threadTitleNode = e;
+        this._threadTitleObserver = new MutationObserver(function(mutations) {
+          onThreadTitleChange(e.innerText);
+        });
+        this._threadTitleObserver.observe(e, {
+          childList: true, // MercuryThreadTitle replaces its span leaf
+        });
+        onThreadTitleChange(e.innerText);
+      }
     },
 
   };
@@ -175,9 +307,9 @@
   window.history._pushState = window.history.pushState;
   window.history.pushState = function(obj, title, url) {
     window.history._pushState(obj, title, url);
-    MacMessenger.updateThreadIDFromURL(url);
+    MacMessenger.locationChanged(url);
   };
-  MacMessenger.updateThreadIDFromURL(document.location.href);
+  MacMessenger.locationChanged(document.location.href);
 
 
   // Things that need the DOM to be loaded

@@ -130,6 +130,20 @@
 }
 
 
+- (void)showTitlebarAnimate:(BOOL)animate {
+  if (_titlebarView.isHidden) {
+    [(animate ? [_titlebarView animator] : _titlebarView) setHidden:NO];
+  }
+}
+
+
+- (void)hideTitlebarAnimate:(BOOL)animate {
+  if (!_titlebarView.isHidden) {
+    [(animate ? [_titlebarView animator] : _titlebarView) setHidden:YES];
+  }
+}
+
+
 
 #pragma mark - NSWindowDelegate
 

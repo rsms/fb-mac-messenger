@@ -45,16 +45,20 @@
   // })());
 
 
-  function findReactDOMNodePath(namePath, parentInstance) {
+  function findReactDOMNodePath(namePath, parentInstance, returnCI) {
+    if (typeof require === 'undefined') {
+      return null;
+    }
     var ReactDOM = require("ReactDOM");
     var name = namePath[0];
     var pci = parentInstance ? {a:parentInstance} : null;
     var ci = findReactDOMNode({name:name, returnInstance:true}, pci);
     if (ci) {
       if (namePath.length > 1) {
-        return findReactDOMNodePath(namePath.slice(1), ci);
+        return findReactDOMNodePath(namePath.slice(1), ci, returnCI);
       }
-      return ReactDOM.findDOMNode(ci.getPublicInstance());
+      ci = ci.getPublicInstance();
+      return returnCI ? ci : ReactDOM.findDOMNode(ci);
     }
     return null;
   }
@@ -71,6 +75,9 @@
   // }, 4000)
 
   function findReactDOMNode(options, instances) {
+    if (typeof require === 'undefined') {
+      return null;
+    }
     var ReactDOM = require("ReactDOM");
     var ReactMount = require("ReactMount");
     var k, ret = null, instance, element, children;
@@ -162,33 +169,96 @@
   //   window.MacMessengerGitRev will be defined to a string e.g. "abc917"
 
   window.MacMessenger = {
+    tryFindSettingsGear: function() {
+      this.masterViewHeader = findReactDOMNodePath([
+        'MessengerMasterView',
+        'MessengerMasterViewHeader'
+      ], null, /*returnCI=*/true);
+      var updateGearButton = (function() {
+        this.gearButton = findReactDOMNodePath(
+          ['MessengerMasterView','MessengerMasterViewHeader','MessengerSettingsMenu'],
+          null,
+          /*returnCI=*/true
+        );
+        //console.log('this.gearButton:', this.gearButton)
+        if (this.gearButton) {
+          var ReactDOM = require("ReactDOM");
+          this.gearButtonNode = ReactDOM.findDOMNode(this.gearButton);
+          this._gearButtonAnchor = this.gearButtonNode.querySelector('a');
+          this.gearButtonNode.style.visibility = 'hidden';
+
+          // DEBUG calls to gear menu items
+          // var gearButton = this.gearButton;
+          // var wrap = function(name) {
+          //   var f = gearButton[name];
+          //   gearButton[name] = function() {
+          //     var args = Array.prototype.slice.call(arguments);
+          //     console.log(name, args);
+          //     return f.apply(this, args);
+          //   }
+          // };
+          // wrap('_handleChangeFolderClick');
+          // wrap('_handleLogOut');
+          // wrap('_handleReportBugClick');
+          // wrap('_handleSettingsClick');
+          // wrap('_handleShowViewClick');
+          // END DEBUG
+        } else {
+          this._gearButtonAnchor = null;
+        }
+      }).bind(this);
+
+      //console.log('this.masterViewHeader:', this.masterViewHeader)
+      if (this.masterViewHeader) {
+        var cdu = this.masterViewHeader.componentDidUpdate;
+        this.masterViewHeader.componentDidUpdate = function(prevProps) {
+          if (cdu) {
+            cdu.apply(this, Array.prototype.slice.call(arguments));
+          }
+          if (this.props.folder === 'inbox') {
+            ShowMainWindowTitlebar();
+          } else {
+            HideMainWindowTitlebar();
+          }
+          //console.log('componentDidUpdate', JSON.parse(JSON.stringify(prevProps)));
+          setTimeout(updateGearButton, 0);
+        };
+        updateGearButton();
+        return true;
+      }
+      return false;
+    },
+
     openGearMenu: function() {
-      this.gearButton.firstElementChild.firstElementChild.dispatchEvent(
-        new MouseEvent('click', {view:window, bubbles:true, cancelable:true})
-      );
+      if (this._gearButtonAnchor) {
+        this._gearButtonAnchor.click();
+      }
     },
 
-    logOut: function() {
-      // TODO: Actually "log out" instead of showing the menu
-      this.openGearMenu();
-    },
-
+    // Gear menu handlers:
+    // _handleChangeFolderClick: function()
+    // _handleLogOut: function()
+    // _handleReportBugClick: function()
+    // _handleSettingsClick: function()
+    // _handleShowViewClick: function()
 
     showSettings: function() {
-      this.openGearMenu();
-      var sel =
-        'div.uiContextualLayerPositioner.uiLayer > ' +
-        'div.uiContextualLayer.uiContextualLayerBelowLeft li > a';
-      document.querySelector(sel).click();
+      // this.openGearMenu(); return;
+      if (this.gearButton) {
+        this.gearButton._handleSettingsClick(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));
+      }
     },
  
     showMessageRequests: function() {
-      this.openGearMenu();
-      var menuItems = document.querySelectorAll(
-        'div.uiContextualLayerPositioner.uiLayer > ' +
-        'div.uiContextualLayer.uiContextualLayerBelowLeft li [role="menuitem"]'
-      );
-      menuItems[1].click();
+      if (this.gearButton) {
+        this.gearButton._handleChangeFolderClick(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));
+      }
+    },
+
+    logOut: function() {
+      if (this.gearButton) {
+        this.gearButton._handleLogOut(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));
+      }
     },
 
     composeNewMessage: function() {
@@ -240,11 +310,18 @@
       var c = url.split(/\/+/); // [0:"https:", 1:"www.messenger.com", 2:"requests", 3:"t", 4:"1234"]
       var i = 2;
       if (c[i] === 'requests') {
-        console.log('in requests'); // WIP
+        //console.log('in requests'); // WIP
+        //HideMainWindowTitlebar();
         ++i;
       } else if (c[i] === 'filtered') {
-        console.log('in filtered'); // WIP
+        //console.log('in filtered'); // WIP
+        //HideMainWindowTitlebar();
         ++i;
+      } else {
+        //ShowMainWindowTitlebar();
+        // if (!MacMessenger.tryFindSettingsGear()) {
+        //   //setTimeout(onDocumentLoaded, 500);
+        // }
       }
       if (c[i] === 't' && c[i+1]) {
         this.currentThreadID = c[1];
@@ -341,18 +418,9 @@
     }, true);
 
     // Find settings gear
-    var tryFindSettingsGear = function() {
-      var e = findReactDOMNode({ name: "MessengerSettingsMenu" });
-      if (e) {
-        e = e.parentNode;
-        e.style.visibility = 'hidden';
-        window.MacMessenger.gearButton = e;
-        return true;
-      }
-    };
-    if (!tryFindSettingsGear()) {
+    if (!MacMessenger.tryFindSettingsGear()) {
       var observer = new MutationObserver(function(mutations) {
-        if (tryFindSettingsGear()) {
+        if (MacMessenger.tryFindSettingsGear()) {
           observer.disconnect();
         }
       });

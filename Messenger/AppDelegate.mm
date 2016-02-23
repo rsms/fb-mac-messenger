@@ -763,30 +763,67 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 JSValueRef JSAPI_SetMainWindowTitle(JSContextRef ctx,
                                     JSObjectRef function,
                                     JSObjectRef thisObject,
-                                    size_t argumentCount,
+                                    size_t argc,
                                     const JSValueRef arguments[],
                                     JSValueRef* exception)
 {
-  if (argumentCount > 0) {
+  if (argc > 0) {
     ((AppDelegate*)NSApp.delegate).mainWindow.title = JSClass::NSStringFromJSValue(ctx, arguments[0]);
   }
   return JSValueMakeUndefined(ctx);
 }
 
 
+JSValueRef JSAPI_ShowMainWindowTitlebar(
+    JSContextRef ctx,
+    JSObjectRef fn,
+    JSObjectRef obj,
+    size_t argc,
+    const JSValueRef argv[],
+    JSValueRef* exc)
+{
+  BOOL animate = (argc == 0) || JSValueIsBoolean(ctx, argv[0]);
+  [((FBMWindow*)((AppDelegate*)NSApp.delegate).mainWindow) showTitlebarAnimate:animate];
+  return JSValueMakeUndefined(ctx);
+}
+
+
+JSValueRef JSAPI_HideMainWindowTitlebar(
+    JSContextRef ctx,
+    JSObjectRef fn,
+    JSObjectRef obj,
+    size_t argc,
+    const JSValueRef argv[],
+    JSValueRef* exc)
+{
+  BOOL animate = (argc == 0) || JSValueIsBoolean(ctx, argv[0]);
+  [((FBMWindow*)((AppDelegate*)NSApp.delegate).mainWindow) hideTitlebarAnimate:animate];
+  return JSValueMakeUndefined(ctx);
+}
+
 
 - (void)webView:(WebView *)webView didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame {
   if (webView != _webView || frame != _webView.mainFrame) {
     return;
   }
+
   auto ctx = webView.mainFrame.globalContext;
   JSObjectRef globalObj = JSContextGetGlobalObject(ctx);
   
+  // Make sure the titlebar is visible
+  [_window showTitlebarAnimate:NO];
+
+  // Function definition macro
+  #define DefFunc(nameUTF16, impl) do { \
+    auto name = U16JSStr(nameUTF16); \
+    auto fun = JSObjectMakeFunctionWithCallback(ctx, name, impl); \
+    JSObjectSetProperty(ctx, globalObj, name, fun, kJSPropertyAttributeReadOnly, nullptr); \
+    JSStringRelease(name); \
+  } while (0)
   
-  auto name = U16JSStr(u"SetMainWindowTitle");
-  auto fun = JSObjectMakeFunctionWithCallback(ctx, name, JSAPI_SetMainWindowTitle);
-  JSObjectSetProperty(ctx, globalObj, name, fun, kJSPropertyAttributeReadOnly, nullptr);
-  JSStringRelease(name);
+  DefFunc(u"SetMainWindowTitle", JSAPI_SetMainWindowTitle);
+  DefFunc(u"ShowMainWindowTitlebar", JSAPI_ShowMainWindowTitlebar);
+  DefFunc(u"HideMainWindowTitlebar", JSAPI_HideMainWindowTitlebar);
   
   
   auto Notifications = JSNotificationsCreate(ctx, 0, nullptr, nullptr);

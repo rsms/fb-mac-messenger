@@ -6,6 +6,32 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.1.7</title>
+      <description><![CDATA[
+        <ul>
+          <li>Security improvements:
+            <ul>
+              <li>Updates and update information is now served over HTTPS (end-to-end secure connection.)</li>
+              <li>Note that app updates themselves have always been cryptographically signed and remains fully signed.</li>
+              <li>Fixes a vulnerability in the updating library used (Sparkle.)</li>
+            </ul>
+          </li>
+          <li>Adds <em>Message Requests</em> and <em>Filtered Messages</em>, available from the "View" main menu.</li>
+          <li>The window title now reflects the current conversation's title.</li>
+          <li>Changes the app icon to match what's used at messenger.com.</li>
+          <li>Hides "install messenger on your phone" banner for users who have never installed Messenger on a phone or tablet.</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 24 Feb 2016 09:47:08 -0800</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="f419067e835088ec"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.7.1456285881-f419067e835088ec.zip"
+        sparkle:version="0.1.7.1456285881"
+        length="2103379"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.1.6</title>
       <description><![CDATA[
         <ul>

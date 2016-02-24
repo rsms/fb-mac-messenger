@@ -45,7 +45,7 @@
 			<key>fbmacmessenger.rsms.me</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
+				<false/>
 				<key>NSExceptionRequiresForwardSecrecy</key>
 				<false/>
 			</dict>

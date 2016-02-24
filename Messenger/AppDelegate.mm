@@ -284,7 +284,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
     // Revert previous behaviour of Sparkle which prevented "new version" dialog to appear automatically
     su.automaticallyDownloadsUpdates = NO;
   }
-  su.feedURL = [NSURL URLWithString:@"http://fbmacmessenger.rsms.me/changelog.xml"];
+  su.feedURL = [NSURL URLWithString:@"https://fbmacmessenger.rsms.me/changelog.xml"];
   su.userAgentString = [NSString stringWithFormat:@"Messenger/%@ Sparkle/%@ Device/%@",
                         appVersion,
                         [NSBundle bundleForClass:[SUUpdater class]].infoDictionary[@"CFBundleVersion"],

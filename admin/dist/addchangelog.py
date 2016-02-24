@@ -24,7 +24,7 @@ itembuf = '''
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="{gitrev}"
-        url="http://fbmacmessenger.rsms.me/dist/{filename}"
+        url="https://fbmacmessenger.rsms.me/dist/{filename}"
         sparkle:version="{version}"
         length="{filesize}"
         type="application/octet-stream" />

@@ -276,7 +276,7 @@
     },
 
     selectConversationAtIndex: function(index) {
-      document.querySelector('div[aria-label="Conversations"] li:nth-child(' + index +') a').click();
+      document.querySelector('div[role="navigation"] li:nth-child(' + index +') a').click();
     },
 
     currentConversationItem: function() {

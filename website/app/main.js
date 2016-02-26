@@ -430,7 +430,7 @@
     // #146 Fix for vertical scrollbar appearing when mouse plugged in
     var css = document.createElement('style');
     css.type = 'text/css';
-    var style = 'body { overflow: hidden; }';
+    var style = 'html { overflow: hidden; } a:focus { outline-style: none; }';
     css.appendChild(document.createTextNode(style));
     document.getElementsByTagName('head')[0].appendChild(css);
  

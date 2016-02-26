@@ -21,6 +21,7 @@ int FBMOSX1010OrNewer();
 - (IBAction)selectOlderConversation:(id)sender;
 
 - (void)windowDidBecomeKey:(NSWindow*)w;
+- (void)windowDidResignKey:(NSWindow*)w;
 // [self evaluateJavaScript:@"try { (typeof MacMessenger != 'undefined') && MacMessenger.focusComposer(); } catch(_) {}"];
 
 @end

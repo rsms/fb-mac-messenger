@@ -10,6 +10,7 @@
 #import "JSClass.hh"
 #import "MEmbeddedRes.h"
 #import "MMFakeDragInfo.h"
+#import "FBMWindow.h"
 
 extern NSString* kMainJSDataURL; // implemented in generated file MainJSDataURL.m
 
@@ -19,6 +20,10 @@ static BOOL kCFIsOSX_10_10_orNewer;
 
 static void __attribute__((constructor))_init() {
   kCFIsOSX_10_10_orNewer = floor(kCFCoreFoundationVersionNumber) > kCFCoreFoundationVersionNumber10_9;
+}
+
+int FBMOSX1010OrNewer() {
+  return kCFIsOSX_10_10_orNewer ? 1 : 0;
 }
 
 
@@ -35,21 +40,6 @@ NSString* ReadDeviceID() {
   }
   return did;
 }
-
-@interface DraggableView : NSView {}
-@property (nonatomic, weak) NSWindow* draggingWindow;
-@end
-
-@implementation DraggableView
-@synthesize draggingWindow;
--(void)mouseDragged:(NSEvent *)theEvent {
-  NSWindow * w = self.draggingWindow;
-  CGRect frame = w.frame;
-  frame.origin.x += theEvent.deltaX;
-  frame.origin.y -= theEvent.deltaY;
-  [w setFrameOrigin:frame.origin];
-}
-@end
 
 @interface AppDelegate ()
 @property (nonatomic, readonly) BOOL canMakeTextLarger;
@@ -76,18 +66,16 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
 
 @implementation AppDelegate {
-  NSWindow*            _window;
+  FBMWindow*           _window;
   WebView*             _webView;
   WebViewZoomController* _webViewZoomController;
   WebView*             _dummyExternalWebView;
-  NSView*              _titlebarView; // NSTitlebarView
   NSString*            _lastNotificationCount;
   NSProgressIndicator* _progressBar;
   NSView*              _curtainView;
   NSTimer*             _reloadWhenIdleTimer;
   NSDate*              _lastReloadDate;
   SCNetworkReachabilityRef _netReachRef;
-  DraggableView*       _draggableView;
   BOOL                 _isOnline;
   BOOL                 _needsReload;
   BOOL                 _webAppIsFunctional;
@@ -102,42 +90,43 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   [ud registerDefaults:@{@"WebContinuousSpellCheckingEnabled": @YES}];
 
   // Create main window
-  NSUInteger windowStyle = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
-  if (kCFIsOSX_10_10_orNewer) {
-    windowStyle |= NSFullSizeContentViewWindowMask;
-  }
-  NSSize frameSize = {800,600};
-  _window = [[NSWindow alloc] initWithContentRect:{{0,0},frameSize} styleMask:windowStyle backing:NSBackingStoreBuffered defer:YES];
-  if (kCFIsOSX_10_10_orNewer) {
-    _window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
-    _window.titleVisibility = NSWindowTitleHidden;
-    _window.titlebarAppearsTransparent = YES;
-    
-    #if USE_BLURRY_BACKGROUND
-    auto* fxview = [[NSVisualEffectView alloc] initWithFrame:{{0,0},frameSize}];
-    fxview.blendingMode = NSVisualEffectBlendingModeBehindWindow;
-    fxview.material = NSVisualEffectMaterialAppearanceBased;
-    fxview.state = NSVisualEffectStateFollowsWindowActiveState;
-    _window.contentView = fxview;
-    #endif
-  }
-  _window.collectionBehavior = NSWindowCollectionBehaviorFullScreenPrimary;
-
-  if ([ud boolForKey:@"moves-with-active-space"]) {
-    _window.collectionBehavior |= NSWindowCollectionBehaviorMoveToActiveSpace;
-  }
-  _window.minSize = {320,300};
-  _window.releasedWhenClosed = NO;
-  _window.delegate = self;
-  [_window center];
-  _window.frameAutosaveName = @"main";
-  _window.movableByWindowBackground = YES;
-  _titlebarView = [_window standardWindowButton:NSWindowCloseButton].superview;
-  
-  _draggableView = [[DraggableView alloc] init];
-  _draggableView.draggingWindow = _window;
-  
-  [self updateWindowTitlebar];
+  _window = [FBMWindow new];
+//  NSUInteger windowStyle = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
+//  if (kCFIsOSX_10_10_orNewer) {
+//    windowStyle |= NSFullSizeContentViewWindowMask;
+//  }
+//  NSSize frameSize = {800,600};
+//  _window = [[FBMWindow alloc] initWithContentRect:{{0,0},frameSize} styleMask:windowStyle backing:NSBackingStoreBuffered defer:YES];
+//  if (kCFIsOSX_10_10_orNewer) {
+//    _window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
+//    _window.titleVisibility = NSWindowTitleHidden;
+//    _window.titlebarAppearsTransparent = YES;
+//    
+//    #if USE_BLURRY_BACKGROUND
+//    auto* fxview = [[NSVisualEffectView alloc] initWithFrame:{{0,0},frameSize}];
+//    fxview.blendingMode = NSVisualEffectBlendingModeBehindWindow;
+//    fxview.material = NSVisualEffectMaterialAppearanceBased;
+//    fxview.state = NSVisualEffectStateFollowsWindowActiveState;
+//    _window.contentView = fxview;
+//    #endif
+//  }
+//  _window.collectionBehavior = NSWindowCollectionBehaviorFullScreenPrimary;
+//
+//  if ([ud boolForKey:@"moves-with-active-space"]) {
+//    _window.collectionBehavior |= NSWindowCollectionBehaviorMoveToActiveSpace;
+//  }
+//  _window.minSize = {320,300};
+//  _window.releasedWhenClosed = NO;
+//  _window.delegate = self;
+//  [_window center];
+//  _window.frameAutosaveName = @"main";
+//  _window.movableByWindowBackground = YES;
+//  _titlebarView = [_window standardWindowButton:NSWindowCloseButton].superview;
+//  
+//  _draggableView = [[DraggableView alloc] init];
+//  _draggableView.draggingWindow = _window;
+//  
+//  [self updateWindowTitlebar];
 
   // Web prefs
   auto wp = [[WebPreferences alloc] initWithIdentifier:@"main"];
@@ -155,9 +144,6 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   wp.applicationCacheTotalQuota = 500 * 1024 * 1024;
   wp.applicationCacheDefaultOriginQuota = 500 * 1024 * 1024;
   [wp _setLocalStorageDatabasePath:[WebStorageManager _storageDirectoryPath]];
-  #if DEBUG
-  NSLog(@"[WebStorageManager _storageDirectoryPath] = '%@'", [WebStorageManager _storageDirectoryPath]);
-  #endif
   
   ENABLE(localStorageEnabled);
   ENABLE(databasesEnabled);
@@ -204,7 +190,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   webView.translatesAutoresizingMaskIntoConstraints = YES;
   webView.autoresizesSubviews = YES;
   webView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-  [_window.contentView addSubview:webView];
+  [_window setMainView:webView];
   webView.policyDelegate = self;
   webView.frameLoadDelegate = self;
   webView.UIDelegate = self;
@@ -225,8 +211,6 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
   _webViewZoomController = [[WebViewZoomController alloc] initWithWebView:webView userDefaults:[NSUserDefaults standardUserDefaults]];
   [_webViewZoomController restoreSavedZoomLevels];
-
-  [_window.contentView addSubview:_draggableView];
   
   // Dim effect view
   _curtainView = [[NSView alloc] initWithFrame:[_window.contentView bounds]];
@@ -300,7 +284,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
     // Revert previous behaviour of Sparkle which prevented "new version" dialog to appear automatically
     su.automaticallyDownloadsUpdates = NO;
   }
-  su.feedURL = [NSURL URLWithString:@"http://fbmacmessenger.rsms.me/changelog.xml"];
+  su.feedURL = [NSURL URLWithString:@"https://fbmacmessenger.rsms.me/changelog.xml"];
   su.userAgentString = [NSString stringWithFormat:@"Messenger/%@ Sparkle/%@ Device/%@",
                         appVersion,
                         [NSBundle bundleForClass:[SUUpdater class]].infoDictionary[@"CFBundleVersion"],
@@ -317,54 +301,13 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 }
 
 
-- (void)updateWindowTitlebar {
-  const CGFloat kTitlebarHeight = 50;
-  const CGFloat kFullScreenButtonYOrigin = 3;
-  auto windowFrame = _window.frame;
-  BOOL fullScreen = (_window.styleMask & NSFullScreenWindowMask) == NSFullScreenWindowMask;
-
-  // Set size of titlebar container
-  auto titlebarContainerView = _titlebarView.superview;
-  auto titlebarContainerFrame = titlebarContainerView.frame;
-  titlebarContainerFrame.origin.y = windowFrame.size.height - kTitlebarHeight;
-  titlebarContainerFrame.size.height = kTitlebarHeight;
-  titlebarContainerView.frame = titlebarContainerFrame;
-  
-  auto hidden = [[NSUserDefaults standardUserDefaults] boolForKey:@"traffic-lights/hidden"];
-
-  // Set position of window buttons
-  __block CGFloat x = 12; // initial LHS margin, matching Safari 8.0 on OS X 10.10.
-  auto updateButton = ^(NSView* buttonView) {
-    auto buttonFrame = buttonView.frame;
-
-    // in fullscreen, the titlebar frame is not governed by kTitlebarHeight but rather appears to be fixed by the system.
-    // thus, we set a constant Y origin for the buttons when in fullscreen.
-    buttonFrame.origin.y = fullScreen ?
-      kFullScreenButtonYOrigin :
-      round((kTitlebarHeight - buttonFrame.size.height) / 2.0);
-
-    buttonFrame.origin.x = x;
-
-    // spacing for next button, matching Safari 8.0 on OS X 10.10.
-    x += buttonFrame.size.width + 6;
-
-    [buttonView setFrameOrigin:buttonFrame.origin];
-    
-    if (hidden) {
-      buttonView.hidden = YES;
-    }
-  };
-  updateButton([_window standardWindowButton:NSWindowCloseButton]);
-  updateButton([_window standardWindowButton:NSWindowMiniaturizeButton]);
-  updateButton([_window standardWindowButton:NSWindowZoomButton]);
-  
-  [_draggableView setFrame:[_titlebarView convertRect:_titlebarView.bounds toView:_window.contentView]];
-  _draggableView.hidden = fullScreen;
+- (void)dealloc {
+  [self disableNetReachObservation];
 }
 
 
-- (void)dealloc {
-  [self disableNetReachObservation];
+- (NSWindow*)mainWindow {
+  return _window;
 }
 
 
@@ -416,15 +359,16 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 }
 
 
-- (id)evaluateJavaScript:(NSString *)script
-{
+- (id)evaluateJavaScript:(NSString *)script {
   WebScriptObject *scriptObject = _webView.windowScriptObject;
   static NSString * const kErrorPrefix = @"Exception raised during -evaluateWebScript: ";
   script = [NSString stringWithFormat:
-            @"try { %@ } catch (e) { \"%@\"+e.sourceURL+\":\"+e.line+\": \"+e.toString() }", script, kErrorPrefix];
+            @"try { %@ } catch (e) { \"%@main.js:\"+e.line+\": \"+e.toString() }", script, kErrorPrefix];
   id result = [scriptObject evaluateWebScript:script];
   if ([result isKindOfClass:[NSString class]] && [result hasPrefix:kErrorPrefix]) {
-    [NSException raise:NSGenericException format:@"%@", result];
+    //[NSException raise:NSGenericException format:@"%@", result];
+    NSLog(@"[evaluateJavaScript] %@", result);
+    return nil;
   }
   return result;
 }
@@ -451,7 +395,8 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
 
 - (BOOL)canSelectNewerConversation {
-  return [[self evaluateJavaScript:@"MacMessenger.canSelectNewerConversation()"] boolValue];
+  NSNumber* v = [self evaluateJavaScript:@"MacMessenger.canSelectNewerConversation()"];
+  return v == nil || ![v isKindOfClass:[NSNumber class]] ? NO : [v boolValue];
 }
 
 
@@ -461,7 +406,8 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
 
 - (BOOL)canSelectOlderConversation {
-  return [[self evaluateJavaScript:@"MacMessenger.canSelectOlderConversation()"] boolValue];
+  NSNumber* v = [self evaluateJavaScript:@"MacMessenger.canSelectOlderConversation()"];
+  return v == nil || ![v isKindOfClass:[NSNumber class]] ? NO : [v boolValue];
 }
 
 
@@ -569,6 +515,12 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 - (IBAction)showPrivacyPolicy:(id)sender {
   [self showWebViewWindowWithID:@"privacy-policy" title:@"Messenger Privacy Policy" URL:@"https://www.facebook.com/help/cookies"];
 }
+
+
+- (IBAction)showMessageRequests:(id)sender {
+  [self evaluateJavaScript:@"MacMessenger.showMessageRequests()"];
+}
+
 
 - (IBAction)toggleFullscreen:(id)sender {
   [_window toggleFullScreen:sender];
@@ -689,33 +641,19 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 - (IBAction)resetPageZoom:(id)sender        { [_webViewZoomController resetPageZoom:sender]; }
 
 
-#pragma mark - NSWindowDelegate
+#pragma mark - FBMWindow callbacks
 
-
-- (void)windowDidBecomeKey:(NSNotification*)notification {
-  //NSLog(@"%@%@%@", self, NSStringFromSelector(_cmd), notification);
-  // Give focus to the composer
-  [self evaluateJavaScript:@"try { (typeof MacMessenger != 'undefined') && MacMessenger.focusComposer(); } catch(_) {}"];
-  
-  // Make sure a focus event is always triggered when the window becomes active
-  [self evaluateJavaScript:@"try { verifyWindowActive && verifyWindowActive(); } catch(_) {}"];
-}
-
-- (void)windowDidResignKey:(NSNotification *)notification {
-  // Make sure a blur event is always triggered when the window becomes inactive
-  [self evaluateJavaScript:@"try { verifyWindowInactive && verifyWindowInactive(); } catch(_) {}"];
-}
-
-
-- (void)windowDidResize:(NSNotification *)notification {
-  if (_window.isVisible) {
-    [self updateWindowTitlebar];
+- (void)windowDidBecomeKey:(NSWindow*)w {
+  if (w == _window) {
+    [self evaluateJavaScript:@"try { (typeof MacMessenger != 'undefined') && MacMessenger.focusComposer(); } catch(_) {}"];
+    [self evaluateJavaScript:@"try { verifyWindowActive && verifyWindowActive(); } catch(_) {}"];
   }
 }
 
-- (void)windowDidExitFullScreen:(NSNotification *)notification {
-  if (_window.isVisible) {
-    [self updateWindowTitlebar];
+- (void)windowDidResignKey:(NSWindow*)w {
+  if (w == _window) {
+    // Make sure a blur event is always triggered when the window becomes inactive
+    [self evaluateJavaScript:@"try { verifyWindowInactive && verifyWindowInactive(); } catch(_) {}"];
   }
 }
 
@@ -830,12 +768,71 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 #pragma mark - WebFrameLoadDelegate
 
 
+JSValueRef JSAPI_SetMainWindowTitle(JSContextRef ctx,
+                                    JSObjectRef function,
+                                    JSObjectRef thisObject,
+                                    size_t argc,
+                                    const JSValueRef arguments[],
+                                    JSValueRef* exception)
+{
+  if (argc > 0) {
+    ((AppDelegate*)NSApp.delegate).mainWindow.title = JSClass::NSStringFromJSValue(ctx, arguments[0]);
+  }
+  return JSValueMakeUndefined(ctx);
+}
+
+
+JSValueRef JSAPI_ShowMainWindowTitlebar(
+    JSContextRef ctx,
+    JSObjectRef fn,
+    JSObjectRef obj,
+    size_t argc,
+    const JSValueRef argv[],
+    JSValueRef* exc)
+{
+  BOOL animate = (argc == 0) || JSValueIsBoolean(ctx, argv[0]);
+  [((FBMWindow*)((AppDelegate*)NSApp.delegate).mainWindow) showTitlebarAnimate:animate];
+  return JSValueMakeUndefined(ctx);
+}
+
+
+JSValueRef JSAPI_HideMainWindowTitlebar(
+    JSContextRef ctx,
+    JSObjectRef fn,
+    JSObjectRef obj,
+    size_t argc,
+    const JSValueRef argv[],
+    JSValueRef* exc)
+{
+  BOOL animate = (argc == 0) || JSValueIsBoolean(ctx, argv[0]);
+  [((FBMWindow*)((AppDelegate*)NSApp.delegate).mainWindow) hideTitlebarAnimate:animate];
+  return JSValueMakeUndefined(ctx);
+}
+
+
 - (void)webView:(WebView *)webView didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame {
   if (webView != _webView || frame != _webView.mainFrame) {
     return;
   }
+
   auto ctx = webView.mainFrame.globalContext;
   JSObjectRef globalObj = JSContextGetGlobalObject(ctx);
+  
+  // Make sure the titlebar is visible
+  [_window showTitlebarAnimate:NO];
+
+  // Function definition macro
+  #define DefFunc(nameUTF16, impl) do { \
+    auto name = U16JSStr(nameUTF16); \
+    auto fun = JSObjectMakeFunctionWithCallback(ctx, name, impl); \
+    JSObjectSetProperty(ctx, globalObj, name, fun, kJSPropertyAttributeReadOnly, nullptr); \
+    JSStringRelease(name); \
+  } while (0)
+  
+  DefFunc(u"SetMainWindowTitle", JSAPI_SetMainWindowTitle);
+  DefFunc(u"ShowMainWindowTitlebar", JSAPI_ShowMainWindowTitlebar);
+  DefFunc(u"HideMainWindowTitlebar", JSAPI_HideMainWindowTitlebar);
+  
   
   auto Notifications = JSNotificationsCreate(ctx, 0, nullptr, nullptr);
   JSClass::setProperty(ctx, globalObj, u"_notifications", Notifications);

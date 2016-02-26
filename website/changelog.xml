@@ -2,9 +2,35 @@
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>Messenger for Mac Changelog</title>
-    <link>http://fbmacmessenger.rsms.me/changelog.xml</link>
+    <link>https://fbmacmessenger.rsms.me/changelog.xml</link>
     <description>Most recent changes with links to updates</description>
     <language>en</language>
+    <item>
+      <title>Messenger for Mac 0.1.7</title>
+      <description><![CDATA[
+        <ul>
+          <li>Security improvements:
+            <ul>
+              <li>Updates and update information is now served over HTTPS (end-to-end secure connection.)</li>
+              <li>Note that app updates themselves have always been cryptographically signed and remains fully signed.</li>
+              <li>Fixes a vulnerability in the updating library used (Sparkle.)</li>
+            </ul>
+          </li>
+          <li>Adds <em>Message Requests</em> and <em>Filtered Messages</em>, available from the "View" main menu.</li>
+          <li>The window title now reflects the current conversation's title.</li>
+          <li>Changes the app icon to match what's used at messenger.com.</li>
+          <li>Hides "install messenger on your phone" banner for users who have never installed Messenger on a phone or tablet.</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 24 Feb 2016 09:47:08 -0800</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="f419067e835088ec"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.7.1456285881-f419067e835088ec.zip"
+        sparkle:version="0.1.7.1456285881"
+        length="2103379"
+        type="application/octet-stream" />
+    </item>
     <item>
       <title>Messenger for Mac 0.1.6</title>
       <description><![CDATA[
@@ -26,7 +52,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="1a2c4f98e1dad409"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.1.6.1455039740-1a2c4f98e1dad409.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.6.1455039740-1a2c4f98e1dad409.zip"
         sparkle:version="0.1.6.1455039740"
         length="1993937"
         type="application/octet-stream" />
@@ -42,7 +68,7 @@
       <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="8f43a2f9c4d47b7b"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.1.5.1442536116-8f43a2f9c4d47b7b.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.5.1442536116-8f43a2f9c4d47b7b.zip"
         sparkle:version="0.1.5.1442536116"
         length="1987903"
         type="application/octet-stream" />
@@ -60,7 +86,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="f3436781b1e02ea1"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.1.4.1440786644-f3436781b1e02ea1.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.4.1440786644-f3436781b1e02ea1.zip"
         sparkle:version="0.1.4.1440786644"
         length="1976355"
         type="application/octet-stream" />
@@ -76,7 +102,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="54be52ff0c189880"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.1.3.1439436496-54be52ff0c189880.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.3.1439436496-54be52ff0c189880.zip"
         sparkle:version="0.1.3.1439436496"
         length="1976173"
         type="application/octet-stream" />
@@ -92,7 +118,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="3df9691554b45d1f"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.1.2.1439435587-3df9691554b45d1f.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.2.1439435587-3df9691554b45d1f.zip"
         sparkle:version="0.1.2.1439435587"
         length="1972648"
         type="application/octet-stream" />
@@ -114,7 +140,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="5583b4fc775d0804"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.1.1.1439432949-5583b4fc775d0804.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.1.1439432949-5583b4fc775d0804.zip"
         sparkle:version="0.1.1.1439432949"
         length="1972563"
         type="application/octet-stream" />
@@ -136,7 +162,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="0b4651ac573332db"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.1.0.1439413265-0b4651ac573332db.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.0.1439413265-0b4651ac573332db.zip"
         sparkle:version="0.1.0.1439413265"
         length="1970061"
         type="application/octet-stream" />
@@ -152,7 +178,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="20a46b37192bfacc"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434655833-20a46b37192bfacc.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434655833-20a46b37192bfacc.zip"
         sparkle:version="0.0.9.1434655833"
         length="1969402"
         type="application/octet-stream" />
@@ -168,7 +194,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="6f94ffc94d941402"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434567577-6f94ffc94d941402.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434567577-6f94ffc94d941402.zip"
         sparkle:version="0.0.9.1434567577"
         length="1969397"
         type="application/octet-stream" />
@@ -184,7 +210,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="52aaec14b08d4790"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434563496-52aaec14b08d4790.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434563496-52aaec14b08d4790.zip"
         sparkle:version="0.0.9.1434563496"
         length="1969336"
         type="application/octet-stream" />
@@ -207,7 +233,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="3641cfadfed59607"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434563040-3641cfadfed59607.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.9.1434563040-3641cfadfed59607.zip"
         sparkle:version="0.0.9.1434563040"
         length="1969299"
         type="application/octet-stream" />
@@ -223,7 +249,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="7f9bb2ca00f85676"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.8.1433891483-7f9bb2ca00f85676.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.8.1433891483-7f9bb2ca00f85676.zip"
         sparkle:version="0.0.8.1433891483"
         length="1994940"
         type="application/octet-stream" />
@@ -241,7 +267,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="b8deadac8f169d05"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.8.1433885892-b8deadac8f169d05.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.8.1433885892-b8deadac8f169d05.zip"
         sparkle:version="0.0.8.1433885892"
         length="1993699"
         type="application/octet-stream" />
@@ -257,7 +283,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="d640fa4b728ab130"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.8.1433711909-d640fa4b728ab130.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.8.1433711909-d640fa4b728ab130.zip"
         sparkle:version="0.0.8.1433711909"
         length="1993193"
         type="application/octet-stream" />
@@ -276,7 +302,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="3a36310384c36809"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.7.1430161367-3a36310384c36809.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.7.1430161367-3a36310384c36809.zip"
         sparkle:version="0.0.7.1430161367"
         length="1993267"
         type="application/octet-stream" />
@@ -293,7 +319,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="186e947e4741dba4"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.6.1429084595-186e947e4741dba4.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.6.1429084595-186e947e4741dba4.zip"
         sparkle:version="0.0.6.1429084595"
         length="1984129"
         type="application/octet-stream" />
@@ -313,7 +339,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="e3c045c72240b5e9"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.6.1429082889-e3c045c72240b5e9.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.6.1429082889-e3c045c72240b5e9.zip"
         sparkle:version="0.0.6.1429082889"
         length="1983943"
         type="application/octet-stream" />
@@ -340,7 +366,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="9f25fb1b20a9cacd"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.5.1428972877-9f25fb1b20a9cacd.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.5.1428972877-9f25fb1b20a9cacd.zip"
         sparkle:version="0.0.5.1428972877"
         length="1980832"
         type="application/octet-stream" />
@@ -362,7 +388,7 @@
       <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="a80cddf5538e66d6"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.4.1428634580-a80cddf5538e66d6.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.4.1428634580-a80cddf5538e66d6.zip"
         sparkle:version="0.0.4.1428634580"
         length="1972813"
         type="application/octet-stream" />
@@ -383,7 +409,7 @@
       <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="e5d7ed3698917650"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.3.1428564817-e5d7ed3698917650.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.3.1428564817-e5d7ed3698917650.zip"
         sparkle:version="0.0.3.1428564817"
         length="1968064"
         type="application/octet-stream" />
@@ -400,7 +426,7 @@
       <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="019677e9a6329958"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.2.1428547214-019677e9a6329958.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.2.1428547214-019677e9a6329958.zip"
         sparkle:version="0.0.2.1428547214"
         length="1947282"
         type="application/octet-stream" />
@@ -417,7 +443,7 @@
       <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="5e9153c98cecfa7a"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.2.1428541486-5e9153c98cecfa7a.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.2.1428541486-5e9153c98cecfa7a.zip"
         sparkle:version="0.0.2.1428541486"
         length="1948808"
         type="application/octet-stream" />
@@ -433,7 +459,7 @@
       <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="f446430758969b4a"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.2.1428541185-f446430758969b4a.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.2.1428541185-f446430758969b4a.zip"
         sparkle:version="0.0.2.1428541185"
         length="1948314"
         type="application/octet-stream" />
@@ -449,7 +475,7 @@
       <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="42b6eabd3a3f5fcc"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.2.1428540990-42b6eabd3a3f5fcc.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.2.1428540990-42b6eabd3a3f5fcc.zip"
         sparkle:version="0.0.2.1428540990"
         length="1948323"
         type="application/octet-stream" />
@@ -466,7 +492,7 @@
       <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="2e29c8e9b6bbc854"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.1.1428527957-2e29c8e9b6bbc854.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.1.1428527957-2e29c8e9b6bbc854.zip"
         sparkle:version="0.0.1.1428527957"
         length="1926961"
         type="application/octet-stream" />
@@ -482,7 +508,7 @@
       <sparkle:minimumSystemVersion>10.10</sparkle:minimumSystemVersion>
       <enclosure
         gitrev="0fbdac9bb899642d"
-        url="http://fbmacmessenger.rsms.me/dist/Messenger-0.0.1.1428527387-0fbdac9bb899642d.zip"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.0.1.1428527387-0fbdac9bb899642d.zip"
         sparkle:version="0.0.1.1428527387"
         length="1164208"
         type="application/octet-stream" />

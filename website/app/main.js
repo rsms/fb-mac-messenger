@@ -1,52 +1,133 @@
 (function () {
 
+  // Dumps a tree of react components with references to DOM elements:
+  // console.log((function dumpReactComponents() {
+  //   var ReactDOM = require("ReactDOM");
+  //   var add = function(components, r) {
+  //     var k, m = components;
+  //     if (r.name) {
+  //       if (!m) { m = {}; }
+  //       m[r.name] = r;
+  //     } else if (r.children) {
+  //       if (!m) { m = {}; }
+  //       for (k in r.children) {
+  //         m[k] = r.children;
+  //       }
+  //     }
+  //     return m;
+  //   };
+  //   var visitCI = function(ci) {
+  //     var k, e = ci._currentElement, unnamed = 0;
+  //     var r2, r = {name:null, element:null, children:null};
+  //     if (e && e.type && e.type.displayName) {
+  //       r.name = e.type.displayName;
+  //       r.element = ReactDOM.findDOMNode(ci.getPublicInstance());
+  //     }
+  //     if (ci._renderedComponent) {
+  //       r2 = visitCI(ci._renderedComponent);
+  //       r.children = add(r.children, r2);
+  //     }
+  //     if (ci._renderedChildren) {
+  //       for (k in ci._renderedChildren) {
+  //         r2 = visitCI(ci._renderedChildren[k]);
+  //         r.children = add(r.children, r2);
+  //       }
+  //     }
+  //     return r;
+  //   };
+  //   var ReactMount = require("ReactMount"), k, ci, r, unnamed = 0;
+  //   var components = {};
+  //   for (k in ReactMount._instancesByReactRootID) {
+  //     r = visitCI(ReactMount._instancesByReactRootID[k]);
+  //     components = add(components, r);
+  //   }
+  //   return components;
+  // })());
+
+
+  function findReactDOMNodePath(namePath, parentInstance, returnCI) {
+    if (typeof require === 'undefined') {
+      return null;
+    }
+    var ReactDOM = require("ReactDOM");
+    var name = namePath[0];
+    var pci = parentInstance ? {a:parentInstance} : null;
+    var ci = findReactDOMNode({name:name, returnInstance:true}, pci);
+    if (ci) {
+      if (namePath.length > 1) {
+        return findReactDOMNodePath(namePath.slice(1), ci, returnCI);
+      }
+      ci = ci.getPublicInstance();
+      return returnCI ? ci : ReactDOM.findDOMNode(ci);
+    }
+    return null;
+  }
+
+  // setTimeout(function(){
+  //   var e = findReactDOMNodePath([
+  //     'MessengerDetailView',
+  //     'MessengerDetailView',
+  //     'MessengerDetailViewHeaderContainer',
+  //     'MessengerDetailViewHeader',
+  //     'MercuryThreadTitle',
+  //   ]);
+  //   console.log('findReactDOMNodePath =>', e);
+  // }, 4000)
+
   function findReactDOMNode(options, instances) {
-    var React = require("React");
+    if (typeof require === 'undefined') {
+      return null;
+    }
     var ReactDOM = require("ReactDOM");
     var ReactMount = require("ReactMount");
-    var ret = null;
+    var k, ret = null, instance, element, children;
 
-    if (!instances) instances = ReactMount._instancesByReactRootID;
+    if (!instances) {
+      instances = ReactMount._instancesByReactRootID;
+    }
 
-    for (n in instances) {
-      var instance = instances[n];
+    for (k in instances) {
+      instance = instances[k];
 
-      if (!instance) continue;
-      var element = instance._currentElement;
+      if (!instance) {
+        continue;
+      }
+      element = instance._currentElement;
 
       if (options.name) {
         if (element && element.type && element.type.displayName == options.name) {
+          if (options.returnInstance) {
+            return instance;
+          }
           return ReactDOM.findDOMNode(instance.getPublicInstance());
         }
       } else if (options.id) {
         if (instance._rootNodeID == options.id) {
-          // if (element.type.displayName) {
-          //   console.log(element.type.displayName);
-          // } else {
-          //   console.log(element.type);
-          // }
           return instance;
         }
       }
-      if (typeof instance._stringText === 'string') continue;
+      if (typeof instance._stringText === 'string') {
+        continue;
+      }
 
       if (instance._renderedComponent) {
         ret = findReactDOMNode(options, { a: instance._renderedComponent });
       }
 
-      var children = instance._renderedChildren;
+      children = instance._renderedChildren;
       if (!ret && children) {
         ret = findReactDOMNode(options, children);
       }
 
-      if (ret) return ret;
+      if (ret) {
+        return ret;
+      }
     }
 
     return null;
   }
 
 
-  // observeElement
   var observeElement = function(baseElement, selector, handler) {
     var e = baseElement.querySelector(selector);
     var observer;
@@ -88,24 +169,96 @@
   //   window.MacMessengerGitRev will be defined to a string e.g. "abc917"
 
   window.MacMessenger = {
+    tryFindSettingsGear: function() {
+      this.masterViewHeader = findReactDOMNodePath([
+        'MessengerMasterView',
+        'MessengerMasterViewHeader'
+      ], null, /*returnCI=*/true);
+      var updateGearButton = (function() {
+        this.gearButton = findReactDOMNodePath(
+          ['MessengerMasterView','MessengerMasterViewHeader','MessengerSettingsMenu'],
+          null,
+          /*returnCI=*/true
+        );
+        //console.log('this.gearButton:', this.gearButton)
+        if (this.gearButton) {
+          var ReactDOM = require("ReactDOM");
+          this.gearButtonNode = ReactDOM.findDOMNode(this.gearButton);
+          this._gearButtonAnchor = this.gearButtonNode.querySelector('a');
+          this.gearButtonNode.style.visibility = 'hidden';
+
+          // DEBUG calls to gear menu items
+          // var gearButton = this.gearButton;
+          // var wrap = function(name) {
+          //   var f = gearButton[name];
+          //   gearButton[name] = function() {
+          //     var args = Array.prototype.slice.call(arguments);
+          //     console.log(name, args);
+          //     return f.apply(this, args);
+          //   }
+          // };
+          // wrap('_handleChangeFolderClick');
+          // wrap('_handleLogOut');
+          // wrap('_handleReportBugClick');
+          // wrap('_handleSettingsClick');
+          // wrap('_handleShowViewClick');
+          // END DEBUG
+        } else {
+          this._gearButtonAnchor = null;
+        }
+      }).bind(this);
+
+      //console.log('this.masterViewHeader:', this.masterViewHeader)
+      if (this.masterViewHeader) {
+        var cdu = this.masterViewHeader.componentDidUpdate;
+        this.masterViewHeader.componentDidUpdate = function(prevProps) {
+          if (cdu) {
+            cdu.apply(this, Array.prototype.slice.call(arguments));
+          }
+          if (this.props.folder === 'inbox') {
+            ShowMainWindowTitlebar();
+          } else {
+            HideMainWindowTitlebar();
+          }
+          //console.log('componentDidUpdate', JSON.parse(JSON.stringify(prevProps)));
+          setTimeout(updateGearButton, 0);
+        };
+        updateGearButton();
+        return true;
+      }
+      return false;
+    },
+
     openGearMenu: function() {
-      this.gearButton.firstElementChild.firstElementChild.dispatchEvent(
-        new MouseEvent('click', {view:window, bubbles:true, cancelable:true})
-      );
+      if (this._gearButtonAnchor) {
+        this._gearButtonAnchor.click();
+      }
+    },
+
+    // Gear menu handlers:
+    // _handleChangeFolderClick: function()
+    // _handleLogOut: function()
+    // _handleReportBugClick: function()
+    // _handleSettingsClick: function()
+    // _handleShowViewClick: function()
+
+    showSettings: function() {
+      // this.openGearMenu(); return;
+      if (this.gearButton) {
+        this.gearButton._handleSettingsClick(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));
+      }
+    },
+ 
+    showMessageRequests: function() {
+      if (this.gearButton) {
+        this.gearButton._handleChangeFolderClick(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));
+      }
     },
 
     logOut: function() {
-      // TODO: Actually "log out" instead of showing the menu
-      this.openGearMenu();
-    },
-
-
-    showSettings: function() {
-      this.openGearMenu();
-      var sel =
-        'div.uiContextualLayerPositioner.uiLayer > ' +
-        'div.uiContextualLayer.uiContextualLayerBelowLeft li > a';
-      document.querySelector(sel).click();
+      if (this.gearButton) {
+        this.gearButton._handleLogOut(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));
+      }
     },
 
     composeNewMessage: function() {
@@ -152,85 +305,75 @@
       }
     },
 
-    updateThreadIDFromURL: function(url) {
-      var m = /\/t\/([^\/]+)$/.exec(url);
-      if (m && this.currentThreadID !== m[1]) {
-        this.currentThreadID = m[1];
+    locationChanged: function(url) {
+      // https://www.messenger.com/requests/t/1234
+      var c = url.split(/\/+/); // [0:"https:", 1:"www.messenger.com", 2:"requests", 3:"t", 4:"1234"]
+      var i = 2;
+      if (c[i] === 'requests') {
+        //console.log('in requests'); // WIP
+        //HideMainWindowTitlebar();
+        ++i;
+      } else if (c[i] === 'filtered') {
+        //console.log('in filtered'); // WIP
+        //HideMainWindowTitlebar();
+        ++i;
+      } else {
+        //ShowMainWindowTitlebar();
+        // if (!MacMessenger.tryFindSettingsGear()) {
+        //   //setTimeout(onDocumentLoaded, 500);
+        // }
+      }
+      if (c[i] === 't' && c[i+1]) {
+        this.currentThreadID = c[1];
+        this.onThreadChange();
+      } else if (this.currentThreadID) {
+        this.currentThreadID = null;
         this.onThreadChange();
       }
     },
 
-    onThreadChange: function() {
-      //console.log('Thread changed to', this.currentThreadID);
+    onThreadTitleChange: function(title) {
+      //console.log('onThreadTitleChange', title);
+      window.SetMainWindowTitle(title);
     },
 
-    augmentConversation: function(baseElement){
-      // var convoContainer = document.querySelector(
-      //   'div.uiScrollableArea.fade.contentBefore.contentAfter'+
-      //   '>div.uiScrollableAreaWrap'+
-      //   '>div.uiScrollableAreaBody'+
-      //   '>div.uiScrollableAreaContent'
-      // );
-      // if (!convoContainer) {
-      //   return;
+    onThreadChange: function() {
+      //console.log('Thread changed to', this.currentThreadID, document.title);
+      clearTimeout(this._threadChangeTimer);
+
+      var e, limit;
+
+      // if (this._threadTitleNode && this._threadTitleNode !== e) {
+      //   console.log('_threadTitleNode !== e');
+      //   this._threadTitleNode = null;
+      //   if (this._threadTitleObserver) {
+      //     this._threadTitleObserver.disconnect();
+      //     this._threadTitleObserver = null;
+      //   }
       // }
-      var dropboxSharedLinks = baseElement.querySelectorAll(
-        'div[aria-owns^="js_"][tabindex]>span '+
-        'a[href^="https://www.dropbox.com/s/"]:not([data-dbxaugmented])'
-      );
 
-      var imageFileExtensions = {
-        'jpg':1,'jpeg':1,'png':1,
-      };
-
-      //var messages = document.querySelectorAll('div[aria-owns^="js_"][tabindex]>span');
-      Array.prototype.forEach.call(dropboxSharedLinks, function (e) {
-        //var reactID = msg.getAttribute('data-reactid');
-        e.setAttribute('data-dbxaugmented', ''); // mark as "processed" so we don't try again
-        var m = /\/s\/[^\/]+\/([^\/\?]+)/.exec(e.href);
-        if (m) {
-          var filename = decodeURI(m[1]);
-          var ext = /\.([^\.]+)$/.exec(filename);
-          if (ext) { ext = ext[1]; }
-          if (ext && imageFileExtensions[ext.toLowerCase()]) {
-            var downloadURL = e.href.replace(/\?dl=0/, '?dl=1');
-            var img = document.createElement('img');
-            img.src = downloadURL;
-            img.onload = function() {
-              //console.log(filename, img.width, img.height);
-              img.style.maxWidth = '200px';
-              img.style.maxHeight = '200px';
-              e.innerText = '';
-              e.appendChild(img);
-            };
-            e.style.display = 'block';
-            // e.style.width = '100%';
-            e.style.minWidth = '100px';
-            e.style.minHeight = '100px';
-            // //e.style.backgroundColor = 'rgba(0,0,0,0.1)';
-            // e.style.backgroundImage = 'url("' + downloadURL + '")';
-            // e.style.backgroundSize = 'contain';
-            // e.style.backgroundPosition = 'center center';
-            // e.style.backgroundRepeat = 'no-repeat';
-            // e.style.textDecoration = 'none';
-            // e.style.color = 'transparent';
-            // e.innerHTML = ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'+
-            //               ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'+
-            //               ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'+
-            //               ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'+
-            //               ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'+
-            //               ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'+
-            //               ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'+
-            //               ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;';
-            e.title = filename;
-          } else {
-            var icon = document.createElement('div');
-            icon.className = '_2uf5';
-            e.parentNode.insertBefore(icon, e);
-          }
-          e.innerText = filename;
+      if (!this._threadTitleNode) {
+        e = findReactDOMNodePath([
+          'MessengerDetailView',
+          'MessengerDetailView',
+          'MessengerDetailViewHeaderContainer',
+          'MessengerDetailViewHeader',
+          'MercuryThreadTitle',
+        ]);
+        if (!e) {
+          this._threadChangeTimer = setTimeout(this.onThreadChange.bind(this), 500);
+          return;
         }
-      });
+        var onThreadTitleChange = this.onThreadTitleChange.bind(this);
+        this._threadTitleNode = e;
+        this._threadTitleObserver = new MutationObserver(function(mutations) {
+          onThreadTitleChange(e.innerText);
+        });
+        this._threadTitleObserver.observe(e, {
+          childList: true, // MercuryThreadTitle replaces its span leaf
+        });
+        onThreadTitleChange(e.innerText);
+      }
     },
 
   };
@@ -255,40 +398,9 @@
   window.history._pushState = window.history.pushState;
   window.history.pushState = function(obj, title, url) {
     window.history._pushState(obj, title, url);
-    MacMessenger.updateThreadIDFromURL(url);
+    MacMessenger.locationChanged(url);
   };
-  MacMessenger.updateThreadIDFromURL(document.location.href);
-
-
-  // observe conversation content switch
-  observeElement(
-    document,
-    '[data-reactid=".0.1.$1.0.1.$0.0.0.0.0.0.0.1"]',
-    function (convoContainer) {
-      //console.log('convoContainer:', convoContainer);
-      if (!convoContainer) {
-        return;
-      }
-      var latencyTimer, reactionLatency = 100;
-      var reactToMutations = function() {
-        clearTimeout(latencyTimer);
-        latencyTimer = null;
-        //console.log('convo content changed: reactToMutations');
-        MacMessenger.augmentConversation(convoContainer);
-      };
-      observer = new MutationObserver(function() {
-        if (!latencyTimer) {
-          latencyTimer = setTimeout(reactToMutations, reactionLatency);
-        }
-      });
-      observer.observe(convoContainer, {
-        // attributes: true,
-        childList: true,
-        subtree: true,
-      });
-    }
-  );
-  setInterval(function(){ MacMessenger.augmentConversation(document); }, 2000);
+  MacMessenger.locationChanged(document.location.href);
 
 
   // Things that need the DOM to be loaded
@@ -308,7 +420,7 @@
     document.removeEventListener('readystatechange', onDocumentLoaded);
     didLoad = true;
 
-    // This fixes an annoying "beep" sound
+    // This fixes an annoying "beep" sound in the message composer
     document.body.addEventListener('keypress', function (e) {
       if (e.target.contentEditable && !e.metaKey) {
         e.preventDefault();
@@ -320,18 +432,9 @@
     }, true);
 
     // Find settings gear
-    var tryFindSettingsGear = function() {
-      var e = findReactDOMNode({ name: "MessengerSettingsMenu" });
-      if (e) {
-        e = e.parentNode;
-        e.style.visibility = 'hidden';
-        window.MacMessenger.gearButton = e;
-        return true;
-      }
-    };
-    if (!tryFindSettingsGear()) {
+    if (!MacMessenger.tryFindSettingsGear()) {
       var observer = new MutationObserver(function(mutations) {
-        if (tryFindSettingsGear()) {
+        if (MacMessenger.tryFindSettingsGear()) {
           observer.disconnect();
         }
       });

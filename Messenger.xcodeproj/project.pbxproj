@@ -99,6 +99,7 @@
 		669511401B00A0E600526CFD /* MMFakeDragInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFakeDragInfo.m; sourceTree = "<group>"; };
 		CB4ACC4C1BF4B91F00930C59 /* WebViewZoomController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewZoomController.h; sourceTree = "<group>"; };
 		CB4ACC4D1BF4B91F00930C59 /* WebViewZoomController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewZoomController.m; sourceTree = "<group>"; };
+		CE50E2E01C81F31E00696D4C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainMenu.strings; sourceTree = "<group>"; };
 		FC67C61E1AD7027700459263 /* FBMApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMApplication.h; sourceTree = "<group>"; };
 		FC67C61F1AD7027700459263 /* FBMApplication.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBMApplication.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -349,6 +350,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				3A9A9C4C1AD5B407008FABE9 /* Base */,
+				CE50E2E01C81F31E00696D4C /* en */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";

@@ -9,6 +9,23 @@
       <title>Messenger for Mac 0.1.7</title>
       <description><![CDATA[
         <ul>
+          <li>Fixes an issue for new users introduced by upgrading Sparkle (auto-update framework) in version 0.1.7.1459534376</li>
+          <li>Minor performance enhancements</li>
+        </ul>
+      ]]></description>
+      <pubDate>Fri, 01 Apr 2016 11:16:16 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="b3a4a21fc7da0c8b"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.7.1459534376-b3a4a21fc7da0c8b.zip"
+        sparkle:version="0.1.7.1459534376"
+        length="2102416"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.1.7</title>
+      <description><![CDATA[
+        <ul>
           <li>Security improvements:
             <ul>
               <li>Updates and update information is now served over HTTPS (end-to-end secure connection.)</li>

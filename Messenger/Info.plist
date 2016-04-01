@@ -71,5 +71,7 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>FBMApplication</string>
+	<key>SUFeedURL</key>
+	<string>https://fbmacmessenger.rsms.me/changelog.xml</string>
 </dict>
 </plist>

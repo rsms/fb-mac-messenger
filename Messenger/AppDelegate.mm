@@ -79,6 +79,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   BOOL                 _isOnline;
   BOOL                 _needsReload;
   BOOL                 _webAppIsFunctional;
+  BOOL                 _needsJSInjection;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
@@ -274,17 +275,20 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   // Present main window
   [_window makeKeyAndOrderFront:self];
 
+  _lastNotificationCount = @"";
+  _isOnline = YES; // initially assume we are online and can access messenger.com
+  
+  // Sparkle
   auto bundleInfo = [NSBundle mainBundle].infoDictionary;
   NSString* appVersion = bundleInfo[@"CFBundleVersion"];
   assert([appVersion isKindOfClass:[NSString class]]);
-
+  
   // Sparkle
   auto su = [SUUpdater sharedUpdater];
   if ([appVersion hasPrefix:@"0.1.2."] || [appVersion hasPrefix:@"0.1.1."] || [appVersion hasPrefix:@"0.1.0."] || [appVersion hasPrefix:@"0.0."]) {
     // Revert previous behaviour of Sparkle which prevented "new version" dialog to appear automatically
     su.automaticallyDownloadsUpdates = NO;
   }
-  su.feedURL = [NSURL URLWithString:@"https://fbmacmessenger.rsms.me/changelog.xml"];
   su.userAgentString = [NSString stringWithFormat:@"Messenger/%@ Sparkle/%@ Device/%@",
                         appVersion,
                         [NSBundle bundleForClass:[SUUpdater class]].infoDictionary[@"CFBundleVersion"],
@@ -292,9 +296,6 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   su.updateCheckInterval = 60 * 60; // every hour
   su.automaticallyChecksForUpdates = YES;
   [su performSelector:@selector(checkForUpdatesInBackground) withObject:nil afterDelay:1];
-
-  _lastNotificationCount = @"";
-  _isOnline = YES; // initially assume we are online and can access messenger.com
 
   [self reloadFromServer:self];
   [self initNetReachObservation];
@@ -535,56 +536,6 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 - (void)applicationDidBecomeActive:(NSNotification *)notification {
   // Note: Becomes active after unlocking computer when app was active while the computer was locked
   [_window makeKeyAndOrderFront:self];
-  [self cancelReloadTimer];
-}
-
-- (void)applicationDidResignActive:(NSNotification *)notification {
-  [self restartReloadTimer];
-}
-
-#pragma mark - Background auto-reload
-
-- (void)restartReloadTimer {
-  static NSTimeInterval kMinReloadInterval = 4;   // wait at least N to reload
-  
-  NSTimeInterval interval = [[NSUserDefaults standardUserDefaults] floatForKey:@"autoreload"];
-  if (isnan(interval) || interval < 0 || interval == +0.0 || interval == -0.0) {
-    return;
-  }
-
-  if (interval < kMinReloadInterval) {
-    interval = kMinReloadInterval;
-  }
-
-  NSTimeInterval timeSinceLastReload = -_lastReloadDate.timeIntervalSinceNow;
-  NSTimeInterval reloadInterval = 0;
-
-  if (_needsReload || timeSinceLastReload >= interval) {
-    reloadInterval = kMinReloadInterval;
-  } else {
-    reloadInterval = (interval - timeSinceLastReload) + kMinReloadInterval;
-  }
-
-  [self cancelReloadTimer];
-  //NSLog(@"reloading app in %.2f seconds", reloadInterval);
-  _reloadWhenIdleTimer = [NSTimer scheduledTimerWithTimeInterval:reloadInterval target:self selector:@selector(reloadTimerTriggered) userInfo:nil repeats:NO];
-  _reloadWhenIdleTimer.tolerance = 1;
-}
-
-
-- (void)reloadTimerTriggered {
-  _reloadWhenIdleTimer = nil;
-  _needsReload = YES;
-  if (_isOnline) {
-    [self reloadFromServer:self];
-  }
-}
-
-- (void)cancelReloadTimer {
-  if (_reloadWhenIdleTimer != nil) {
-    [_reloadWhenIdleTimer invalidate];
-    _reloadWhenIdleTimer = nil;
-  }
 }
 
 
@@ -803,9 +754,12 @@ JSValueRef JSAPI_HideMainWindowTitlebar(
 
 
 - (void)webView:(WebView *)webView didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame {
-  if (webView != _webView || frame != _webView.mainFrame) {
+  if (webView != _webView || frame != _webView.mainFrame || !_needsJSInjection) {
     return;
   }
+  #if DEBUG
+  NSLog(@"DEBUG: Setting up JS API for view:%@ frame:%@", webView, frame);
+  #endif
 
   auto ctx = webView.mainFrame.globalContext;
   JSObjectRef globalObj = JSContextGetGlobalObject(ctx);
@@ -878,10 +832,12 @@ JSValueRef JSAPI_HideMainWindowTitlebar(
       "window.MacMessengerVersion = '%@';"
       "window.MacMessengerGitRev = '%@';"
       "function injectMainJS() {"
-      "  if (document.head || document.documentElement) {"
+      "  var pe = document.head || document.documentElement;"
+      "  if (pe) {"
       "    var script = document.createElement('script');"
       "    script.src = '%@';"
-      "    (document.head || document.documentElement).appendChild(script);"
+      "    script.async = true;"
+      "    pe.appendChild(script);"
       "    return true;"
       "  }"
       "}"
@@ -901,6 +857,8 @@ JSValueRef JSAPI_HideMainWindowTitlebar(
   // Disable vertical scroll elasticity on parent webview scrollview
   webView.mainFrame.frameView.allowsScrolling = NO; // < Note: Doesn't seem to have any effect.
   webView.mainFrame.frameView.documentView.enclosingScrollView.verticalScrollElasticity = NSScrollElasticityNone;
+  
+  _needsJSInjection = NO;
 }
 
 
@@ -908,12 +866,7 @@ JSValueRef JSAPI_HideMainWindowTitlebar(
   // Called when the web view starts loading (NOT called if loading failed)
   _needsReload = NO;
   _webAppIsFunctional = YES;
-  
-  // Restart reload timer?
-  auto app = [NSApplication sharedApplication];
-  if (!app.isActive || app.isHidden) {
-    [self restartReloadTimer];
-  }
+  _needsJSInjection = YES;
 }
 
 
@@ -977,9 +930,6 @@ JSValueRef JSAPI_HideMainWindowTitlebar(
 
   _webAppIsFunctional = NO;
   _needsReload = YES;
-  if (_isOnline) {
-    [self restartReloadTimer];
-  }
 }
 
 - (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {

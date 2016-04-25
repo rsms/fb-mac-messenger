@@ -31,3 +31,5 @@ build_config.mk
 */*.xcodeproj/project.xcworkspace
 */*/*.xcodeproj/xcuserdata
 */*/*.xcodeproj/project.xcworkspace
+
+deps/cef/

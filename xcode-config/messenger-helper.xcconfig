@@ -1,0 +1,13 @@
+PRODUCT_NAME = Messenger Helper
+
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../../../../Frameworks
+INFOPLIST_FILE = Messenger Helper/Info.plist
+
+SYMROOT = $(SRCROOT)/build
+
+// Build a potentially fat image for standard archs. Probably just x86_64.
+ARCHS = $(ARCHS_STANDARD)
+
+LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/deps/cef/build/libcef_dll
+HEADER_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/deps/cef
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/deps/cef/build

@@ -10,23 +10,28 @@
 		07DB23D81AD9E22E00177F14 /* NSImage+RoundCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = 07DB23D71AD9E22E00177F14 /* NSImage+RoundCorner.m */; };
 		3A0B9CD31BAB4C660067C9AB /* MainJSDataURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A0B9CD21BAB4C660067C9AB /* MainJSDataURL.m */; };
 		3A649B7F1B31E08300428884 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A649B7E1B31E08300428884 /* SystemConfiguration.framework */; };
-		3A713BA01AD65F6500870D2A /* MEmbeddedRes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */; };
-		3A7F0BD01C7639A70036F7AC /* FBMWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A7F0BCF1C7639A70036F7AC /* FBMWindow.mm */; };
 		3A9A9C461AD5B407008FABE9 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */; };
-		3A9A9C481AD5B407008FABE9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C471AD5B407008FABE9 /* main.m */; };
+		3A9A9C481AD5B407008FABE9 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C471AD5B407008FABE9 /* main.mm */; };
 		3A9A9C4A1AD5B407008FABE9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A9A9C491AD5B407008FABE9 /* Images.xcassets */; };
 		3A9A9C4D1AD5B407008FABE9 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A9A9C4B1AD5B407008FABE9 /* MainMenu.xib */; };
 		3A9A9C631AD5B4CD008FABE9 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9A9C621AD5B4CD008FABE9 /* WebKit.framework */; };
 		3A9A9C651AD5C307008FABE9 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9A9C641AD5C307008FABE9 /* Sparkle.framework */; };
 		3A9A9C681AD5C3AD008FABE9 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9A9C641AD5C307008FABE9 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3A9A9C781AD5D873008FABE9 /* JSClass.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C771AD5D873008FABE9 /* JSClass.mm */; };
 		3A9A9C7A1AD5D8D2008FABE9 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9A9C791AD5D8D2008FABE9 /* JavaScriptCore.framework */; };
-		3A9A9C7C1AD5D8ED008FABE9 /* JSNotification.js.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C7B1AD5D8ED008FABE9 /* JSNotification.js.mm */; };
-		3A9A9C841AD5EA13008FABE9 /* JSObjWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C831AD5EA13008FABE9 /* JSObjWrapper.m */; };
-		3A9A9C861AD5EE4E008FABE9 /* JSNotifications.js.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */; };
-		669511411B00A0E600526CFD /* MMFakeDragInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 669511401B00A0E600526CFD /* MMFakeDragInfo.m */; };
-		CB4ACC4E1BF4B91F00930C59 /* WebViewZoomController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB4ACC4D1BF4B91F00930C59 /* WebViewZoomController.m */; };
-		FC67C6201AD7027700459263 /* FBMApplication.mm in Sources */ = {isa = PBXBuildFile; fileRef = FC67C61F1AD7027700459263 /* FBMApplication.mm */; };
+		6A74283D1CCADA0800A73B32 /* main.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6A74283C1CCADA0800A73B32 /* main.cc */; };
+		6A74283F1CCADA0800A73B32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A74283E1CCADA0800A73B32 /* Assets.xcassets */; };
+		6A74284B1CCADAFB00A73B32 /* libcef_dll_wrapper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A74284A1CCADAF000A73B32 /* libcef_dll_wrapper.a */; };
+		6A74284D1CCADB1A00A73B32 /* Chromium Embedded Framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A74284C1CCADB1800A73B32 /* Chromium Embedded Framework.framework */; };
+		6ABD81B21CCADEE100628BE3 /* Chromium Embedded Framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A74284C1CCADB1800A73B32 /* Chromium Embedded Framework.framework */; };
+		6ABD81B31CCADEE500628BE3 /* libcef_dll_wrapper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A74284A1CCADAF000A73B32 /* libcef_dll_wrapper.a */; };
+		6ABD81B91CCAE13400628BE3 /* App.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6ABD81B81CCAE13400628BE3 /* App.cc */; };
+		6ABD81BA1CCB11AF00628BE3 /* Chromium Embedded Framework.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 6A74284C1CCADB1800A73B32 /* Chromium Embedded Framework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6ABD81BB1CCB121300628BE3 /* Messenger Helper.app in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7428361CCADA0700A73B32 /* Messenger Helper.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6ABD81C01CCB12EE00628BE3 /* RCWindow.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6ABD81BF1CCB12EE00628BE3 /* RCWindow.cc */; };
+		6ABD81C31CCB146200628BE3 /* helper-app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6ABD81C11CCB146200628BE3 /* helper-app.cc */; };
+		6ABD81C51CCBD69900628BE3 /* RCWindow-mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6ABD81C41CCBD69900628BE3 /* RCWindow-mac.mm */; };
+		6ABD81C81CCBDABD00628BE3 /* MacWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6ABD81C71CCBDABD00628BE3 /* MacWindow.mm */; };
+		6ABD81CA1CCC103E00628BE3 /* App-mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6ABD81C91CCC103E00628BE3 /* App-mac.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -43,6 +48,16 @@
 		};
 /* End PBXBuildRule section */
 
+/* Begin PBXContainerItemProxy section */
+		6ABD81BC1CCB121800628BE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A9A9C371AD5B407008FABE9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6A7428351CCADA0700A73B32;
+			remoteInfo = "Messenger Helper";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		3A9A9C671AD5C356008FABE9 /* Copy Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -51,6 +66,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				3A9A9C681AD5C3AD008FABE9 /* Sparkle.framework in Copy Frameworks */,
+				6ABD81BA1CCB11AF00628BE3 /* Chromium Embedded Framework.framework in Copy Frameworks */,
+				6ABD81BB1CCB121300628BE3 /* Messenger Helper.app in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -63,19 +80,15 @@
 		3A0B9CD21BAB4C660067C9AB /* MainJSDataURL.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MainJSDataURL.m; path = ../build/MainJSDataURL.m; sourceTree = "<group>"; };
 		3A649B7E1B31E08300428884 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3A6757231AE0A52400BDC7C5 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = main.js; path = website/app/main.js; sourceTree = SOURCE_ROOT; };
-		3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEmbeddedRes.h; sourceTree = "<group>"; };
-		3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEmbeddedRes.m; sourceTree = "<group>"; };
-		3A7F0BCE1C7639A70036F7AC /* FBMWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMWindow.h; sourceTree = "<group>"; };
-		3A7F0BCF1C7639A70036F7AC /* FBMWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBMWindow.mm; sourceTree = "<group>"; };
 		3A9A9C3F1AD5B407008FABE9 /* Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A9A9C431AD5B407008FABE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A9A9C441AD5B407008FABE9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
-		3A9A9C471AD5B407008FABE9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3A9A9C471AD5B407008FABE9 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		3A9A9C491AD5B407008FABE9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		3A9A9C4C1AD5B407008FABE9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		3A9A9C621AD5B4CD008FABE9 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
-		3A9A9C641AD5C307008FABE9 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = sparkle/Sparkle.framework; sourceTree = "<group>"; };
+		3A9A9C641AD5C307008FABE9 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = deps/sparkle/Sparkle.framework; sourceTree = "<group>"; };
 		3A9A9C691AD5C6A7008FABE9 /* prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
 		3A9A9C6D1AD5CA29008FABE9 /* common-debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "common-debug.xcconfig"; sourceTree = "<group>"; };
 		3A9A9C6E1AD5CA29008FABE9 /* common-release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "common-release.xcconfig"; sourceTree = "<group>"; };
@@ -84,23 +97,27 @@
 		3A9A9C711AD5CA29008FABE9 /* messenger-release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "messenger-release.xcconfig"; sourceTree = "<group>"; };
 		3A9A9C721AD5CA29008FABE9 /* messenger.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = messenger.xcconfig; sourceTree = "<group>"; };
 		3A9A9C731AD5CF9D008FABE9 /* version.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = version.txt; sourceTree = SOURCE_ROOT; };
-		3A9A9C751AD5D873008FABE9 /* jsapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsapi.h; sourceTree = "<group>"; };
-		3A9A9C761AD5D873008FABE9 /* JSClass.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JSClass.hh; sourceTree = "<group>"; };
-		3A9A9C771AD5D873008FABE9 /* JSClass.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSClass.mm; sourceTree = "<group>"; };
 		3A9A9C791AD5D8D2008FABE9 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		3A9A9C7B1AD5D8ED008FABE9 /* JSNotification.js.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSNotification.js.mm; sourceTree = "<group>"; };
-		3A9A9C821AD5EA13008FABE9 /* JSObjWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSObjWrapper.h; sourceTree = "<group>"; };
-		3A9A9C831AD5EA13008FABE9 /* JSObjWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSObjWrapper.m; sourceTree = "<group>"; };
-		3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSNotifications.js.mm; sourceTree = "<group>"; };
-		3AC5B7B41B7C357F00BCF9D0 /* WebViewPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewPrivate.h; sourceTree = "<group>"; };
-		3AEEEB881ADE3A9800F3A659 /* WebStorageManagerPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebStorageManagerPrivate.h; sourceTree = "<group>"; };
-		3AEEEB891ADE3B0600F3A659 /* WebPreferencesPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebPreferencesPrivate.h; sourceTree = "<group>"; };
-		6695113F1B00A0E600526CFD /* MMFakeDragInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFakeDragInfo.h; sourceTree = "<group>"; };
-		669511401B00A0E600526CFD /* MMFakeDragInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFakeDragInfo.m; sourceTree = "<group>"; };
-		CB4ACC4C1BF4B91F00930C59 /* WebViewZoomController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewZoomController.h; sourceTree = "<group>"; };
-		CB4ACC4D1BF4B91F00930C59 /* WebViewZoomController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewZoomController.m; sourceTree = "<group>"; };
-		FC67C61E1AD7027700459263 /* FBMApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMApplication.h; sourceTree = "<group>"; };
-		FC67C61F1AD7027700459263 /* FBMApplication.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FBMApplication.mm; sourceTree = "<group>"; };
+		6A7428361CCADA0700A73B32 /* Messenger Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Messenger Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A74283C1CCADA0800A73B32 /* main.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cc; sourceTree = "<group>"; };
+		6A74283E1CCADA0800A73B32 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6A7428431CCADA0800A73B32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6A7428471CCADA6300A73B32 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = "../figma-desktop/deps/cef/include"; sourceTree = "<group>"; };
+		6A74284A1CCADAF000A73B32 /* libcef_dll_wrapper.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcef_dll_wrapper.a; path = deps/cef/build/libcef_dll/libcef_dll_wrapper.a; sourceTree = "<group>"; };
+		6A74284C1CCADB1800A73B32 /* Chromium Embedded Framework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "Chromium Embedded Framework.framework"; path = "deps/cef/build/Chromium Embedded Framework.framework"; sourceTree = "<group>"; };
+		6A74284E1CCADBA300A73B32 /* messenger-helper-release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "messenger-helper-release.xcconfig"; sourceTree = "<group>"; };
+		6A74284F1CCADBA300A73B32 /* messenger-helper-debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "messenger-helper-debug.xcconfig"; sourceTree = "<group>"; };
+		6A7428501CCADBA300A73B32 /* messenger-helper.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "messenger-helper.xcconfig"; sourceTree = "<group>"; };
+		6ABD81B41CCAE00700628BE3 /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = "<group>"; };
+		6ABD81B81CCAE13400628BE3 /* App.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = App.cc; sourceTree = "<group>"; };
+		6ABD81BE1CCB12EE00628BE3 /* RCWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCWindow.h; sourceTree = "<group>"; };
+		6ABD81BF1CCB12EE00628BE3 /* RCWindow.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RCWindow.cc; sourceTree = "<group>"; };
+		6ABD81C11CCB146200628BE3 /* helper-app.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "helper-app.cc"; sourceTree = "<group>"; };
+		6ABD81C21CCB146200628BE3 /* helper-app.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "helper-app.h"; sourceTree = "<group>"; };
+		6ABD81C41CCBD69900628BE3 /* RCWindow-mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "RCWindow-mac.mm"; sourceTree = "<group>"; };
+		6ABD81C61CCBDABD00628BE3 /* MacWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacWindow.h; sourceTree = "<group>"; };
+		6ABD81C71CCBDABD00628BE3 /* MacWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MacWindow.mm; sourceTree = "<group>"; };
+		6ABD81C91CCC103E00628BE3 /* App-mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "App-mac.mm"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +129,17 @@
 				3A9A9C7A1AD5D8D2008FABE9 /* JavaScriptCore.framework in Frameworks */,
 				3A9A9C631AD5B4CD008FABE9 /* WebKit.framework in Frameworks */,
 				3A9A9C651AD5C307008FABE9 /* Sparkle.framework in Frameworks */,
+				6ABD81B21CCADEE100628BE3 /* Chromium Embedded Framework.framework in Frameworks */,
+				6ABD81B31CCADEE500628BE3 /* libcef_dll_wrapper.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6A7428331CCADA0700A73B32 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A74284B1CCADAFB00A73B32 /* libcef_dll_wrapper.a in Frameworks */,
+				6A74284D1CCADB1A00A73B32 /* Chromium Embedded Framework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				3A9A9C411AD5B407008FABE9 /* Messenger */,
+				6A7428371CCADA0800A73B32 /* Messenger Helper */,
 				3A9A9C661AD5C30A008FABE9 /* Deps */,
 				3A9A9C6C1AD5CA29008FABE9 /* xcode-config */,
 				3A9A9C401AD5B407008FABE9 /* Products */,
@@ -152,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				3A9A9C3F1AD5B407008FABE9 /* Messenger.app */,
+				6A7428361CCADA0700A73B32 /* Messenger Helper.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -159,23 +189,18 @@
 		3A9A9C411AD5B407008FABE9 /* Messenger */ = {
 			isa = PBXGroup;
 			children = (
+				3A9A9C471AD5B407008FABE9 /* main.mm */,
+				6ABD81B41CCAE00700628BE3 /* App.h */,
+				6ABD81B81CCAE13400628BE3 /* App.cc */,
+				6ABD81C91CCC103E00628BE3 /* App-mac.mm */,
+				6ABD81BE1CCB12EE00628BE3 /* RCWindow.h */,
+				6ABD81BF1CCB12EE00628BE3 /* RCWindow.cc */,
+				6ABD81C41CCBD69900628BE3 /* RCWindow-mac.mm */,
+				6ABD81C61CCBDABD00628BE3 /* MacWindow.h */,
+				6ABD81C71CCBDABD00628BE3 /* MacWindow.mm */,
 				3A9A9C441AD5B407008FABE9 /* AppDelegate.h */,
 				3A9A9C451AD5B407008FABE9 /* AppDelegate.mm */,
-				FC67C61E1AD7027700459263 /* FBMApplication.h */,
-				FC67C61F1AD7027700459263 /* FBMApplication.mm */,
-				3A7F0BCE1C7639A70036F7AC /* FBMWindow.h */,
-				3A7F0BCF1C7639A70036F7AC /* FBMWindow.mm */,
-				6695113F1B00A0E600526CFD /* MMFakeDragInfo.h */,
-				669511401B00A0E600526CFD /* MMFakeDragInfo.m */,
-				CB4ACC4C1BF4B91F00930C59 /* WebViewZoomController.h */,
-				CB4ACC4D1BF4B91F00930C59 /* WebViewZoomController.m */,
-				3AEEEB891ADE3B0600F3A659 /* WebPreferencesPrivate.h */,
-				3AC5B7B41B7C357F00BCF9D0 /* WebViewPrivate.h */,
-				3AEEEB881ADE3A9800F3A659 /* WebStorageManagerPrivate.h */,
-				3A713B9E1AD65F6500870D2A /* MEmbeddedRes.h */,
-				3A713B9F1AD65F6500870D2A /* MEmbeddedRes.m */,
 				3A0B9CD21BAB4C660067C9AB /* MainJSDataURL.m */,
-				3A9A9C741AD5D838008FABE9 /* JSAPI */,
 				07DB23D91AD9E23100177F14 /* Categories */,
 				3A9A9C491AD5B407008FABE9 /* Images.xcassets */,
 				3A9A9C4B1AD5B407008FABE9 /* MainMenu.xib */,
@@ -190,7 +215,6 @@
 			children = (
 				3A9A9C731AD5CF9D008FABE9 /* version.txt */,
 				3A9A9C431AD5B407008FABE9 /* Info.plist */,
-				3A9A9C471AD5B407008FABE9 /* main.m */,
 				3A9A9C691AD5C6A7008FABE9 /* prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -199,6 +223,7 @@
 		3A9A9C661AD5C30A008FABE9 /* Deps */ = {
 			isa = PBXGroup;
 			children = (
+				6A7428481CCADA6900A73B32 /* CEF */,
 				3A649B7E1B31E08300428884 /* SystemConfiguration.framework */,
 				3A9A9C791AD5D8D2008FABE9 /* JavaScriptCore.framework */,
 				3A9A9C621AD5B4CD008FABE9 /* WebKit.framework */,
@@ -213,25 +238,36 @@
 				3A9A9C6D1AD5CA29008FABE9 /* common-debug.xcconfig */,
 				3A9A9C6E1AD5CA29008FABE9 /* common-release.xcconfig */,
 				3A9A9C6F1AD5CA29008FABE9 /* common.xcconfig */,
+				3A9A9C721AD5CA29008FABE9 /* messenger.xcconfig */,
 				3A9A9C701AD5CA29008FABE9 /* messenger-debug.xcconfig */,
 				3A9A9C711AD5CA29008FABE9 /* messenger-release.xcconfig */,
-				3A9A9C721AD5CA29008FABE9 /* messenger.xcconfig */,
+				6A7428501CCADBA300A73B32 /* messenger-helper.xcconfig */,
+				6A74284E1CCADBA300A73B32 /* messenger-helper-release.xcconfig */,
+				6A74284F1CCADBA300A73B32 /* messenger-helper-debug.xcconfig */,
 			);
 			path = "xcode-config";
 			sourceTree = "<group>";
 		};
-		3A9A9C741AD5D838008FABE9 /* JSAPI */ = {
+		6A7428371CCADA0800A73B32 /* Messenger Helper */ = {
 			isa = PBXGroup;
 			children = (
-				3A9A9C751AD5D873008FABE9 /* jsapi.h */,
-				3A9A9C7B1AD5D8ED008FABE9 /* JSNotification.js.mm */,
-				3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */,
-				3A9A9C821AD5EA13008FABE9 /* JSObjWrapper.h */,
-				3A9A9C831AD5EA13008FABE9 /* JSObjWrapper.m */,
-				3A9A9C761AD5D873008FABE9 /* JSClass.hh */,
-				3A9A9C771AD5D873008FABE9 /* JSClass.mm */,
+				6A74283E1CCADA0800A73B32 /* Assets.xcassets */,
+				6A7428431CCADA0800A73B32 /* Info.plist */,
+				6A74283C1CCADA0800A73B32 /* main.cc */,
+				6ABD81C11CCB146200628BE3 /* helper-app.cc */,
+				6ABD81C21CCB146200628BE3 /* helper-app.h */,
 			);
-			name = JSAPI;
+			path = "Messenger Helper";
+			sourceTree = "<group>";
+		};
+		6A7428481CCADA6900A73B32 /* CEF */ = {
+			isa = PBXGroup;
+			children = (
+				6A74284C1CCADB1800A73B32 /* Chromium Embedded Framework.framework */,
+				6A74284A1CCADAF000A73B32 /* libcef_dll_wrapper.a */,
+				6A7428471CCADA6300A73B32 /* include */,
+			);
+			name = CEF;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,10 +287,28 @@
 				3A9A9C7D1AD5D97E008FABE9 /* PBXBuildRule */,
 			);
 			dependencies = (
+				6ABD81BD1CCB121800628BE3 /* PBXTargetDependency */,
 			);
 			name = Messenger;
 			productName = Messenger;
 			productReference = 3A9A9C3F1AD5B407008FABE9 /* Messenger.app */;
+			productType = "com.apple.product-type.application";
+		};
+		6A7428351CCADA0700A73B32 /* Messenger Helper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6A7428441CCADA0800A73B32 /* Build configuration list for PBXNativeTarget "Messenger Helper" */;
+			buildPhases = (
+				6A7428321CCADA0700A73B32 /* Sources */,
+				6A7428331CCADA0700A73B32 /* Frameworks */,
+				6A7428341CCADA0700A73B32 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Messenger Helper";
+			productName = "Messenger Helper";
+			productReference = 6A7428361CCADA0700A73B32 /* Messenger Helper.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -269,6 +323,9 @@
 					3A9A9C3E1AD5B407008FABE9 = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = 2JS2795PX7;
+					};
+					6A7428351CCADA0700A73B32 = {
+						CreatedOnToolsVersion = 7.3;
 					};
 				};
 			};
@@ -286,6 +343,7 @@
 			projectRoot = "";
 			targets = (
 				3A9A9C3E1AD5B407008FABE9 /* Messenger */,
+				6A7428351CCADA0700A73B32 /* Messenger Helper */,
 			);
 		};
 /* End PBXProject section */
@@ -297,6 +355,14 @@
 			files = (
 				3A9A9C4A1AD5B407008FABE9 /* Images.xcassets in Resources */,
 				3A9A9C4D1AD5B407008FABE9 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6A7428341CCADA0700A73B32 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A74283F1CCADA0800A73B32 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,22 +393,35 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A0B9CD31BAB4C660067C9AB /* MainJSDataURL.m in Sources */,
-				3A7F0BD01C7639A70036F7AC /* FBMWindow.mm in Sources */,
-				3A9A9C481AD5B407008FABE9 /* main.m in Sources */,
+				3A9A9C481AD5B407008FABE9 /* main.mm in Sources */,
+				6ABD81CA1CCC103E00628BE3 /* App-mac.mm in Sources */,
 				07DB23D81AD9E22E00177F14 /* NSImage+RoundCorner.m in Sources */,
-				3A9A9C841AD5EA13008FABE9 /* JSObjWrapper.m in Sources */,
-				CB4ACC4E1BF4B91F00930C59 /* WebViewZoomController.m in Sources */,
-				3A9A9C781AD5D873008FABE9 /* JSClass.mm in Sources */,
+				6ABD81C51CCBD69900628BE3 /* RCWindow-mac.mm in Sources */,
+				6ABD81C81CCBDABD00628BE3 /* MacWindow.mm in Sources */,
 				3A9A9C461AD5B407008FABE9 /* AppDelegate.mm in Sources */,
-				FC67C6201AD7027700459263 /* FBMApplication.mm in Sources */,
-				3A9A9C861AD5EE4E008FABE9 /* JSNotifications.js.mm in Sources */,
-				669511411B00A0E600526CFD /* MMFakeDragInfo.m in Sources */,
-				3A713BA01AD65F6500870D2A /* MEmbeddedRes.m in Sources */,
-				3A9A9C7C1AD5D8ED008FABE9 /* JSNotification.js.mm in Sources */,
+				6ABD81C01CCB12EE00628BE3 /* RCWindow.cc in Sources */,
+				6ABD81B91CCAE13400628BE3 /* App.cc in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6A7428321CCADA0700A73B32 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A74283D1CCADA0800A73B32 /* main.cc in Sources */,
+				6ABD81C31CCB146200628BE3 /* helper-app.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6ABD81BD1CCB121800628BE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6A7428351CCADA0700A73B32 /* Messenger Helper */;
+			targetProxy = 6ABD81BC1CCB121800628BE3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		3A9A9C4B1AD5B407008FABE9 /* MainMenu.xib */ = {
@@ -433,10 +512,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/sparkle",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = me.rsms.fbmessenger;
 			};
 			name = Debug;
@@ -447,11 +522,43 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/sparkle",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = me.rsms.fbmessenger;
+			};
+			name = Release;
+		};
+		6A7428451CCADA0800A73B32 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6A74284F1CCADBA300A73B32 /* messenger-helper-debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/deps/cef/build/libcef_dll",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "me.rsms.Messenger-Helper";
+			};
+			name = Debug;
+		};
+		6A7428461CCADA0800A73B32 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6A74284E1CCADBA300A73B32 /* messenger-helper-release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/deps/cef/build/libcef_dll",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "me.rsms.Messenger-Helper";
 			};
 			name = Release;
 		};
@@ -472,6 +579,15 @@
 			buildConfigurations = (
 				3A9A9C5D1AD5B407008FABE9 /* Debug */,
 				3A9A9C5E1AD5B407008FABE9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6A7428441CCADA0800A73B32 /* Build configuration list for PBXNativeTarget "Messenger Helper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A7428451CCADA0800A73B32 /* Debug */,
+				6A7428461CCADA0800A73B32 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -36,3 +36,4 @@ CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
 
 SDKROOT = macosx // aka "latest"
 MACOSX_DEPLOYMENT_TARGET = 10.10
+

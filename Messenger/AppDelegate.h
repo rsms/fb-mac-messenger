@@ -3,15 +3,8 @@
 
 int FBMOSX1010OrNewer();
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate
-#if __MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_10_11
-// When we switched to build against the 10.11 SDK, the following interfaces
-// are now protocols: (are interfaces in <=10.10)
-, WebPolicyDelegate, WebFrameLoadDelegate, WebUIDelegate
-#endif
->
-
-@property (readonly, nonatomic) NSWindow* mainWindow;
+@interface AppDelegate : NSObject <NSApplicationDelegate,
+                                   NSUserNotificationCenterDelegate>
 
 - (IBAction)checkForUpdates:(id)sender;
 - (void)setActiveConversationAtIndex:(NSString *)index;
@@ -20,8 +13,9 @@ int FBMOSX1010OrNewer();
 - (BOOL)canSelectOlderConversation;
 - (IBAction)selectOlderConversation:(id)sender;
 
-- (void)windowDidBecomeKey:(NSWindow*)w;
-// [self evaluateJavaScript:@"try { (typeof MacMessenger != 'undefined') && MacMessenger.focusComposer(); } catch(_) {}"];
+@property (nonatomic, readonly) BOOL canZoomPageIn;
+@property (nonatomic, readonly) BOOL canZoomPageOut;
+@property (nonatomic, readonly) BOOL canResetPageZoom;
 
 @end
 

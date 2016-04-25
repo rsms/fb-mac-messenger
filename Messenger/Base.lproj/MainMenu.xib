@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10102" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10102"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -80,18 +80,18 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Conversation" id="PSw-0C-Vph" userLabel="View">
+                <menuItem title="File" id="PSw-0C-Vph" userLabel="View">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Conversation" id="Jgv-RM-txC" userLabel="View">
+                    <menu key="submenu" title="File" id="Jgv-RM-txC" userLabel="View">
                         <items>
                             <menuItem title="New Message…" keyEquivalent="n" id="kOk-jx-4yu">
                                 <connections>
                                     <action selector="composeNewMessage:" target="Voe-Tx-rLC" id="jkK-E8-Sn8"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Find people and groups…" tag="1" keyEquivalent="f" id="Xz5-n4-O0W">
+                            <menuItem title="New Window" keyEquivalent="N" id="blJ-Hk-qmt">
                                 <connections>
-                                    <action selector="findPeopleAndGroups:" target="Voe-Tx-rLC" id="6cg-YJ-skg"/>
+                                    <action selector="openNewWindow:" target="Voe-Tx-rLC" id="CkA-Ri-hwj"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -145,6 +145,11 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="uyl-h8-XO2"/>
+                            <menuItem title="Find people and groups…" tag="1" keyEquivalent="f" id="Xz5-n4-O0W">
+                                <connections>
+                                    <action selector="findPeopleAndGroups:" target="Voe-Tx-rLC" id="6cg-YJ-skg"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Spelling and Grammar" id="Dv1-io-Yv7">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Spelling" id="3IN-sU-3Bg">
@@ -302,38 +307,10 @@
                                     </binding>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Reset Text Size" alternate="YES" keyEquivalent="0" id="BvI-Td-Abl">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="makeTextStandardSize:" target="Voe-Tx-rLC" id="UW2-5E-i6t"/>
-                                    <binding destination="Voe-Tx-rLC" name="enabled" keyPath="canMakeTextStandardSize" id="PqC-cP-WFE">
-                                        <dictionary key="options">
-                                            <integer key="NSMultipleValuesPlaceholder" value="1"/>
-                                            <integer key="NSNoSelectionPlaceholder" value="1"/>
-                                            <integer key="NSNotApplicablePlaceholder" value="1"/>
-                                            <integer key="NSNullPlaceholder" value="1"/>
-                                        </dictionary>
-                                    </binding>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Zoom In" keyEquivalent="+" id="Z4w-BN-CrW">
+                            <menuItem title="Zoom In" keyEquivalent="=" id="Z4w-BN-CrW">
                                 <connections>
                                     <action selector="zoomPageIn:" target="Voe-Tx-rLC" id="xGi-Ah-Ost"/>
-                                    <binding destination="Voe-Tx-rLC" name="enabled" keyPath="canMakeTextLarger" id="09h-bn-pzB">
-                                        <dictionary key="options">
-                                            <integer key="NSMultipleValuesPlaceholder" value="1"/>
-                                            <integer key="NSNoSelectionPlaceholder" value="1"/>
-                                            <integer key="NSNotApplicablePlaceholder" value="1"/>
-                                            <integer key="NSNullPlaceholder" value="1"/>
-                                        </dictionary>
-                                    </binding>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Increase Text Size" alternate="YES" keyEquivalent="+" id="l8i-33-lWl">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="makeTextLarger:" target="Voe-Tx-rLC" id="wLx-uN-m5y"/>
-                                    <binding destination="Voe-Tx-rLC" name="enabled" keyPath="canMakeTextLarger" id="mcl-0t-4FD">
+                                    <binding destination="Voe-Tx-rLC" name="enabled" keyPath="canZoomPageIn" id="0E5-kY-6ND">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="1"/>
                                             <integer key="NSNoSelectionPlaceholder" value="1"/>
@@ -346,21 +323,7 @@
                             <menuItem title="Zoom Out" keyEquivalent="-" id="fQb-3Z-C0i">
                                 <connections>
                                     <action selector="zoomPageOut:" target="Voe-Tx-rLC" id="wpj-uO-P8R"/>
-                                    <binding destination="Voe-Tx-rLC" name="enabled" keyPath="canMakeTextSmaller" id="poh-Ha-p4o">
-                                        <dictionary key="options">
-                                            <integer key="NSMultipleValuesPlaceholder" value="1"/>
-                                            <integer key="NSNoSelectionPlaceholder" value="1"/>
-                                            <integer key="NSNotApplicablePlaceholder" value="1"/>
-                                            <integer key="NSNullPlaceholder" value="1"/>
-                                        </dictionary>
-                                    </binding>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Decrease Test Size" alternate="YES" keyEquivalent="-" id="1Zh-f3-iOo">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="makeTextSmaller:" target="Voe-Tx-rLC" id="TtP-Js-gIS"/>
-                                    <binding destination="Voe-Tx-rLC" name="enabled" keyPath="canMakeTextSmaller" id="JYC-xm-aLa">
+                                    <binding destination="Voe-Tx-rLC" name="enabled" keyPath="canZoomPageOut" id="Sv0-Kq-3ON">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="1"/>
                                             <integer key="NSNoSelectionPlaceholder" value="1"/>

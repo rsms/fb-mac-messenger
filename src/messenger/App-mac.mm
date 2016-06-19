@@ -14,6 +14,9 @@ void RCApp::enableSuddenTermination() {
 
 void RCApp::boostrapNativeApp() {
   [[NSBundle mainBundle] loadNibNamed:@"MainMenu" owner:NSApp topLevelObjects:nil];
+  
+  // Clear any anonymous notifications from last session
+  //notifications().clearAnonymous();
 }
 
 

@@ -11,6 +11,7 @@
 *.a
 * copy.*
 ._*
+*.7z
 build_config.mk
 *.patch
 *.diff

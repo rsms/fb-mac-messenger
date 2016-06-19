@@ -1,6 +1,7 @@
 #pragma once
 #include "include/cef_app.h"
 #include "RCWindow.h"
+#include "Notifications.h"
 #include <set>
 
 #if defined(__MACH__) && defined(__APPLE__) && defined(__OBJC__)
@@ -48,6 +49,9 @@ struct RCApp : public CefApp,
   CefRefPtr<RCWindow> openNewWindow(const std::string& url, const std::string& winID);
   CefRefPtr<RCWindow> openNewMessengerWindow();
 
+  // Access to user notifications
+  Notifications& notifications() { return _notifications; }
+
   // disable or enable sudden termination.
   // N calls to disable should be balanced with N calls to enable.
   bool suddenTerminationAllowed() const { return _suddenTerminationCounter == 0; }
@@ -62,6 +66,7 @@ private:
   WindowSet _openWindows; // open windows. Only accessed on the UI thread.
   size_t    _suddenTerminationCounter = 1; // 0=allowed
   RCWindow* _keyWindow = nullptr; // weak. owned by _openWindows
+  Notifications _notifications;
 
   // Called after requestTermination() has been called and all document windows have
   // been closed. Closes the document browser window and exits the main event loop.

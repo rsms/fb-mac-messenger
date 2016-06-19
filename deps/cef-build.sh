@@ -1,10 +1,35 @@
 #!/bin/bash
 set -e
 cd "$(dirname "$0")/cef"
+
+# we need to patch the cmake config to build with clang's libc++
+python << END
+import re
+
+f = open('cmake/FindCEF.cmake', 'r')
+s = f.read()
+f.close()
+
+addition = '''
+include("../cef_variables_messenger.cmake")
+'''
+
+if s.find(addition) == -1:
+  s += addition
+  print 'patching cmake/FindCEF.cmake'
+  f = open('cmake/FindCEF.cmake', 'w')
+  f.write(s)
+  f.close()
+
+END
+
+rm -rf build
 mkdir build
 cd build
-cmake -G "Ninja" -DPROJECT_ARCH="x86_64" -DCMAKE_BUILD_TYPE=Debug ..
-ninja libcef_dll_wrapper.a
+
+# cmake -G "Ninja" -DPROJECT_ARCH="x86_64" -DCMAKE_BUILD_TYPE=Debug ..
+CXX=clang CC=clang cmake -G "Ninja" -DPROJECT_ARCH="x86_64" ..
+CXX=clang CC=clang ninja libcef_dll_wrapper.a
 
 # Make .framework
 rm -rf "Chromium Embedded Framework.framework"

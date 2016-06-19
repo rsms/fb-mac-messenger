@@ -1,20 +1,20 @@
 #pragma once
 
-#include "include/cef_base.h"
+#include "common.h"
 #include "include/cef_client.h"
-#include "include/wrapper/cef_message_router.h"
+#include "MsgRouter.h"
 
+#include <set>
 #include <functional>
 
 template <typename F> using func = std::function<F>;
 
 
-struct RCWindow : public CefClient,
-                  public CefDisplayHandler,
-                  public CefLifeSpanHandler,
-                  public CefLoadHandler,
-                  public CefRequestHandler,
-                  public CefMessageRouterBrowserSide::Handler
+struct RCWindow : public CefClient
+                , public CefDisplayHandler
+                , public CefLifeSpanHandler
+                , public CefLoadHandler
+                , public CefRequestHandler
 {
   using WinCallback = func<void(CefRefPtr<RCWindow>)>;
 
@@ -27,7 +27,7 @@ struct RCWindow : public CefClient,
   void showAndMakeKey();
   void close();
   void forceClose();
-  
+
   // Zooming the view
   void zoomIn();
   void zoomOut();
@@ -87,17 +87,6 @@ struct RCWindow : public CefClient,
   virtual void OnRenderProcessTerminated(CefRefPtr<CefBrowser>,
                                          TerminationStatus) OVERRIDE;
 
-  // CefMessageRouterBrowserSide::Handler methods:
-  virtual bool OnQuery(CefRefPtr<CefBrowser> browser,
-                       CefRefPtr<CefFrame> frame,
-                       int64 query_id,
-                       const CefString& request,
-                       bool persistent,
-                       CefRefPtr<Callback> callback) OVERRIDE;
-  virtual void OnQueryCanceled(CefRefPtr<CefBrowser> browser,
-                               CefRefPtr<CefFrame> frame,
-                               int64 query_id) OVERRIDE;
-
   // closeNativeWindow is called just before the window closes.
   // The implementation should clear the window's browser view so that the
   // underlying CefBrowser implementation can deallocate it's view.
@@ -111,7 +100,9 @@ private:
   WinCallback               _onClose;
   WinCallback               _onKey;
   bool                      _isClosing = false;
-  CefRefPtr<CefMessageRouterBrowserSide> _msgRouter;
+  bool                      _hasLoadedOnce = false;
+  MsgRouter                 _msgRouter;
+  std::set<CefString>       _notificationTags;
 
   RCWindow();
   void createNativeWindow(CefWindowInfo& wconf, const std::string& winID);

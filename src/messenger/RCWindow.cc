@@ -1,21 +1,52 @@
 #include "RCWindow.h"
+#include "App.h"
 #include "include/wrapper/cef_helpers.h"
 
 RCWindow::RCWindow() {
-  // Configure message router (e.g. to communicate with JS in a HTML document.)
-  // The same config values must be passed to both
-  // CefMessageRouterBrowserSide and CefMessageRouterRendererSide.
-  CefMessageRouterConfig c;
-  c.js_query_function = "hostQuery";
-  c.js_cancel_function = "hostCancelQuery";
-  _msgRouter = CefMessageRouterBrowserSide::Create(c);
-  _msgRouter->AddHandler(this, /*first=*/true);
+  _msgRouter.addCall("echo", [=](CefRefPtr<CefListValue> args,
+                     CefRefPtr<MsgPromise> p)
+  {
+    p->resolve(args);
+  });
+  
+  _msgRouter.addCall(u"createNotification", [=](CefRefPtr<CefListValue> args,
+                     CefRefPtr<MsgPromise> p)
+  {
+    auto title = args->GetString(0);
+    auto options = args->GetDictionary(1);
+    
+    static const auto kBody = CefStr(u"body");
+    static const auto kIcon = CefStr(u"icon");
+    static const auto kTag  = CefStr(u"tag");
+    
+    auto body = options->GetString(kBody);
+    auto iconURL = options->GetString(kIcon);
+    auto tag = options->GetString(kTag);
+
+    auto n = App.notifications().create(title, body, iconURL, tag);
+    if (_b) {
+      n->setAssociatedBrowser(_b->GetBrowser());
+    }
+    n->schedule();
+
+    // Return notification tag
+    p->resolve(n->tag());
+  });
+  
+  _msgRouter.addNotify(u"closeNotification", [=] (CefRefPtr<CefListValue> args) {
+    auto tag = args->GetString(0);
+    if (tag.empty()) {
+      return;
+    }
+    App.notifications().remove(tag);
+  });
 }
 
 
 RCWindow::~RCWindow() {
   fprintf(stderr, "—— ~RCWindow\n");
 }
+
 
 //static
 CefRefPtr<RCWindow> RCWindow::create(const std::string& url, const std::string& winID) {
@@ -35,7 +66,8 @@ CefRefPtr<RCWindow> RCWindow::create(const std::string& url, const std::string& 
   bconf.databases = STATE_ENABLED;
   bconf.application_cache = STATE_ENABLED;
   bconf.webgl = STATE_ENABLED;
-
+  
+//  CefBrowserHost::CreateBrowserSync(wconf, w.get(), "file:///Users/rsms/src/Messenger-cef/src/messenger/test.html", bconf, nullptr);
   CefBrowserHost::CreateBrowserSync(wconf, w.get(), url, bconf, nullptr);
 
   return w;
@@ -64,16 +96,20 @@ void RCWindow::onBecameKey() {
 }
 
 
+static const double kInitialZoom = -1.0;
+
 void RCWindow::zoomIn() {
   setZoom(getZoom() + 0.5);
+  //printf("zoom increased to %f\n", getZoom());
 }
 
 void RCWindow::zoomOut() {
   setZoom(getZoom() - 0.5);
+  //printf("zoom decreased to %f\n", getZoom());
 }
 
 void RCWindow::resetZoom() {
-  setZoom(0);
+  setZoom(kInitialZoom);
 }
 
 double RCWindow::getZoom() {
@@ -118,8 +154,6 @@ void RCWindow::OnBeforeClose(CefRefPtr<CefBrowser> b) {
   CEF_REQUIRE_UI_THREAD();
   fprintf(stderr, "—— RCWindow::OnBeforeClose browser#%d\n", b->GetIdentifier());
   
-  _msgRouter->OnBeforeClose(b);
-  
   if (_onClose) {
     _onClose(this);
   }
@@ -137,12 +171,10 @@ bool RCWindow::OnProcessMessageReceived(CefRefPtr<CefBrowser> b,
                                         CefProcessId srcID,
                                         CefRefPtr<CefProcessMessage> m)
 {
-  //fprintf(stderr,
-  //        "—— RCWindow::OnProcessMessageReceived browser#%d msg name: '%s'\n",
-  //        b->GetIdentifier(),
-  //        m->GetName().ToString().c_str());
-  // Returns true if the message is handled by this router or false otherwise.
-  return _msgRouter->OnProcessMessageReceived(b, srcID, m);
+  if (srcID == PID_RENDERER) {
+    return _msgRouter.handleMessage(b, m);
+  }
+  return false;
 }
 
 
@@ -180,11 +212,16 @@ bool RCWindow::OnConsoleMessage(CefRefPtr<CefBrowser> browser,
 
 #pragma mark - CefLoadHandler
 
+
 void RCWindow::OnLoadStart(CefRefPtr<CefBrowser> b, CefRefPtr<CefFrame> f) {
   //fprintf(stderr,
   //        "—— RCWindow::OnLoadStart browser#%d thread=%s\n",
   //        b->GetIdentifier(),
   //        CefCurrentlyOn(TID_RENDERER) ? "TID_RENDERER" : "TID_UI");
+  if (!_hasLoadedOnce) {
+    _hasLoadedOnce = true;
+    _b->SetZoomLevel(kInitialZoom);
+  }
 }
 
 void RCWindow::OnLoadError(CefRefPtr<CefBrowser> browser,
@@ -225,7 +262,6 @@ bool RCWindow::OnBeforeBrowse(CefRefPtr<CefBrowser> b,
                               bool is_redirect)
 {
   // Proceed
-  _msgRouter->OnBeforeBrowse(b, f); // only call when proceeding w/ navigation
   return false;
 }
 
@@ -234,55 +270,4 @@ bool RCWindow::OnBeforeBrowse(CefRefPtr<CefBrowser> b,
 // terminates unexpectedly. |status| indicates how the process
 // terminated.
 void RCWindow::OnRenderProcessTerminated(CefRefPtr<CefBrowser> b, TerminationStatus status) {
-  _msgRouter->OnRenderProcessTerminated(b);
-}
-
-
-#pragma mark - CefMessageRouterBrowserSide::Handler
-
-
-// Executed when a new query is received. |query_id| uniquely identifies the
-// query for the life span of the router. Return true to handle the query
-// or false to propagate the query to other registered handlers, if any. If
-// no handlers return true from this method then the query will be
-// automatically canceled with an error code of -1 delivered to the
-// JavaScript onFailure callback. If this method returns true then a
-// Callback method must be executed either in this method or asynchronously
-// to complete the query.
-bool RCWindow::OnQuery(CefRefPtr<CefBrowser> b,
-                       CefRefPtr<CefFrame> f,
-                       int64 query_id,
-                       const CefString& request,
-                       bool persistent,
-                       CefRefPtr<Callback> callback)
-{
-  fprintf(stderr,
-          "—— RCWindow::OnQuery browser#%d"
-          " query_id=%llu,"
-          " request=%s"
-          " persistent=%s"
-          "\n",
-          b->GetIdentifier(),
-          query_id,
-          request.ToString().c_str(),
-          persistent ? "true" : "false");
-  // TODO: something meaningful
-  callback->Success(CefString("Hello from browser process"));
-  return true;
-}
-
-
-// Executed when a query has been canceled either explicitly using the
-// JavaScript cancel function or implicitly due to browser destruction,
-// navigation or renderer process termination. It will only be called for
-// the single handler that returned true from OnQuery for the same
-// |query_id|. No references to the associated Callback object should be
-// kept after this method is called, nor should any Callback methods be
-// executed.
-void RCWindow::OnQueryCanceled(CefRefPtr<CefBrowser> b,
-                               CefRefPtr<CefFrame> f,
-                               int64 query_id)
-{
-  fprintf(stderr, "—— RCWindow::OnQueryCanceled browser#%d query_id=%llu\n", b->GetIdentifier(), query_id);
-  // TODO: cancel any in-flight queries
 }

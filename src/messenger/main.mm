@@ -56,15 +56,19 @@ int main(int argc, char* argv[]) {
     auto bundleID = bundle.bundleIdentifier;
     
     // User-Agent
-    // Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36
     NSString* bundleVersion = [bundle objectForInfoDictionaryKey:(__bridge NSString *)kCFBundleVersionKey];
+    auto procInfo = [NSProcessInfo processInfo];
+    auto osVersion = procInfo.operatingSystemVersion;
     auto userAgent = [NSString stringWithFormat:
-      @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) fb-mac-messenger/%@ Chrome/"
+      @"Mozilla/5.0 (Macintosh; Intel Mac OS X %ld_%ld_%ld) AppleWebKit/537.36 (KHTML, like Gecko) fb-mac-messenger/%@ Chrome/"
                       MAKE_STRING(CHROME_VERSION_MAJOR) "."
                       MAKE_STRING(CHROME_VERSION_MINOR) "."
                       MAKE_STRING(CHROME_VERSION_BUILD) "."
                       MAKE_STRING(CHROME_VERSION_PATCH)
                       " Safari/537.36",
+                      osVersion.majorVersion,
+                      osVersion.minorVersion,
+                      osVersion.patchVersion,
                       bundleVersion];
     CefStringSetNSString(&settings.user_agent, userAgent);
 
@@ -96,8 +100,8 @@ int main(int argc, char* argv[]) {
 
     // Remote inspector
     #if DEBUG
-    settings.remote_debugging_port = 13377;
-    NSLog(@"remote inspector enabled at http://localhost:13377/");
+    settings.remote_debugging_port = 13370;
+    NSLog(@"remote inspector enabled at http://localhost:13370/");
     #endif
 
     // Configure Mac app delegate

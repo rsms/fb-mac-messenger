@@ -2,10 +2,10 @@ PRODUCT_NAME = Messenger
 
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks
 
-INFOPLIST_FILE = Messenger/Info.plist
+INFOPLIST_FILE = src/messenger/Info.plist
 
 GCC_PRECOMPILE_PREFIX_HEADER = YES
-GCC_PREFIX_HEADER = Messenger/prefix.pch
+GCC_PREFIX_HEADER = src/messenger/prefix.pch
 
 //SWIFT_OBJC_BRIDGING_HEADER = $(PROJECT_DIR)/$(PRODUCT_NAME)/BridgingHeader.h
 //OTHER_LDFLAGS = $(inherited)
@@ -17,6 +17,6 @@ SYMROOT = $(SRCROOT)/build
 // Build a potentially fat image for standard archs. Probably just x86_64.
 ARCHS = $(ARCHS_STANDARD)
 
-LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/deps/cef/build/libcef_dll
+LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/deps/cef/build/libcef_dll_wrapper
 HEADER_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/deps/cef
 FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/deps/sparkle $(PROJECT_DIR)/deps/cef/build

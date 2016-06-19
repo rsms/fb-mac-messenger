@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>doc</title>
+    <style type="text/css">
+* { margin:0; padding:0; font:12px sans-serif; }
+body { margin:20px; }
+a { text-decoration:inherit; color: inherit; }
+a:hover { color:salmon; }
+
+    </style>
+  </head>
+  <body>
+
+<script type="text/javascript">
+
+setTimeout(() => {
+  Messenger.echo('hello', 'world').then(res => {
+    console.log('echo returned:', res);
+  })
+}, 100);
+
+setTimeout(() => {
+  var n = new Notification('Title', {
+    body: 'Body text'
+  });
+}, 2000);
+
+</script>
+  </body>
+</html>

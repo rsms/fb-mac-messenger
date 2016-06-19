@@ -176,16 +176,28 @@ NSString* ReadDeviceID() {
 #pragma mark - NSUserNotificationCenterDelegate
 
 
+- (void)userNotificationCenter:(NSUserNotificationCenter *)center
+        didDeliverNotification:(NSUserNotification *)notification
+{
+  NSLog(@"%@%@%@", self, NSStringFromSelector(_cmd), notification);
+}
+
+
 - (BOOL)userNotificationCenter:(NSUserNotificationCenter*)center
-     shouldPresentNotification:(NSUserNotification*)notification {
-  //NSLog(@"%@%@%@", self, NSStringFromSelector(_cmd), notification);
+     shouldPresentNotification:(NSUserNotification*)notification
+{
+  NSLog(@"%@%@%@", self, NSStringFromSelector(_cmd), notification);
   return YES;
 }
 
 
 - (void)userNotificationCenter:(NSUserNotificationCenter*)center
-       didActivateNotification:(NSUserNotification*)notification {
-  //NSLog(@"%@%@ notification=%@", self, NSStringFromSelector(_cmd), notification);
+       didActivateNotification:(NSUserNotification*)notification
+{
+  NSLog(@"%@%@ notification=%@", self, NSStringFromSelector(_cmd), notification);
+//  if (notification.userInfo && notification.userInfo[@"isJSNotification"]) {
+//    JSNotificationsActivateNotification(_webView.mainFrame.globalContext, notification);
+//  }
 }
 
 

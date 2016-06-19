@@ -4,15 +4,6 @@
 #import "include/base/cef_bind.h"
 #import "include/wrapper/cef_closure_task.h"
 
-static NSString* NSStringFromCefString(const CefStringUTF16& s) {
-  return [[NSString alloc] initWithCharacters:(const unichar*)s.c_str() length:s.length()]; // copy
-}
-
-template <typename T>
-static NSString* NSStringFromCefString(const CefStringBase<T>& s) {
-  auto s16 = s.ToString16(); // copy
-  return [[NSString alloc] initWithCharacters:(unichar*)s16.data() length:s16.size()]; // copy
-}
 
 #define selfWindow ((__bridge NSWindow*)_win)
 
@@ -74,7 +65,7 @@ void RCWindow::createNativeWindow(CefWindowInfo& wconf, const std::string& winID
   
   w.titlebarAppearsTransparent = YES;
   w.titleVisibility = NSWindowTitleHidden;
-  w.animationBehavior = NSWindowAnimationBehaviorDocumentWindow;
+//  w.animationBehavior = NSWindowAnimationBehaviorDocumentWindow;
   
   // title size "hack"
   auto toolbar = [[NSToolbar alloc] initWithIdentifier:@"titlebar"];

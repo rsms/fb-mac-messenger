@@ -419,7 +419,9 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
 - (IBAction)reloadFromServer:(id)sender {
   NSString* url = nil;
-  if (_webView.mainFrame.DOMDocument != nil && _webView.mainFrame.DOMDocument.URL.length != 0) {
+  if (_webView.mainFrame.DOMDocument != nil &&
+      [_webView.mainFrame.DOMDocument.URL hasPrefix:@"https://www.messenger.com/"])
+  {
     NSLog(@"Reloading app");
     url = _webView.mainFrame.DOMDocument.URL;
   } else {

@@ -421,7 +421,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   NSString* url = nil;
   if (_webView.mainFrame.DOMDocument != nil && _webView.mainFrame.DOMDocument.URL.length != 0) {
     NSLog(@"Reloading app");
-    url = _webView.mainFrame.DOMDocument.URL;
+    url = @"https://www.messenger.com/login";
   } else {
     url = @"https://www.messenger.com/login";
   }

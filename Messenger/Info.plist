@@ -15,13 +15,13 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.1.7</string>
+	<string>0.1.8</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.1.7.1456285881</string>
+	<string>0.1.8.1466363428</string>
 	<key>GitRev</key>
-	<string>f419067e835088eccf57de9c33dfb7eb1939f3c5</string>
+	<string>c3dc9b83f1dd04693233209ada52d25fa340459b</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSAppTransportSecurity</key>
@@ -71,5 +71,7 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>FBMApplication</string>
+	<key>SUFeedURL</key>
+	<string>https://fbmacmessenger.rsms.me/changelog.xml</string>
 </dict>
 </plist>

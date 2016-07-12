@@ -1,5 +1,8 @@
 (function () {
 
+  // Prevent compositing until everything has loaded to improve load performance
+  document.documentElement.style.visibility = 'hidden';
+
   // Dumps a tree of react components with references to DOM elements:
   // console.log((function dumpReactComponents() {
   //   var ReactDOM = require("ReactDOM");
@@ -44,7 +47,6 @@
   //   return components;
   // })());
 
-
   function findReactDOMNodePath(namePath, parentInstance, returnCI) {
     if (typeof require === 'undefined') {
       return null;
@@ -79,7 +81,14 @@
       return null;
     }
     var ReactDOM = require("ReactDOM");
+    if (!ReactDOM) {
+      return null;
+    }
     var ReactMount = require("ReactMount");
+    if (!ReactMount) {
+      return null;
+    }
+
     var k, ret = null, instance, element, children;
 
     if (!instances) {
@@ -126,27 +135,6 @@
 
     return null;
   }
-
-
-  var observeElement = function(baseElement, selector, handler) {
-    var e = baseElement.querySelector(selector);
-    var observer;
-    var findElement = function() {
-      var e = baseElement.querySelector(selector);
-      if (e !== observer.currentElement) {
-        observer.currentElement = e;
-        handler(e);
-      }
-    };
-    observer = new MutationObserver(findElement);
-    observer.observe(baseElement, {
-      // attributes: true,
-      childList: true,
-      subtree: true,
-    });
-    findElement();
-    return observer;
-  };
   
   // Returns a new object with new values for each key
   var mapObject = function(original, eachFn) {
@@ -180,7 +168,6 @@
           null,
           /*returnCI=*/true
         );
-        //console.log('this.gearButton:', this.gearButton)
         if (this.gearButton) {
           var ReactDOM = require("ReactDOM");
           this.gearButtonNode = ReactDOM.findDOMNode(this.gearButton);
@@ -208,7 +195,6 @@
         }
       }).bind(this);
 
-      //console.log('this.masterViewHeader:', this.masterViewHeader)
       if (this.masterViewHeader) {
         var cdu = this.masterViewHeader.componentDidUpdate;
         this.masterViewHeader.componentDidUpdate = function(prevProps) {
@@ -220,7 +206,6 @@
           } else {
             HideMainWindowTitlebar();
           }
-          //console.log('componentDidUpdate', JSON.parse(JSON.stringify(prevProps)));
           setTimeout(updateGearButton, 0);
         };
         updateGearButton();
@@ -310,11 +295,9 @@
       var c = url.split(/\/+/); // [0:"https:", 1:"www.messenger.com", 2:"requests", 3:"t", 4:"1234"]
       var i = 2;
       if (c[i] === 'requests') {
-        //console.log('in requests'); // WIP
         //HideMainWindowTitlebar();
         ++i;
       } else if (c[i] === 'filtered') {
-        //console.log('in filtered'); // WIP
         //HideMainWindowTitlebar();
         ++i;
       } else {
@@ -333,24 +316,15 @@
     },
 
     onThreadTitleChange: function(title) {
-      //console.log('onThreadTitleChange', title);
       window.SetMainWindowTitle(title);
     },
 
     onThreadChange: function() {
-      //console.log('Thread changed to', this.currentThreadID, document.title);
       clearTimeout(this._threadChangeTimer);
 
       var e, limit;
 
-      // if (this._threadTitleNode && this._threadTitleNode !== e) {
-      //   console.log('_threadTitleNode !== e');
-      //   this._threadTitleNode = null;
-      //   if (this._threadTitleObserver) {
-      //     this._threadTitleObserver.disconnect();
-      //     this._threadTitleObserver = null;
-      //   }
-      // }
+      return;
 
       if (!this._threadTitleNode) {
         e = findReactDOMNodePath([
@@ -393,16 +367,6 @@
   };
 
 
-
-  // Intercept location changes
-  window.history._pushState = window.history.pushState;
-  window.history.pushState = function(obj, title, url) {
-    window.history._pushState(obj, title, url);
-    MacMessenger.locationChanged(url);
-  };
-  MacMessenger.locationChanged(document.location.href);
-
-
   // Things that need the DOM to be loaded
   var didLoad = false;
   var onDocumentLoaded = function() {
@@ -419,6 +383,18 @@
     }
     document.removeEventListener('readystatechange', onDocumentLoaded);
     didLoad = true;
+
+    setTimeout(function(){
+      document.documentElement.style.visibility = null;
+    }, 1);
+
+    // Intercept location changes
+    window.history._pushState = window.history.pushState;
+    window.history.pushState = function(obj, title, url) {
+      window.history._pushState(obj, title, url);
+      MacMessenger.locationChanged(url);
+    };
+    MacMessenger.locationChanged(document.location.href);
 
     // This fixes an annoying "beep" sound in the message composer
     document.body.addEventListener('keypress', function (e) {

@@ -6,6 +6,39 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.1.8</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes a bug with loading messenger.com on macOS 10.12 beta where the window would just be empty</li>
+        </ul>
+      ]]></description>
+      <pubDate>Sun, 19 Jun 2016 12:17:03 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="c3dc9b83f1dd0469"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.8.1466363428-c3dc9b83f1dd0469.zip"
+        sparkle:version="0.1.8.1466363428"
+        length="2114717"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Messenger for Mac 0.1.7</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes an issue for new users introduced by upgrading Sparkle (auto-update framework) in version 0.1.7.1459534376</li>
+          <li>Minor performance enhancements</li>
+        </ul>
+      ]]></description>
+      <pubDate>Fri, 01 Apr 2016 11:16:16 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="b3a4a21fc7da0c8b"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.7.1459534376-b3a4a21fc7da0c8b.zip"
+        sparkle:version="0.1.7.1459534376"
+        length="2102416"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.1.7</title>
       <description><![CDATA[
         <ul>

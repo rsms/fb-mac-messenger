@@ -158,16 +158,16 @@
 
   window.MacMessenger = {
     tryFindSettingsGear: function() {
-      this.masterViewHeader = findReactDOMNodePath([
-        'MessengerMasterView',
-        'MessengerMasterViewHeader'
-      ], null, /*returnCI=*/true);
+      var main = findReactDOMNode({name: "Messenger"});
+      if (main) this.masterViewHeader = main.querySelector("div[role='banner']");
+//       this.masterViewHeader = findReactDOMNode({}, { a: document.querySelector("div[role='banner']") });
+//       this.gearButton = null;
+//      this.masterViewHeader = findReactDOMNodePath([
+//        'Messenger', 'div'
+////        'k', 'k', 'm'
+//      ], null, /*returnCI=*/true);
       var updateGearButton = (function() {
-        this.gearButton = findReactDOMNodePath(
-          ['MessengerMasterView','MessengerMasterViewHeader','MessengerSettingsMenu'],
-          null,
-          /*returnCI=*/true
-        );
+        this.gearButton = this.masterViewHeader.firstElementChild;
         if (this.gearButton) {
           var ReactDOM = require("ReactDOM");
           this.gearButtonNode = ReactDOM.findDOMNode(this.gearButton);
@@ -503,20 +503,12 @@
         observer.observe(document.body, { childList: true });
       }
     }
-    styleComponent("MessengerMasterView", {
+    styleComponent("Messenger", {
       "(max-width: 640px)": function(el, matches) {
         // Allow sidebar to go smaller
-        el.parentNode.style.minWidth = matches ? null : "280px";
-      }
-    });
-    styleComponent("MessengerMasterViewHeader", {
-      "(max-width: 640px)": function(el, matches) {
-        // Make banner contain children correctly
-        el.style.display = matches ? "block" : null;
-        
-        // Move over New Conversation button
+        el.firstElementChild.style.minWidth = matches ? null : "280px";
         var newConversation = el.querySelector("a[href='/new']");
-        newConversation.style.marginRight = matches ? "-49px" : null;
+        newConversation.style.marginRight = matches ? "-109px" : null;
         newConversation.style.float = matches ? "right" : null;
         newConversation.style.position = matches ? "relative" : null;
         newConversation.style.zIndex = matches ? "300" : null;

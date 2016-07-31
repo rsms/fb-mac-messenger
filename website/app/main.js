@@ -46,7 +46,7 @@
   //   }
   //   return components;
   // })());
-
+ 
   function findReactDOMNodePath(namePath, parentInstance, returnCI) {
     if (typeof require === 'undefined') {
       return null;
@@ -160,19 +160,12 @@
     tryFindSettingsGear: function() {
       var main = findReactDOMNode({name: "Messenger"});
       if (main) this.masterViewHeader = main.querySelector("div[role='banner']");
-//       this.masterViewHeader = findReactDOMNode({}, { a: document.querySelector("div[role='banner']") });
-//       this.gearButton = null;
-//      this.masterViewHeader = findReactDOMNodePath([
-//        'Messenger', 'div'
-////        'k', 'k', 'm'
-//      ], null, /*returnCI=*/true);
       var updateGearButton = (function() {
-        this.gearButton = this.masterViewHeader.firstElementChild;
-        if (this.gearButton) {
-          var ReactDOM = require("ReactDOM");
-          this.gearButtonNode = ReactDOM.findDOMNode(this.gearButton);
+        this.gearButtonNode = this.masterViewHeader.firstElementChild;
+        if (this.gearButtonNode) {
+          this.gearButton = reactComponentFromDOM(this.gearButtonNode);
           this._gearButtonAnchor = this.gearButtonNode.querySelector('a');
-          this.gearButtonNode.style.visibility = 'hidden';
+          
 
           // DEBUG calls to gear menu items
           // var gearButton = this.gearButton;
@@ -196,19 +189,19 @@
       }).bind(this);
 
       if (this.masterViewHeader) {
-        var cdu = this.masterViewHeader.componentDidUpdate;
-        this.masterViewHeader.componentDidUpdate = function(prevProps) {
-          if (cdu) {
-            cdu.apply(this, Array.prototype.slice.call(arguments));
-          }
-          if (this.props.folder === 'inbox') {
-            ShowMainWindowTitlebar();
-          } else {
-            HideMainWindowTitlebar();
-          }
-          setTimeout(updateGearButton, 0);
-        };
-        updateGearButton();
+//        var cdu = this.masterViewHeader.componentDidUpdate;
+//        this.masterViewHeader.componentDidUpdate = function(prevProps) {
+//          if (cdu) {
+//            cdu.apply(this, Array.prototype.slice.call(arguments));
+//          }
+//          if (this.props.folder === 'inbox') {
+//            ShowMainWindowTitlebar();
+//          } else {
+//            HideMainWindowTitlebar();
+//          }
+//          setTimeout(updateGearButton, 0);
+//        };
+//        updateGearButton();
         return true;
       }
       return false;
@@ -219,32 +212,39 @@
         this._gearButtonAnchor.click();
       }
     },
-
-    // Gear menu handlers:
-    // _handleChangeFolderClick: function()
-    // _handleLogOut: function()
-    // _handleReportBugClick: function()
-    // _handleSettingsClick: function()
-    // _handleShowViewClick: function()
-
+ 
     showSettings: function() {
-      // this.openGearMenu(); return;
-      if (this.gearButton) {
-        this.gearButton._handleSettingsClick(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));
+      if (!document.querySelector("ul[role='menu']")) {
+        this._gearButtonAnchor.click();
+        this._gearButtonAnchor.click();
       }
+      var menuItem = document.querySelector("ul[role='menu'] li:first-child a");
+      menuItem.click();
+    },
+ 
+    showInbox: function() {
+      require('MessengerActions').changeMasterView(require('MessengerView').MASTER.RECENT);
+      require('MessengerActions').changeFolder(require('MessagingTag').INBOX);
     },
  
     showMessageRequests: function() {
-      if (this.gearButton) {
-        this.gearButton._handleChangeFolderClick(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));
-      }
+      require('MessengerActions').changeMasterView(require('MessengerView').MASTER.RECENT);
+      require('MessengerActions').changeFolder(require('MessagingTag').PENDING);
     },
 
     logOut: function() {
-      if (this.gearButton) {
-        this.gearButton._handleLogOut(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));
+       if (!document.querySelector("ul[role='menu']")) {
+        this._gearButtonAnchor.click();
+        this._gearButtonAnchor.click();
       }
+      var menuItem = document.querySelector("ul[role='menu'] li:last-child a");
+      menuItem.click();
     },
+ 
+    showActiveFriends: function() {
+      require('MessengerActions').changeMasterView(require('MessengerView').MASTER.PEOPLE);
+    },
+
 
     composeNewMessage: function() {
       document.querySelector('a[href="/new"]').dispatchEvent(
@@ -407,6 +407,12 @@
     var css = document.createElement('style');
     css.type = 'text/css';
     var style = 'body { overflow: hidden; }';
+ 
+    // Make gear always hidden
+    style += "div[role='banner'] > div:first-child { visibility: hidden; }";
+ 
+    // Make back button always hidden
+    style += "div[role='banner'] > a:first-child { visibility: hidden; }";
     css.appendChild(document.createTextNode(style));
     document.getElementsByTagName('head')[0].appendChild(css);
  
@@ -450,7 +456,7 @@
         return styles.queries[size] ? styles.queries[size].query.matches : null;
       }
     };
-    
+ 
     // Add styles and media query listeners to a React component
     var styleComponent = function(reactClass, queryResponses, options) {
       var tryFindUIComponent = function() {
@@ -505,6 +511,7 @@
     }
     styleComponent("Messenger", {
       "(max-width: 640px)": function(el, matches) {
+
         // Allow sidebar to go smaller
         el.firstElementChild.style.minWidth = matches ? null : "280px";
         var newConversation = el.querySelector("a[href='/new']");
@@ -512,6 +519,11 @@
         newConversation.style.float = matches ? "right" : null;
         newConversation.style.position = matches ? "relative" : null;
         newConversation.style.zIndex = matches ? "300" : null;
+                   
+        var back = el.querySelector("div[role='banner'] > a[href='#']");
+        if (back) {
+          
+        }
       }
     });
     styleComponent("MessengerRecentContainer", {
@@ -545,19 +557,13 @@
         el.style.borderLeft = matches ? "0" : null;
         el.querySelector(":scope > div:last-child").style.borderLeft =
           matches ? "1px solid rgba(0, 0, 0, .20)" : null;
-      }
-    });
-    styleComponent("MessengerDetailViewHeaderContainer", {
-      "(max-width: 640px)": function(el, matches) {
-        // Move over search bar to accomodate New Conversation button
-        el.style.paddingLeft = matches ? "49px" : null;
         
         // Make sure conversation title doesn't overlap buttons
         var titleText = el.querySelector("h2");
         if (titleText) {
           titleText.parentNode.style.paddingRight = matches ? "41px" : null;
           titleText.parentNode.style.boxSizing = matches ? "border-box" : null;
-          titleText.parentNode.style.paddingLeft = matches ? "7px" : null;
+          titleText.parentNode.style.paddingLeft = matches ? "41px" : null;
           titleText.parentNode.style.minWidth = matches ? "100%" : null;
           titleText.style.overflow = matches ? "hidden" : null;
           titleText.style.textOverflow = matches ? "ellipsis" : null;

@@ -498,6 +498,14 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   [self evaluateJavaScript:@"MacMessenger.showSettings()"];
 }
 
+- (IBAction)showActiveFriends:(id)sender {
+  [self evaluateJavaScript:@"MacMessenger.showActiveFriends()"];
+}
+
+- (IBAction)showInbox:(id)sender {
+  [self evaluateJavaScript:@"MacMessenger.showInbox()"];
+}
+
 
 - (IBAction)showAppHelp:(id)sender {
   [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.facebook.com/help/735006619902401"]];

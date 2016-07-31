@@ -151,6 +151,10 @@
       eachFn(key, object[key]);
     }
   };
+ 
+  var last = function(array) {
+    return array[array.length-1];
+  };
 
   // Note:
   //   window.MacMessengerVersion will be defined to a string e.g. to "0.1.2"
@@ -163,7 +167,6 @@
       var updateGearButton = (function() {
         this.gearButtonNode = this.masterViewHeader.firstElementChild;
         if (this.gearButtonNode) {
-          this.gearButton = reactComponentFromDOM(this.gearButtonNode);
           this._gearButtonAnchor = this.gearButtonNode.querySelector('a');
           
 
@@ -189,19 +192,13 @@
       }).bind(this);
 
       if (this.masterViewHeader) {
-//        var cdu = this.masterViewHeader.componentDidUpdate;
-//        this.masterViewHeader.componentDidUpdate = function(prevProps) {
-//          if (cdu) {
-//            cdu.apply(this, Array.prototype.slice.call(arguments));
-//          }
-//          if (this.props.folder === 'inbox') {
-//            ShowMainWindowTitlebar();
-//          } else {
-//            HideMainWindowTitlebar();
-//          }
-//          setTimeout(updateGearButton, 0);
-//        };
-//        updateGearButton();
+        this.headerObserver = new MutationObserver(function() {
+            updateGearButton();
+        });
+        this.headerObserver.observe(this.masterViewHeader, {
+          childList: true
+        });
+        updateGearButton();
         return true;
       }
       return false;
@@ -214,11 +211,9 @@
     },
  
     showSettings: function() {
-      if (!document.querySelector("ul[role='menu']")) {
-        this._gearButtonAnchor.click();
-        this._gearButtonAnchor.click();
-      }
-      var menuItem = document.querySelector("ul[role='menu'] li:first-child a");
+      this._gearButtonAnchor.click();
+      this._gearButtonAnchor.click();
+      var menuItem = last(document.querySelectorAll("ul[role='menu']")).querySelector("li:first-child a");
       menuItem.click();
     },
  
@@ -233,11 +228,9 @@
     },
 
     logOut: function() {
-       if (!document.querySelector("ul[role='menu']")) {
-        this._gearButtonAnchor.click();
-        this._gearButtonAnchor.click();
-      }
-      var menuItem = document.querySelector("ul[role='menu'] li:last-child a");
+      this._gearButtonAnchor.click();
+      this._gearButtonAnchor.click();
+      var menuItem = last(document.querySelectorAll("ul[role='menu']")).querySelector("li:last-child a");
       menuItem.click();
     },
  

@@ -512,11 +512,6 @@
         newConversation.style.float = matches ? "right" : null;
         newConversation.style.position = matches ? "relative" : null;
         newConversation.style.zIndex = matches ? "300" : null;
-                   
-        var back = el.querySelector("div[role='banner'] > a[href='#']");
-        if (back) {
-          
-        }
       }
     });
     styleComponent("MessengerRecentContainer", {

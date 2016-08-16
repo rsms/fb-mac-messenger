@@ -528,8 +528,12 @@
               child.style.backgroundColor = matches ? color : null;
               child.style.border = matches ? ("2px solid " + color) : null;
               child.style.borderRadius = matches ? "50%" : null;
-              child.style.marginTop = matches ? "-44px" : null;
-              child.style.marginRight = matches ? "-2px" : null;
+              child.style.marginTop = matches ? "-34px" : null;
+              if (child.tagName == "IMG") {
+                child.style.marginRight = matches ? "-1px" : null;
+              } else {
+                child.style.marginLeft = matches ? "-3px" : null;
+              }
             }
           );
         });

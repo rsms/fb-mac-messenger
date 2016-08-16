@@ -282,22 +282,22 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="View" id="g4l-96-7Lq" userLabel="View">
                         <items>
-                            <menuItem title="Message Requests" id="8Xh-P6-fno">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Inbox" keyEquivalent="1" id="VkS-48-Y7U" userLabel="Inbox">
+                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
-                                    <action selector="showMessageRequests:" target="Voe-Tx-rLC" id="irK-zd-aru"/>
+                                    <action selector="showInbox:" target="Voe-Tx-rLC" id="pym-rF-Xcg"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Active Friends" id="bfM-KS-13L" userLabel="Active Friends">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Active Friends" keyEquivalent="2" id="bfM-KS-13L" userLabel="Active Friends">
+                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
                                     <action selector="showActiveFriends:" target="Voe-Tx-rLC" id="hGV-yV-tAz"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Inbox" id="VkS-48-Y7U" userLabel="Inbox">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Message Requests" keyEquivalent="3" id="8Xh-P6-fno">
+                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
-                                    <action selector="showInbox:" target="Voe-Tx-rLC" id="pym-rF-Xcg"/>
+                                    <action selector="showMessageRequests:" target="Voe-Tx-rLC" id="irK-zd-aru"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="a1P-YN-Nhb"/>

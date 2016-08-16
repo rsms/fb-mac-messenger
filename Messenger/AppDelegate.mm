@@ -484,6 +484,16 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   }
 }
 
+- (void)showActiveFriends {
+  [self evaluateJavaScript:@"MacMessenger.showActiveFriends()"];
+}
+- (void) showInbox {
+  [self evaluateJavaScript:@"MacMessenger.showInbox()"];
+}
+- (void)showMessageRequests {
+  [self evaluateJavaScript:@"MacMessenger.showMessageRequests()"];
+}
+
 - (IBAction)composeNewMessage:(id)sender {
   [self evaluateJavaScript:@"MacMessenger.composeNewMessage()"];
 }
@@ -499,11 +509,11 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 }
 
 - (IBAction)showActiveFriends:(id)sender {
-  [self evaluateJavaScript:@"MacMessenger.showActiveFriends()"];
+  [self showActiveFriends];
 }
 
 - (IBAction)showInbox:(id)sender {
-  [self evaluateJavaScript:@"MacMessenger.showInbox()"];
+  [self showInbox];
 }
 
 
@@ -529,7 +539,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
 
 - (IBAction)showMessageRequests:(id)sender {
-  [self evaluateJavaScript:@"MacMessenger.showMessageRequests()"];
+  [self showMessageRequests];
 }
 
 

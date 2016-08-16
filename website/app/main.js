@@ -235,6 +235,8 @@
     },
  
     showActiveFriends: function() {
+      require('MessengerActions').changeMasterView(require('MessengerView').MASTER.RECENT);
+      require('MessengerActions').changeFolder(require('MessagingTag').INBOX);
       require('MessengerActions').changeMasterView(require('MessengerView').MASTER.PEOPLE);
     },
 

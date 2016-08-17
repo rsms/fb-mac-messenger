@@ -46,7 +46,7 @@
   //   }
   //   return components;
   // })());
-
+ 
   function findReactDOMNodePath(namePath, parentInstance, returnCI) {
     if (typeof require === 'undefined') {
       return null;
@@ -151,6 +151,10 @@
       eachFn(key, object[key]);
     }
   };
+ 
+  var last = function(array) {
+    return array[array.length-1];
+  };
 
   // Note:
   //   window.MacMessengerVersion will be defined to a string e.g. to "0.1.2"
@@ -158,21 +162,13 @@
 
   window.MacMessenger = {
     tryFindSettingsGear: function() {
-      this.masterViewHeader = findReactDOMNodePath([
-        'MessengerMasterView',
-        'MessengerMasterViewHeader'
-      ], null, /*returnCI=*/true);
+      var main = findReactDOMNode({name: "Messenger"});
+      if (main) this.masterViewHeader = main.querySelector("div[role='banner']");
       var updateGearButton = (function() {
-        this.gearButton = findReactDOMNodePath(
-          ['MessengerMasterView','MessengerMasterViewHeader','MessengerSettingsMenu'],
-          null,
-          /*returnCI=*/true
-        );
-        if (this.gearButton) {
-          var ReactDOM = require("ReactDOM");
-          this.gearButtonNode = ReactDOM.findDOMNode(this.gearButton);
+        this.gearButtonNode = this.masterViewHeader.firstElementChild;
+        if (this.gearButtonNode) {
           this._gearButtonAnchor = this.gearButtonNode.querySelector('a');
-          this.gearButtonNode.style.visibility = 'hidden';
+          
 
           // DEBUG calls to gear menu items
           // var gearButton = this.gearButton;
@@ -196,18 +192,12 @@
       }).bind(this);
 
       if (this.masterViewHeader) {
-        var cdu = this.masterViewHeader.componentDidUpdate;
-        this.masterViewHeader.componentDidUpdate = function(prevProps) {
-          if (cdu) {
-            cdu.apply(this, Array.prototype.slice.call(arguments));
-          }
-          if (this.props.folder === 'inbox') {
-            ShowMainWindowTitlebar();
-          } else {
-            HideMainWindowTitlebar();
-          }
-          setTimeout(updateGearButton, 0);
-        };
+        this.headerObserver = new MutationObserver(function() {
+            updateGearButton();
+        });
+        this.headerObserver.observe(this.masterViewHeader, {
+          childList: true
+        });
         updateGearButton();
         return true;
       }
@@ -219,32 +209,37 @@
         this._gearButtonAnchor.click();
       }
     },
-
-    // Gear menu handlers:
-    // _handleChangeFolderClick: function()
-    // _handleLogOut: function()
-    // _handleReportBugClick: function()
-    // _handleSettingsClick: function()
-    // _handleShowViewClick: function()
-
+ 
     showSettings: function() {
-      // this.openGearMenu(); return;
-      if (this.gearButton) {
-        this.gearButton._handleSettingsClick(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));
-      }
+      this._gearButtonAnchor.click();
+      this._gearButtonAnchor.click();
+      var menuItem = last(document.querySelectorAll("ul[role='menu']")).querySelector("li:first-child a");
+      menuItem.click();
+    },
+ 
+    showInbox: function() {
+      require('MessengerActions').changeMasterView(require('MessengerView').MASTER.RECENT);
+      require('MessengerActions').changeFolder(require('MessagingTag').INBOX);
     },
  
     showMessageRequests: function() {
-      if (this.gearButton) {
-        this.gearButton._handleChangeFolderClick(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));
-      }
+      require('MessengerActions').changeMasterView(require('MessengerView').MASTER.RECENT);
+      require('MessengerActions').changeFolder(require('MessagingTag').PENDING);
     },
 
     logOut: function() {
-      if (this.gearButton) {
-        this.gearButton._handleLogOut(new MouseEvent('click', {view:window, bubbles:true, cancelable:true}));
-      }
+      this._gearButtonAnchor.click();
+      this._gearButtonAnchor.click();
+      var menuItem = last(document.querySelectorAll("ul[role='menu']")).querySelector("li:last-child a");
+      menuItem.click();
     },
+ 
+    showActiveFriends: function() {
+      require('MessengerActions').changeMasterView(require('MessengerView').MASTER.RECENT);
+      require('MessengerActions').changeFolder(require('MessagingTag').INBOX);
+      require('MessengerActions').changeMasterView(require('MessengerView').MASTER.PEOPLE);
+    },
+
 
     composeNewMessage: function() {
       document.querySelector('a[href="/new"]').dispatchEvent(
@@ -407,6 +402,12 @@
     var css = document.createElement('style');
     css.type = 'text/css';
     var style = 'body { overflow: hidden; }';
+ 
+    // Make gear always hidden
+    style += "div[role='banner'] > div:first-child { visibility: hidden; }";
+ 
+    // Make back button always hidden
+    style += "div[role='banner'] > a:first-child { visibility: hidden; }";
     css.appendChild(document.createTextNode(style));
     document.getElementsByTagName('head')[0].appendChild(css);
  
@@ -450,7 +451,7 @@
         return styles.queries[size] ? styles.queries[size].query.matches : null;
       }
     };
-    
+ 
     // Add styles and media query listeners to a React component
     var styleComponent = function(reactClass, queryResponses, options) {
       var tryFindUIComponent = function() {
@@ -503,20 +504,13 @@
         observer.observe(document.body, { childList: true });
       }
     }
-    styleComponent("MessengerMasterView", {
+    styleComponent("Messenger", {
       "(max-width: 640px)": function(el, matches) {
+
         // Allow sidebar to go smaller
-        el.parentNode.style.minWidth = matches ? null : "280px";
-      }
-    });
-    styleComponent("MessengerMasterViewHeader", {
-      "(max-width: 640px)": function(el, matches) {
-        // Make banner contain children correctly
-        el.style.display = matches ? "block" : null;
-        
-        // Move over New Conversation button
+        el.firstElementChild.style.minWidth = matches ? null : "280px";
         var newConversation = el.querySelector("a[href='/new']");
-        newConversation.style.marginRight = matches ? "-49px" : null;
+        newConversation.style.marginRight = matches ? "-109px" : null;
         newConversation.style.float = matches ? "right" : null;
         newConversation.style.position = matches ? "relative" : null;
         newConversation.style.zIndex = matches ? "300" : null;
@@ -534,8 +528,12 @@
               child.style.backgroundColor = matches ? color : null;
               child.style.border = matches ? ("2px solid " + color) : null;
               child.style.borderRadius = matches ? "50%" : null;
-              child.style.marginTop = matches ? "-44px" : null;
-              child.style.marginRight = matches ? "-2px" : null;
+              child.style.marginTop = matches ? "-34px" : null;
+              if (child.tagName == "IMG") {
+                child.style.marginRight = matches ? "-1px" : null;
+              } else {
+                child.style.marginLeft = matches ? "-3px" : null;
+              }
             }
           );
         });
@@ -553,19 +551,13 @@
         el.style.borderLeft = matches ? "0" : null;
         el.querySelector(":scope > div:last-child").style.borderLeft =
           matches ? "1px solid rgba(0, 0, 0, .20)" : null;
-      }
-    });
-    styleComponent("MessengerDetailViewHeaderContainer", {
-      "(max-width: 640px)": function(el, matches) {
-        // Move over search bar to accomodate New Conversation button
-        el.style.paddingLeft = matches ? "49px" : null;
         
         // Make sure conversation title doesn't overlap buttons
         var titleText = el.querySelector("h2");
         if (titleText) {
           titleText.parentNode.style.paddingRight = matches ? "41px" : null;
           titleText.parentNode.style.boxSizing = matches ? "border-box" : null;
-          titleText.parentNode.style.paddingLeft = matches ? "7px" : null;
+          titleText.parentNode.style.paddingLeft = matches ? "41px" : null;
           titleText.parentNode.style.minWidth = matches ? "100%" : null;
           titleText.style.overflow = matches ? "hidden" : null;
           titleText.style.textOverflow = matches ? "ellipsis" : null;

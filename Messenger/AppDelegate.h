@@ -19,6 +19,9 @@ int FBMOSX1010OrNewer();
 - (IBAction)selectNewerConversation:(id)sender;
 - (BOOL)canSelectOlderConversation;
 - (IBAction)selectOlderConversation:(id)sender;
+- (void)showActiveFriends;
+- (void)showInbox;
+- (void)showMessageRequests;
 
 - (void)windowDidBecomeKey:(NSWindow*)w;
 // [self evaluateJavaScript:@"try { (typeof MacMessenger != 'undefined') && MacMessenger.focusComposer(); } catch(_) {}"];

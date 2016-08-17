@@ -6,6 +6,31 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.1.9</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes a UI issue where the settings gear icon of messenger.com would be visible behind the window controls</li>
+          <li>
+            Adds keyboard shortcuts for switching the sidebar (available via "View" main menu)
+            <ul>
+              <li>Inbox: ⌃⌘1 (alternatively ⌘⌥1)</li>
+              <li>Active friends: ⌃⌘2 (alternatively ⌘⌥2)</li>
+              <li>Message requests: ⌃⌘3 (alternatively ⌘⌥3)</li>
+            </ul>
+          </li>
+          <li>Fixes a bug preventing preferences view from opening after returning from "active friends" view</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 17 Aug 2016 08:58:16 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="ee2d21f7e322294f"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.9.1471449462-ee2d21f7e322294f.zip"
+        sparkle:version="0.1.9.1471449462"
+        length="2116119"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.1.8</title>
       <description><![CDATA[
         <ul>

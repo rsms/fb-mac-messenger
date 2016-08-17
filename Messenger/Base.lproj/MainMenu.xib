@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11129.15" systemVersion="15G31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11129.15"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -283,21 +283,39 @@
                     <menu key="submenu" title="View" id="g4l-96-7Lq" userLabel="View">
                         <items>
                             <menuItem title="Inbox" keyEquivalent="1" id="VkS-48-Y7U" userLabel="Inbox">
-                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
                                     <action selector="showInbox:" target="Voe-Tx-rLC" id="pym-rF-Xcg"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Inbox" alternate="YES" keyEquivalent="1" id="9C8-g6-FGH" userLabel="Inbox">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showInbox:" target="Voe-Tx-rLC" id="0M5-JI-Ey7"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Active Friends" keyEquivalent="2" id="bfM-KS-13L" userLabel="Active Friends">
-                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
                                     <action selector="showActiveFriends:" target="Voe-Tx-rLC" id="hGV-yV-tAz"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Active Friends" alternate="YES" keyEquivalent="2" id="cht-LN-YC5" userLabel="Active Friends">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showActiveFriends:" target="Voe-Tx-rLC" id="iof-GH-341"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Message Requests" keyEquivalent="3" id="8Xh-P6-fno">
-                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
                                     <action selector="showMessageRequests:" target="Voe-Tx-rLC" id="irK-zd-aru"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Message Requests" alternate="YES" keyEquivalent="3" id="a1m-gm-PeZ">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showMessageRequests:" target="Voe-Tx-rLC" id="N27-4B-RPD"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="a1P-YN-Nhb"/>

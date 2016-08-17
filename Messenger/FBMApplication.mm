@@ -5,10 +5,14 @@
 
 - (void)sendEvent:(NSEvent*)event {
   // Cmd-1 .. Cmd-9
-  if (event.type == NSKeyDown && (event.modifierFlags & NSCommandKeyMask)) {
+  auto flags = event.modifierFlags;
+  if (event.type == NSKeyDown && (flags & NSCommandKeyMask)) {
     auto chars = event.charactersIgnoringModifiers;
     if (chars.length == 1) {
-      if (event.modifierFlags & NSAlternateKeyMask) {
+      if ((flags & NSAlternateKeyMask) || (flags & NSControlKeyMask)) {
+        // cmd-opt-1, cmd-ctrl-1 => show inbox
+        // cmd-opt-2, cmd-ctrl-2 => show active friends
+        // cmd-opt-3, cmd-ctrl-3 => show message requests
         switch ([chars characterAtIndex:0]) {
           case u'1': {
             AppDelegate* delegate = (AppDelegate*)[self delegate];
@@ -23,7 +27,6 @@
           case u'3': {
             AppDelegate* delegate = (AppDelegate*)[self delegate];
             [delegate showMessageRequests];
-            NSLog(@"got here");
             break;
           }
           default: {

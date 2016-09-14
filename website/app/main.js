@@ -403,6 +403,9 @@
     css.type = 'text/css';
     var style = 'body { overflow: hidden; }';
  
+    // Hide Get App banner
+    style += "._s15 { display: none; }";
+
     // Make gear always hidden
     style += "div[role='banner'] > div:first-child { visibility: hidden; }";
  

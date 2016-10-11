@@ -11,6 +11,7 @@
 #import "MEmbeddedRes.h"
 #import "MMFakeDragInfo.h"
 #import "FBMWindow.h"
+#import "PFMoveApplication.h"
 
 extern NSString* kMainJSDataURL; // implemented in generated file MainJSDataURL.m
 
@@ -19,7 +20,7 @@ extern NSString* kMainJSDataURL; // implemented in generated file MainJSDataURL.
 static BOOL kCFIsOSX_10_10_orNewer;
 
 static void __attribute__((constructor))_init() {
-  kCFIsOSX_10_10_orNewer = floor(kCFCoreFoundationVersionNumber) > kCFCoreFoundationVersionNumber10_9;
+  kCFIsOSX_10_10_orNewer = kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber10_10;
 }
 
 int FBMOSX1010OrNewer() {
@@ -83,6 +84,12 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
+
+  #ifndef DEBUG
+  // Ask to be moved into Applications folder
+  PFMoveToApplicationsFolderIfNecessary();
+  #endif
+
   // Register ourselves as the default-user-notification center delegate
   [NSUserNotificationCenter defaultUserNotificationCenter].delegate = self;
 
@@ -92,42 +99,6 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
   // Create main window
   _window = [FBMWindow new];
-//  NSUInteger windowStyle = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
-//  if (kCFIsOSX_10_10_orNewer) {
-//    windowStyle |= NSFullSizeContentViewWindowMask;
-//  }
-//  NSSize frameSize = {800,600};
-//  _window = [[FBMWindow alloc] initWithContentRect:{{0,0},frameSize} styleMask:windowStyle backing:NSBackingStoreBuffered defer:YES];
-//  if (kCFIsOSX_10_10_orNewer) {
-//    _window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
-//    _window.titleVisibility = NSWindowTitleHidden;
-//    _window.titlebarAppearsTransparent = YES;
-//    
-//    #if USE_BLURRY_BACKGROUND
-//    auto* fxview = [[NSVisualEffectView alloc] initWithFrame:{{0,0},frameSize}];
-//    fxview.blendingMode = NSVisualEffectBlendingModeBehindWindow;
-//    fxview.material = NSVisualEffectMaterialAppearanceBased;
-//    fxview.state = NSVisualEffectStateFollowsWindowActiveState;
-//    _window.contentView = fxview;
-//    #endif
-//  }
-//  _window.collectionBehavior = NSWindowCollectionBehaviorFullScreenPrimary;
-//
-//  if ([ud boolForKey:@"moves-with-active-space"]) {
-//    _window.collectionBehavior |= NSWindowCollectionBehaviorMoveToActiveSpace;
-//  }
-//  _window.minSize = {320,300};
-//  _window.releasedWhenClosed = NO;
-//  _window.delegate = self;
-//  [_window center];
-//  _window.frameAutosaveName = @"main";
-//  _window.movableByWindowBackground = YES;
-//  _titlebarView = [_window standardWindowButton:NSWindowCloseButton].superview;
-//  
-//  _draggableView = [[DraggableView alloc] init];
-//  _draggableView.draggingWindow = _window;
-//  
-//  [self updateWindowTitlebar];
 
   // Web prefs
   auto wp = [[WebPreferences alloc] initWithIdentifier:@"main"];

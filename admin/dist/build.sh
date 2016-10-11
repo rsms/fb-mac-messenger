@@ -32,7 +32,7 @@ xcodebuild -project ${PROJ}.xcodeproj -target ${PROJ} -configuration ${BUILD_CON
 
 echo 'Signing'
 # See https://developer.apple.com/library/mac/documentation/IDEs/Conceptual/AppDistributionGuide/DistributingApplicationsOutside/DistributingApplicationsOutside.html
-/usr/bin/codesign --force --sign 'Developer ID Application' --deep "${APP_BUNDLE}"
+/usr/bin/codesign --force --sign 'Developer ID Application: Rasmus' --deep "${APP_BUNDLE}"
 
 pushd "${PRODUCT_DIR}" >/dev/null
   zip -r -q --symlinks "${ARCHIVE}" "${APP_NAME}"

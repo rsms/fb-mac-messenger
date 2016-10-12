@@ -505,10 +505,10 @@
       }
     }
     styleComponent("Messenger", {
-      "(max-width: 640px)": function(el, matches) {
+      "(max-width: 803px)": function(el, matches) {
 
         // Allow sidebar to go smaller
-        el.firstElementChild.style.minWidth = matches ? null : "280px";
+        el.firstElementChild.style.minWidth = matches ? "0" : "280px";
         var newConversation = el.querySelector("a[href='/new']");
         newConversation.style.marginRight = matches ? "-109px" : null;
         newConversation.style.float = matches ? "right" : null;
@@ -517,7 +517,7 @@
       }
     });
     styleComponent("MessengerRecentContainer", {
-      "(max-width: 640px)": function(el, matches) {
+      "(max-width: 803px)": function(el, matches) {
         Array.prototype.forEach.call(el.querySelectorAll("ul li"), function(thread) {
           Array.prototype.forEach.call(
             thread.querySelectorAll("div[aria-label='Conversation actions'], div[aria-label='Actions'] img"),
@@ -546,7 +546,7 @@
       subtree: true
     });
     styleComponent("MessengerDetailView", {
-      "(max-width: 640px)": function(el, matches) {
+      "(max-width: 803px)": function(el, matches) {
         // Move border from entire right pane to just the conversation
         el.style.borderLeft = matches ? "0" : null;
         el.querySelector(":scope > div:last-child").style.borderLeft =
@@ -566,11 +566,15 @@
       }
     });
     styleComponent("MessengerBanner", {
-      "(max-width: 640px)": function(el, matches) {
+      "(max-width: 803px)": function(el, matches) {
         el.style.display = 'none';
       }
     });
- 
+    styleComponent("MessengerThreadInfoPanelContainer", {
+      "(max-width: 803px)": function(el, matches) {
+        el.style.webkitBoxDirection = 'normal';
+      }
+    });
 
   };
   document.addEventListener('readystatechange', onDocumentLoaded);

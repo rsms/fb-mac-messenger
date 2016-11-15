@@ -377,17 +377,6 @@
     };
     MacMessenger.locationChanged(document.location.href);
 
-    // This fixes an annoying "beep" sound in the message composer
-    document.body.addEventListener('keypress', function (e) {
-      if (e.target.contentEditable && !e.metaKey) {
-        e.preventDefault();
-        e.stopPropagation();
-        var textEvent = document.createEvent('TextEvent');
-        textEvent.initTextEvent('textInput', true, true, null, String.fromCharCode(e.which));
-        e.target.dispatchEvent(textEvent);
-      }
-    }, true);
-
     // Find settings gear
     if (!MacMessenger.tryFindSettingsGear()) {
       var observer = new MutationObserver(function(mutations) {

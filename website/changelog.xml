@@ -6,6 +6,23 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.1.10</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes slow typing of messages when talking with Facebook Pages or Messenger Bots</li>
+          <li>Adds "Move to Applications" prompt to avoid potential issues with macOS Gatekeeper Path Randomization (aka app translocation)</li>
+        </ul>
+      ]]></description>
+      <pubDate>Tue, 15 Nov 2016 09:29:43 -0800</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="6c4e6bd63b9f663c"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.10.1479230589-6c4e6bd63b9f663c.zip"
+        sparkle:version="0.1.10.1479230589"
+        length="2122158"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.1.9</title>
       <description><![CDATA[
         <ul>

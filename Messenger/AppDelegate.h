@@ -22,6 +22,7 @@ int FBMOSX1010OrNewer();
 - (void)showActiveFriends;
 - (void)showInbox;
 - (void)showMessageRequests;
+- (IBAction)composeNewMessage:(id)sender;
 
 - (void)windowDidBecomeKey:(NSWindow*)w;
 // [self evaluateJavaScript:@"try { (typeof MacMessenger != 'undefined') && MacMessenger.focusComposer(); } catch(_) {}"];

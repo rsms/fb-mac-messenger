@@ -260,7 +260,11 @@
     },
 
     currentConversationItem: function() {
-      return document.querySelector('div[aria-label="Conversations"] li[aria-relevant]');
+      // when a conversation is unread, it has both aria-relevant _and_ aria-live.
+      // so we are looking for the element with aria-relevant but _not_ aria-live, _unless_ there's only one aria-relevant (then it's selected and unread).
+      var item = document.querySelector('div[aria-label="Conversations"] li[aria-relevant]:not([aria-live])');
+      if (!item) item = document.querySelector('div[aria-label="Conversations"] li[aria-relevant]');
+      return item;
     },
 
     canSelectNewerConversation: function () {

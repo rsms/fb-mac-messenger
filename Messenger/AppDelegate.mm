@@ -119,7 +119,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   
   ENABLE(localStorageEnabled);
   ENABLE(databasesEnabled);
-  ENABLE(webGLEnabled);
+  //ENABLE(webGLEnabled);
   
   // Unofficial/Private settings
   ENABLE(acceleratedCompositingEnabled);

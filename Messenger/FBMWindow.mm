@@ -19,6 +19,19 @@
 
 
 
+@interface ContentView : NSView {}
+@property (nonatomic, weak) NSWindow* draggingWindow;
+@end
+
+@implementation ContentView
+- (void)keyDown:(NSEvent*)event {
+  // Simply having this event handler mutes the audible bell that otherwise
+  // is heard when a keyboard event bubbles out from the webview
+}
+@end
+
+
+
 @implementation FBMWindow {
   NSView*              _titlebarView; // NSTitlebarView
   DraggableView*       _draggableView;
@@ -36,15 +49,8 @@
     self.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
     self.titleVisibility = NSWindowTitleHidden;
     self.titlebarAppearsTransparent = YES;
-    
-#if USE_BLURRY_BACKGROUND
-    auto* fxview = [[NSVisualEffectView alloc] initWithFrame:{{0,0},frameSize}];
-    fxview.blendingMode = NSVisualEffectBlendingModeBehindWindow;
-    fxview.material = NSVisualEffectMaterialAppearanceBased;
-    fxview.state = NSVisualEffectStateFollowsWindowActiveState;
-    self.contentView = fxview;
-#endif
   }
+  self.contentView = [[ContentView alloc] initWithFrame:{{0,0},frameSize}];
   self.collectionBehavior = NSWindowCollectionBehaviorFullScreenPrimary;
   
   auto ud = [NSUserDefaults standardUserDefaults];

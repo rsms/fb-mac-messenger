@@ -162,7 +162,7 @@
 
   window.MacMessenger = {
     tryFindSettingsGear: function() {
-      var main = findReactDOMNode({name: "Messenger"});
+      var main = findReactDOMNode({name: "MessengerReact"});
       if (main) this.masterViewHeader = main.querySelector("div[role='banner']");
       var updateGearButton = (function() {
         this.gearButtonNode = this.masterViewHeader.firstElementChild;

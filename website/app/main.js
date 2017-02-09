@@ -260,7 +260,7 @@
     },
 
     currentConversationItem: function() {
-      return document.querySelector('li[role="log"]');
+      return document.querySelector('li[aria-relevant="additions text"]');
     },
 
     canSelectNewerConversation: function () {
@@ -270,7 +270,7 @@
     selectNewerConversation: function () {
       var newer = this.currentConversationItem().previousElementSibling;
       if (newer) {
-        newer.querySelector('[data-reactid]:first-child').click();
+        newer.querySelector('a').click();
       }
     },
 
@@ -281,7 +281,7 @@
     selectOlderConversation: function () {
       var newer = this.currentConversationItem().nextElementSibling;
       if (newer) {
-        newer.querySelector('[data-reactid]:first-child').click();
+        newer.querySelector('a').click();
       }
     },
 

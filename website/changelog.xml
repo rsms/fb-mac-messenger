@@ -6,6 +6,22 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.1.11</title>
+      <description><![CDATA[
+        <ul>
+          <li>Uses less energy on computers with multiple graphics cards (like some MacBook Pro machines) by using integrated low-performance GPU by default.</li>
+        </ul>
+      ]]></description>
+      <pubDate>Sat, 11 Feb 2017 13:55:38 -0800</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="420db4a3b3b64255"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.11.1484623553-420db4a3b3b64255.zip"
+        sparkle:version="0.1.11.1484623553"
+        length="2122175"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.1.10</title>
       <description><![CDATA[
         <ul>

@@ -6,6 +6,25 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.1.12</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes an issue where the app—while being in the background—would sometimes prevent user notifications from showing up since the (messenger.com) app thought it was still active.</li>
+          <li>Fixes an issue with small window where a horizontal scroll bar would appear when the window got really narrow.</li>
+          <li>Fixes an issue where settings would not open via main menu items or keyboard shortcut (⌘,)</li>
+          <li>Fixes an issue with shortcuts for navigating to the next and previous conversation</li>
+        </ul>
+      ]]></description>
+      <pubDate>Fri, 17 Feb 2017 18:19:12 -0800</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="5622ec8fa60c38a1"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.12.1487384288-5622ec8fa60c38a1.zip"
+        sparkle:version="0.1.12.1487384288"
+        length="2122688"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.1.11</title>
       <description><![CDATA[
         <ul>

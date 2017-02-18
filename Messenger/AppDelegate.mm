@@ -119,7 +119,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   
   ENABLE(localStorageEnabled);
   ENABLE(databasesEnabled);
-  ENABLE(webGLEnabled);
+  DISABLE(webGLEnabled);
   
   // Unofficial/Private settings
   ENABLE(acceleratedCompositingEnabled);
@@ -593,6 +593,14 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 - (void)windowDidBecomeKey:(NSWindow*)w {
   if (w == _window) {
     [self evaluateJavaScript:@"try { (typeof MacMessenger != 'undefined') && MacMessenger.focusComposer(); } catch(_) {}"];
+    [self evaluateJavaScript:@"try { verifyWindowActive && verifyWindowActive(); } catch(_) {}"];
+  }
+}
+
+- (void)windowDidResignKey:(NSWindow*)w {
+  if (w == _window) {
+    // Make sure a blur event is always triggered when the window becomes inactive
+    [self evaluateJavaScript:@"try { verifyWindowInactive && verifyWindowInactive(); } catch(_) {}"];
   }
 }
 

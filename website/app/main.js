@@ -346,6 +346,20 @@
     },
 
   };
+ 
+  window.windowActive = false;
+  window.addEventListener('focus', function() { window.windowActive = true; });
+  window.addEventListener('blur', function() { window.windowActive = false; });
+  window.verifyWindowActive = function() {
+    setTimeout(function() {
+      if (!window.windowActive) window.dispatchEvent(new Event('focus'));
+    }, 10);
+  };
+  window.verifyWindowInactive = function() {
+    setTimeout(function() {
+      if (window.windowActive) window.dispatchEvent(new Event('blur'));
+    }, 10);
+  };
 
 
   // Things that need the DOM to be loaded

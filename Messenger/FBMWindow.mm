@@ -158,6 +158,9 @@
   [((AppDelegate*)NSApp.delegate) windowDidBecomeKey:self];
 }
 
+- (void)windowDidResignKey:(NSNotification*)notification {
+  [((AppDelegate*)NSApp.delegate) windowDidResignKey:self];
+}
 
 - (void)windowDidResize:(NSNotification *)notification {
   if (self.isVisible) {

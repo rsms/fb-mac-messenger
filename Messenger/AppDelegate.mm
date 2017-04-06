@@ -17,6 +17,8 @@ extern NSString* kMainJSDataURL; // implemented in generated file MainJSDataURL.
 
 #define USE_BLURRY_BACKGROUND 0
 
+static NSString* kDefaultWindowTitle = @"Messenger";
+
 static BOOL kCFIsOSX_10_10_orNewer;
 
 static void __attribute__((constructor))_init() {
@@ -83,6 +85,9 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   BOOL                 _needsJSInjection;
 }
 
+const CGFloat kTitlebarHeightAtDefaultScale = 50;
+
+
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
 
   #ifndef DEBUG
@@ -98,7 +103,7 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   [ud registerDefaults:@{@"WebContinuousSpellCheckingEnabled": @YES}];
 
   // Create main window
-  _window = [FBMWindow new];
+  _window = [[FBMWindow alloc] initWithTitlebarHeight:kTitlebarHeightAtDefaultScale];
 
   // Web prefs
   auto wp = [[WebPreferences alloc] initWithIdentifier:@"main"];
@@ -183,6 +188,8 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
   _webViewZoomController = [[WebViewZoomController alloc] initWithWebView:webView userDefaults:[NSUserDefaults standardUserDefaults]];
   [_webViewZoomController restoreSavedZoomLevels];
+  [_webViewZoomController addObserver:self forKeyPath:@"zoomLevel" options:0 context:nil];
+  [self updateAfterZoomLevelChange];
   
   // Dim effect view
   _curtainView = [[NSView alloc] initWithFrame:[_window.contentView bounds]];
@@ -275,6 +282,65 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
 - (void)dealloc {
   [self disableNetReachObservation];
+  [_webViewZoomController removeObserver:self forKeyPath:@"zoomLevel" context:nil];
+}
+
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+  assert([keyPath isEqualToString:@"zoomLevel"]); // change to if stmt if observing more things
+  [self updateAfterZoomLevelChange];
+}
+
+
+- (void)updateAfterZoomLevelChange {
+  CGFloat titlebarHeight = kTitlebarHeightAtDefaultScale;
+  switch (_webViewZoomController.zoomLevel) {
+    case -3: {
+      // 50% -- 50px = 25px
+      titlebarHeight = titlebarHeight * 0.5; break;
+    }
+    case -2: {
+      // 75% -- 50px = 38px
+      titlebarHeight = titlebarHeight * 0.75; break;
+    }
+    case -1: {
+      // 85% -- 50px = 43px
+      titlebarHeight = titlebarHeight * 0.85; break;
+    }
+    // 0: 100% -- 50px
+    case 1: {
+      // 115% -- 50px = 58px
+      titlebarHeight = titlebarHeight * 1.15; break;
+    }
+    case 2: {
+      // 125% -- 50px = 63px
+      titlebarHeight = titlebarHeight * 1.25; break;
+    }
+    case 3: {
+      // 150% -- 50px = 75px
+      titlebarHeight = titlebarHeight * 1.50; break;
+    }
+    case 4: {
+      // 175% -- 50px = 88px
+      titlebarHeight = titlebarHeight * 1.75; break;
+    }
+    case 5: {
+      // 200% -- 50px = 100px
+      titlebarHeight = titlebarHeight * 2; break;
+    }
+    case 6: {
+      // 250% -- 50px = 125px
+      titlebarHeight = titlebarHeight * 2.5; break;
+    }
+    default: {
+      if (titlebarHeight < 0) {
+        titlebarHeight = ceil(titlebarHeight * 0.25);
+      } else if (titlebarHeight < 0) {
+        titlebarHeight = ceil(titlebarHeight * 3);
+      }
+    }
+  }
+  _window.titlebarHeight = titlebarHeight;
 }
 
 
@@ -455,13 +521,23 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   }
 }
 
-- (void)showActiveFriends {
-  [self evaluateJavaScript:@"MacMessenger.showActiveFriends()"];
+- (IBAction)openMainMenu:(id)sender {
+  [self evaluateJavaScript:@"MacMessenger.openMainMenu()"];
 }
-- (void) showInbox {
+
+- (IBAction)showInbox:(id)sender {
   [self evaluateJavaScript:@"MacMessenger.showInbox()"];
 }
-- (void)showMessageRequests {
+
+- (IBAction)showActiveFriends:(id)sender {
+  [self evaluateJavaScript:@"MacMessenger.showActiveFriends()"];
+}
+
+- (IBAction)showArchivedThreads:(id)sender {
+  [self evaluateJavaScript:@"MacMessenger.showArchivedThreads()"];
+}
+
+- (IBAction)showMessageRequests:(id)sender {
   [self evaluateJavaScript:@"MacMessenger.showMessageRequests()"];
 }
 
@@ -477,14 +553,6 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
 - (IBAction)showPreferences:(id)sender {
   [self evaluateJavaScript:@"MacMessenger.showSettings()"];
-}
-
-- (IBAction)showActiveFriends:(id)sender {
-  [self showActiveFriends];
-}
-
-- (IBAction)showInbox:(id)sender {
-  [self showInbox];
 }
 
 
@@ -506,11 +574,6 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
 
 - (IBAction)showPrivacyPolicy:(id)sender {
   [self showWebViewWindowWithID:@"privacy-policy" title:@"Messenger Privacy Policy" URL:@"https://www.facebook.com/help/cookies"];
-}
-
-
-- (IBAction)showMessageRequests:(id)sender {
-  [self showMessageRequests];
 }
 
 
@@ -542,6 +605,9 @@ static void NetReachCallback(SCNetworkReachabilityRef target,
   [window center];
   window.frameAutosaveName = identifier;
   window.movableByWindowBackground = YES;
+  if (title.length == 0) {
+    title = kDefaultWindowTitle;
+  }
   window.title = title;
   if (kCFIsOSX_10_10_orNewer) {
     window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
@@ -718,7 +784,11 @@ JSValueRef JSAPI_SetMainWindowTitle(JSContextRef ctx,
                                     JSValueRef* exception)
 {
   if (argc > 0) {
-    ((AppDelegate*)NSApp.delegate).mainWindow.title = JSClass::NSStringFromJSValue(ctx, arguments[0]);
+    auto title = JSClass::NSStringFromJSValue(ctx, arguments[0]);
+    if (title.length == 0) {
+      title = kDefaultWindowTitle;
+    }
+    ((AppDelegate*)NSApp.delegate).mainWindow.title = title;
   }
   return JSValueMakeUndefined(ctx);
 }
@@ -830,23 +900,18 @@ JSValueRef JSAPI_HideMainWindowTitlebar(
      [NSString stringWithFormat:@""
       "window.MacMessengerVersion = '%@';"
       "window.MacMessengerGitRev = '%@';"
+      "(function(){"
       "function injectMainJS() {"
-      "  var pe = document.head || document.documentElement;"
-      "  if (pe) {"
-      "    var script = document.createElement('script');"
-      "    script.src = '%@';"
-      "    script.async = true;"
-      "    pe.appendChild(script);"
-      "    return true;"
-      "  }"
+      "  var pe = document.head;"
+      "  if (!pe) { console.log('injectMainJS retry'); return setTimeout(injectMainJS, 10); }"
+      "  var script = document.createElement('script');"
+      "  script.src = '%@';"
+      "  script.async = true;"
+      "  pe.appendChild(script);"
+      "  return true;"
       "}"
-      "if (!injectMainJS()) {"
-      "  new MutationObserver(function() {"
-      "    if (injectMainJS()) {"
-      "      this.disconnect();"
-      "    }"
-      "  }).observe(document, { attributes: false, childList: true, characterData: false });"
-      "}",
+      "injectMainJS();"
+      "})();",
       bundleInfo[@"CFBundleShortVersionString"],
       bundleInfo[@"GitRev"],
       mainJSURLString]

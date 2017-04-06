@@ -11,9 +11,6 @@ static NSString * const zoomKey = @"WebViewZoomController zoomLevel";
 @property (nonatomic, weak) WebView *webView;
 @property (nonatomic, strong) NSUserDefaults *userDefaults;
 
-@property (nonatomic) NSInteger textSizeLevel;
-@property (nonatomic) NSInteger zoomLevel;
-
 @end
 
 

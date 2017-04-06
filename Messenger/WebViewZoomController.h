@@ -7,6 +7,8 @@
 
 - (void)restoreSavedZoomLevels;
 
+@property (nonatomic) NSInteger textSizeLevel;
+@property (nonatomic) NSInteger zoomLevel;
 
 #pragma mark - WebView Proxy API
 

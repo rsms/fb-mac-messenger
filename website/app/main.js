@@ -73,10 +73,7 @@
       // Called when the contents of the master view header changes
 
       // Find main menu button (if it has been recreated) and hide it if needed
-      if (!M.hideMainMenuButton()) {
-        // Find back button and hide it if needed
-        // M.updateMainBackButton()
-      }
+      M.getMainMenuButton()
 
       // var header = M.getMasterViewHeader()
       // if (header) {
@@ -88,12 +85,21 @@
       // } else console.log('no masterTitle')
     },
 
+    _lastMainMenuButton: null,
+
     getMainMenuButton: function() {
       var header = M.getMasterViewHeader()
       if (!header) {
         return null
       }
-      return header.querySelector('div:first-child .uiPopover a[role="button"]')
+      var mainMenuButton = header.querySelector('div:first-child .uiPopover a[role="button"]')
+      if (M._lastMainMenuButton !== mainMenuButton) {
+        M._lastMainMenuButton = mainMenuButton
+        if (mainMenuButton) {
+          mainMenuButton.style.visibility = 'hidden'
+        }
+      }
+      return mainMenuButton
     },
 
     getMainBackButton: function() {
@@ -102,24 +108,6 @@
         return null
       }
       return header.querySelector('a:first-child[role="button"]')
-    },
-
-    // updateMainBackButton: function() {
-    //   var b = M.getMainBackButton()
-    //   if (!b) {
-    //     return null
-    //   }
-    //   b.style.visibility = 'hidden'
-    //   return b
-    // },
-
-    hideMainMenuButton: function() {
-      var b = M.getMainMenuButton()
-      if (!b) {
-        return null
-      }
-      b.style.visibility = 'hidden'
-      return b
     },
 
     openMainMenu: function() {
@@ -174,17 +162,13 @@
         }
       };
 
+      var index = 0
       return {
-        [Symbol.iterator]: function() {
-          var index = 0
-          return {
-            next: function() {
-              var menuEl = menuElements[index++]
-              return menuEl ? { done: false, value: new MenuObj(menuEl) }
-                            : { done: true,  value: null }
-            },
-          }
-        }
+        next: function() {
+          var menuEl = menuElements[index++]
+          return menuEl ? { done: false, value: new MenuObj(menuEl) }
+                        : { done: true,  value: null }
+        },
       }
     },
 

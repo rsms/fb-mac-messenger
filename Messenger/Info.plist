@@ -19,9 +19,9 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.1.12.1487384288</string>
+	<string>0.1.12.1491443076</string>
 	<key>GitRev</key>
-	<string>5622ec8fa60c38a113fdaec754e410025d22e31f</string>
+	<string>d62d5b652edc5187346df55309e502ad8911b684</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSAppTransportSecurity</key>

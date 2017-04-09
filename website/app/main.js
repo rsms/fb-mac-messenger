@@ -290,7 +290,7 @@
     },
 
     focusSearchField: function() {
-      document.querySelector('input[aria-autocomplete="list"]').focus();
+      document.querySelector('input[spellcheck="false"]').focus();
     },
 
     focusComposer: function() {

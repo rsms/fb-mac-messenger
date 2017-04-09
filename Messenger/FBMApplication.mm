@@ -13,20 +13,22 @@
         // cmd-opt-1, cmd-ctrl-1 => show inbox
         // cmd-opt-2, cmd-ctrl-2 => show active friends
         // cmd-opt-3, cmd-ctrl-3 => show message requests
+        AppDelegate* appDelegate = (AppDelegate*)self.delegate;
         switch ([chars characterAtIndex:0]) {
           case u'1': {
-            AppDelegate* delegate = (AppDelegate*)[self delegate];
-            [delegate showInbox];
+            [appDelegate showInbox:nil];
             break;
           }
           case u'2': {
-            AppDelegate* delegate = (AppDelegate*)[self delegate];
-            [delegate showActiveFriends];
+            [appDelegate showActiveFriends:nil];
             break;
           }
           case u'3': {
-            AppDelegate* delegate = (AppDelegate*)[self delegate];
-            [delegate showMessageRequests];
+            [appDelegate showMessageRequests:nil];
+            break;
+          }
+          case u'4': {
+            [appDelegate showArchivedThreads:nil];
             break;
           }
           default: {

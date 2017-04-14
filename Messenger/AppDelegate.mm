@@ -124,11 +124,7 @@ const CGFloat kTitlebarHeightAtDefaultScale = 50;
   
   ENABLE(localStorageEnabled);
   ENABLE(databasesEnabled);
-<<<<<<< HEAD
-  //ENABLE(webGLEnabled);
-=======
   DISABLE(webGLEnabled);
->>>>>>> rsms/master
   
   // Unofficial/Private settings
   ENABLE(acceleratedCompositingEnabled);

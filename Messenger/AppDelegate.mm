@@ -455,6 +455,8 @@ const CGFloat kTitlebarHeightAtDefaultScale = 50;
 
 
 - (IBAction)reloadFromServer:(id)sender {
+  [self saveRetinaCookie];
+
   NSString* url = nil;
   if (_webView.mainFrame.DOMDocument != nil &&
       [_webView.mainFrame.DOMDocument.URL hasPrefix:@"https://www.messenger.com/"])
@@ -469,6 +471,31 @@ const CGFloat kTitlebarHeightAtDefaultScale = 50;
   _lastReloadDate = [NSDate date];
 }
 
+- (void)saveRetinaCookie {
+  if (_window.backingScaleFactor <= 1) return;
+
+  // Add the "dpr=2" cookie to our cookie storage so that it's sent with the request
+  // This cookie does not persist (probably gets overwritten), so it needs to be reset at every reload
+
+  NSURL* url = [NSURL URLWithString:@"https://www.messenger.com"];
+  NSHTTPCookieStorage* cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+  NSArray* cookies = [cookieStorage cookiesForURL:url];
+  if (!cookies) return;
+
+  NSDictionary* newCookieProperties = @{
+    NSHTTPCookieDomain: @".messenger.com",
+    NSHTTPCookiePath: @"/",
+    NSHTTPCookieName: @"dpr",
+    NSHTTPCookieValue: @"2",
+    NSHTTPCookieExpires: [NSDate dateWithTimeIntervalSinceNow:60*60*24*100],
+    NSHTTPCookieSecure: @YES
+  };
+
+  NSHTTPCookie* newCookie = [[NSHTTPCookie alloc] initWithProperties:newCookieProperties];
+
+  cookies = [cookies arrayByAddingObject:newCookie];
+  [cookieStorage setCookies:cookies forURL:url mainDocumentURL:nil];
+}
 
 - (IBAction)findPeopleAndGroups:(id)sender {
   // Give input focus to the search field
@@ -1014,6 +1041,12 @@ JSValueRef JSAPI_HideMainWindowTitlebar(
     [[NSApp dockTile] setBadgeLabel: notificationCount];
     _lastNotificationCount = notificationCount;
   }
+}
+
+- (void)webView:(WebView *)sender didReceiveServerRedirectForProvisionalLoadForFrame:(WebFrame *)frame {
+  // User will be redirected from messenger.com/login to messenger.com/ on app startup,
+  // save the retina cookie during this redirect to enable retina graphics without needing reloads
+  [self saveRetinaCookie];
 }
 
 

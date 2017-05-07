@@ -460,7 +460,7 @@ const CGFloat kTitlebarHeightAtDefaultScale = 50;
       [_webView.mainFrame.DOMDocument.URL hasPrefix:@"https://www.messenger.com/"])
   {
     NSLog(@"Reloading app");
-    url = _webView.mainFrame.DOMDocument.URL;
+    url = @"https://www.messenger.com/login";
   } else {
     url = @"https://www.messenger.com/login";
   }

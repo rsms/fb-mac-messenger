@@ -177,7 +177,7 @@
       var v = mit.next()
       return v.done ? null : v.value
     },
- 
+
     showSettings: function() {
       var ctxMenu = M.openMainMenu()
       if (ctxMenu) {
@@ -364,7 +364,7 @@
     },
 
   };
- 
+
   window.windowActive = false;
   window.addEventListener('focus', function() { window.windowActive = true; });
   window.addEventListener('blur', function() { window.windowActive = false; });
@@ -395,7 +395,10 @@
     // #146 Fix for vertical scrollbar appearing when mouse plugged in
     var css = document.createElement('style');
     css.type = 'text/css';
+
     var style = 'body { overflow: hidden; }'
+    style += '@media (max-width: 700px) { [aria-label="New Message"] { visibility: hidden; } }'
+
     css.appendChild(document.createTextNode(style));
     document.getElementsByTagName('head')[0].appendChild(css);
   }

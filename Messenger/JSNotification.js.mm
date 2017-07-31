@@ -51,7 +51,6 @@ struct JSNotification : JSClass {
       }
     }
 
-    notif.soundName = NSUserNotificationDefaultSoundName;
     notif.userInfo = @{@"isJSNotification": @(YES)};
     notif.identifier = JSNotificationsAddNotification(jsctx, jsobj, exc);
 

@@ -964,6 +964,10 @@ JSValueRef JSAPI_HideMainWindowTitlebar(
       "s.backgroundImage='url(%@)';",
       kErrorPNGDataURL]];
   }
+  
+  NSScrollView *mainScrollView = webView.mainFrame.frameView.documentView.enclosingScrollView;
+  [mainScrollView setVerticalScrollElasticity:NSScrollElasticityNone];
+  [mainScrollView setHorizontalScrollElasticity:NSScrollElasticityNone];
 }
 
 -(void)webView:(WebView *)webView didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {

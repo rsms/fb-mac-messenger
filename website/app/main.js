@@ -95,9 +95,6 @@
       var mainMenuButton = header.querySelector('div:first-child .uiPopover a[role="button"]')
       if (M._lastMainMenuButton !== mainMenuButton) {
         M._lastMainMenuButton = mainMenuButton
-        if (mainMenuButton) {
-          mainMenuButton.style.visibility = 'hidden'
-        }
       }
       return mainMenuButton
     },
@@ -396,6 +393,7 @@
     var css = document.createElement('style');
     css.type = 'text/css';
     var style = 'body { overflow: hidden; }'
+    style += 'div[role="banner"] a[role="button"]:first-child { visibility: hidden; }'
     css.appendChild(document.createTextNode(style));
     document.getElementsByTagName('head')[0].appendChild(css);
   }

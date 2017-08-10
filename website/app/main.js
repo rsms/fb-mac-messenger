@@ -394,6 +394,7 @@
     css.type = 'text/css';
     var style = 'body { overflow: hidden; }'
     style += 'div[role="banner"] a[role="button"]:first-child { visibility: hidden; }'
+    style += '@media(max-width: 700px) { div[role="banner"] a[href="/new"] { visibility: hidden; } }'
     css.appendChild(document.createTextNode(style));
     document.getElementsByTagName('head')[0].appendChild(css);
   }

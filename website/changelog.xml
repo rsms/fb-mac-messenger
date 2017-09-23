@@ -6,6 +6,26 @@
     <description>Most recent changes with links to updates</description>
     <language>en</language>
     <item>
+      <title>Messenger for Mac 0.1.13</title>
+      <description><![CDATA[
+        <ul>
+          <li>Fixes an issue when the window would just go blank, be just white without contents.</li>
+          <li>Adds "Archived Threads" shortcut to View menu ⌃⌘4 (alternatively ⌘⌥4)</li>
+          <li>Adds "Open Messenger Menu" shortcut to View menu for revealing the "gear menu."</li>
+          <li>Improves window zoom by adjusting the windows buttons (close, minimize, zoom) to match the zoom level</li>
+          <li>Improved start-up performance</li>
+        </ul>
+      ]]></description>
+      <pubDate>Wed, 05 Apr 2017 18:56:47 -0700</pubDate>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <enclosure
+        gitrev="7b1777b58fef0bf9"
+        url="https://fbmacmessenger.rsms.me/dist/Messenger-0.1.13.1491443794-7b1777b58fef0bf9.zip"
+        sparkle:version="0.1.13.1491443794"
+        length="2122020"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Messenger for Mac 0.1.12</title>
       <description><![CDATA[
         <ul>

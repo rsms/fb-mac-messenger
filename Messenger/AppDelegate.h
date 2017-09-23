@@ -19,9 +19,10 @@ int FBMOSX1010OrNewer();
 - (IBAction)selectNewerConversation:(id)sender;
 - (BOOL)canSelectOlderConversation;
 - (IBAction)selectOlderConversation:(id)sender;
-- (void)showActiveFriends;
-- (void)showInbox;
-- (void)showMessageRequests;
+- (IBAction)showActiveFriends:(id)sender;
+- (IBAction)showInbox:(id)sender;
+- (IBAction)showArchivedThreads:(id)sender;
+- (IBAction)showMessageRequests:(id)sender;
 - (IBAction)composeNewMessage:(id)sender;
 
 - (void)windowDidBecomeKey:(NSWindow*)w;

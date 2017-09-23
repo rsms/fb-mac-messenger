@@ -33,12 +33,15 @@
 
 
 @implementation FBMWindow {
-  NSView*              _titlebarView; // NSTitlebarView
-  DraggableView*       _draggableView;
+  NSView*        _titlebarView; // NSTitlebarView
+  DraggableView* _draggableView;
+  CGFloat        _titlebarHeight;
 }
 
+@synthesize titlebarHeight = _titlebarHeight;
 
-- (instancetype)init {
+
+- (instancetype)initWithTitlebarHeight:(CGFloat)titlebarHeight {
   NSUInteger windowStyle = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
   if (FBMOSX1010OrNewer()) {
     windowStyle |= NSFullSizeContentViewWindowMask;
@@ -67,10 +70,17 @@
   
   _draggableView = [[DraggableView alloc] init];
   _draggableView.draggingWindow = self;
-  
+
+  _titlebarHeight = titlebarHeight;
   [self updateWindowTitlebar];
   
   return self;
+}
+
+
+- (void)setTitlebarHeight:(CGFloat)titlebarHeight {
+  _titlebarHeight = titlebarHeight;
+  [self updateWindowTitlebar];
 }
 
 
@@ -83,7 +93,6 @@
 
 
 - (void)updateWindowTitlebar {
-  const CGFloat kTitlebarHeight = 50;
   const CGFloat kFullScreenButtonYOrigin = 3;
   auto windowFrame = self.frame;
   BOOL fullScreen = (self.styleMask & NSFullScreenWindowMask) == NSFullScreenWindowMask;
@@ -91,8 +100,8 @@
   // Set size of titlebar container
   auto titlebarContainerView = _titlebarView.superview;
   auto titlebarContainerFrame = titlebarContainerView.frame;
-  titlebarContainerFrame.origin.y = windowFrame.size.height - kTitlebarHeight;
-  titlebarContainerFrame.size.height = kTitlebarHeight;
+  titlebarContainerFrame.origin.y = windowFrame.size.height - _titlebarHeight;
+  titlebarContainerFrame.size.height = _titlebarHeight;
   titlebarContainerView.frame = titlebarContainerFrame;
   
   auto hidden = [[NSUserDefaults standardUserDefaults] boolForKey:@"traffic-lights/hidden"];
@@ -102,11 +111,11 @@
   auto updateButton = ^(NSView* buttonView) {
     auto buttonFrame = buttonView.frame;
 
-    // in fullscreen, the titlebar frame is not governed by kTitlebarHeight but rather appears to be fixed by the system.
+    // in fullscreen, the titlebar frame is not governed by _titlebarHeight but rather appears to be fixed by the system.
     // thus, we set a constant Y origin for the buttons when in fullscreen.
     buttonFrame.origin.y = fullScreen ?
       kFullScreenButtonYOrigin :
-      round((kTitlebarHeight - buttonFrame.size.height) / 2.0);
+      round((_titlebarHeight - buttonFrame.size.height) / 2.0);
 
     buttonFrame.origin.x = x;
 

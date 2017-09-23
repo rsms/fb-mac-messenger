@@ -15,13 +15,13 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.1.12</string>
+	<string>0.1.13</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.1.12.1487384288</string>
+	<string>0.1.13.1491443794</string>
 	<key>GitRev</key>
-	<string>5622ec8fa60c38a113fdaec754e410025d22e31f</string>
+	<string>7b1777b58fef0bf9672b286c080d4b6a1e78dfda</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSAppTransportSecurity</key>

@@ -1,4 +1,4 @@
-@interface FBMWindow : NSWindow <NSWindowDelegate>
+@interface FBMWindow : NSWindow <NSWindowDelegate, NSTouchBarDelegate>
 
 @property (nonatomic) CGFloat titlebarHeight;
 

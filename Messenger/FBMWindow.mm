@@ -160,6 +160,48 @@
 
 
 
+#pragma mark - Touch Bar
+
+static NSString * const touchBarIdentifier = @"me.rsms.fbmessenger.touchbar";
+static NSString * const touchBarComposeButtonIdentifier = @"me.rsms.fbmessenger.touchbar.compose";
+static NSString * const touchBarConversationNavigationIdentifier = @"me.rsms.fbmessenger.touchbar.conversationNavigation";
+
+- (NSTouchBar *)makeTouchBar {
+  auto bar = [NSTouchBar new];
+  bar.delegate = self;
+  bar.customizationIdentifier = touchBarIdentifier;
+  bar.defaultItemIdentifiers = @[touchBarComposeButtonIdentifier, NSTouchBarItemIdentifierOtherItemsProxy, NSTouchBarItemIdentifierFlexibleSpace, touchBarConversationNavigationIdentifier];
+  bar.customizationAllowedItemIdentifiers = @[touchBarComposeButtonIdentifier, touchBarConversationNavigationIdentifier];
+  
+  return bar;
+}
+
+- (NSTouchBarItem *)touchBar:(NSTouchBar *)touchBar makeItemForIdentifier:(NSTouchBarItemIdentifier)identifier {
+  if ([identifier isEqual:touchBarComposeButtonIdentifier]) {
+    auto item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
+    item.customizationLabel = @"New Message";
+    item.view = [NSButton buttonWithImage:[NSImage imageNamed:NSImageNameTouchBarComposeTemplate] target:[NSApp delegate] action:@selector(composeNewMessage:)];
+    return item;
+  }
+  if ([identifier isEqual:touchBarConversationNavigationIdentifier]) {
+    auto item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
+    item.customizationLabel = @"Conversation Navigation";
+    auto segmentedControl = [NSSegmentedControl segmentedControlWithImages:@[[NSImage imageNamed:NSImageNameTouchBarGoUpTemplate], [NSImage imageNamed:NSImageNameTouchBarGoDownTemplate]] trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(conversationNavigationSegmentedControlDidSelect:)];
+    segmentedControl.segmentStyle = NSSegmentStyleSeparated;
+    item.view = segmentedControl;
+    return item;
+  }
+  return nil;
+}
+
+- (void)conversationNavigationSegmentedControlDidSelect:(NSSegmentedControl *)sender {
+  auto delegate = (AppDelegate *)[NSApp delegate];
+  if (sender.selectedSegment == 0) [delegate selectNewerConversation:sender];
+  else if (sender.selectedSegment == 1) [delegate selectOlderConversation:sender];
+}
+
+
+
 #pragma mark - NSWindowDelegate
 
 

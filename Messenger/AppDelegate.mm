@@ -249,6 +249,11 @@ const CGFloat kTitlebarHeightAtDefaultScale = 50;
                                    toItem:_curtainView
                                 attribute:NSLayoutAttributeCenterY
                                multiplier:1.f constant:0.f]];
+  
+  // Touch bar
+  if ([NSTouchBar class]) {
+    [[NSApplication sharedApplication] setAutomaticCustomizeTouchBarMenuItemEnabled:YES];
+  }
 
   // Present main window
   [_window makeKeyAndOrderFront:self];

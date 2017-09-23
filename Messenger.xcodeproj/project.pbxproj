@@ -24,7 +24,6 @@
 		3A9A9C7C1AD5D8ED008FABE9 /* JSNotification.js.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C7B1AD5D8ED008FABE9 /* JSNotification.js.mm */; };
 		3A9A9C841AD5EA13008FABE9 /* JSObjWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C831AD5EA13008FABE9 /* JSObjWrapper.m */; };
 		3A9A9C861AD5EE4E008FABE9 /* JSNotifications.js.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9A9C851AD5EE4E008FABE9 /* JSNotifications.js.mm */; };
-		669511411B00A0E600526CFD /* MMFakeDragInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 669511401B00A0E600526CFD /* MMFakeDragInfo.m */; };
 		6ADC7FFE1DAD4024006362C3 /* PFMoveApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADC7FFD1DAD4024006362C3 /* PFMoveApplication.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		CB4ACC4E1BF4B91F00930C59 /* WebViewZoomController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB4ACC4D1BF4B91F00930C59 /* WebViewZoomController.m */; };
 		FC67C6201AD7027700459263 /* FBMApplication.mm in Sources */ = {isa = PBXBuildFile; fileRef = FC67C61F1AD7027700459263 /* FBMApplication.mm */; };
@@ -96,8 +95,6 @@
 		3AC5B7B41B7C357F00BCF9D0 /* WebViewPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewPrivate.h; sourceTree = "<group>"; };
 		3AEEEB881ADE3A9800F3A659 /* WebStorageManagerPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebStorageManagerPrivate.h; sourceTree = "<group>"; };
 		3AEEEB891ADE3B0600F3A659 /* WebPreferencesPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebPreferencesPrivate.h; sourceTree = "<group>"; };
-		6695113F1B00A0E600526CFD /* MMFakeDragInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFakeDragInfo.h; sourceTree = "<group>"; };
-		669511401B00A0E600526CFD /* MMFakeDragInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFakeDragInfo.m; sourceTree = "<group>"; };
 		6ADC7FFC1DAD4024006362C3 /* PFMoveApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFMoveApplication.h; path = letsmove/PFMoveApplication.h; sourceTree = SOURCE_ROOT; };
 		6ADC7FFD1DAD4024006362C3 /* PFMoveApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFMoveApplication.m; path = letsmove/PFMoveApplication.m; sourceTree = SOURCE_ROOT; };
 		CB4ACC4C1BF4B91F00930C59 /* WebViewZoomController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewZoomController.h; sourceTree = "<group>"; };
@@ -168,8 +165,6 @@
 				FC67C61F1AD7027700459263 /* FBMApplication.mm */,
 				3A7F0BCE1C7639A70036F7AC /* FBMWindow.h */,
 				3A7F0BCF1C7639A70036F7AC /* FBMWindow.mm */,
-				6695113F1B00A0E600526CFD /* MMFakeDragInfo.h */,
-				669511401B00A0E600526CFD /* MMFakeDragInfo.m */,
 				CB4ACC4C1BF4B91F00930C59 /* WebViewZoomController.h */,
 				CB4ACC4D1BF4B91F00930C59 /* WebViewZoomController.m */,
 				3AEEEB891ADE3B0600F3A659 /* WebPreferencesPrivate.h */,
@@ -341,7 +336,6 @@
 				3A9A9C461AD5B407008FABE9 /* AppDelegate.mm in Sources */,
 				FC67C6201AD7027700459263 /* FBMApplication.mm in Sources */,
 				3A9A9C861AD5EE4E008FABE9 /* JSNotifications.js.mm in Sources */,
-				669511411B00A0E600526CFD /* MMFakeDragInfo.m in Sources */,
 				3A713BA01AD65F6500870D2A /* MEmbeddedRes.m in Sources */,
 				3A9A9C7C1AD5D8ED008FABE9 /* JSNotification.js.mm in Sources */,
 				6ADC7FFE1DAD4024006362C3 /* PFMoveApplication.m in Sources */,

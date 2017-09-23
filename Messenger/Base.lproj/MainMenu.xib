@@ -449,20 +449,12 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="eu3-7i-yIM"/>
-                            <menuItem title="Select Newer Conversation" id="vLj-4s-moH">
-                                <string key="keyEquivalent" base64-UTF8="YES">
-CQ
-</string>
-                                <modifierMask key="keyEquivalentModifierMask" control="YES"/>
+                            <menuItem title="Select Newer Conversation" keyEquivalent="[" id="vLj-4s-moH">
                                 <connections>
                                     <action selector="selectNewerConversation:" target="Voe-Tx-rLC" id="Esh-Ee-m8X"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Select Older Conversation" id="eYP-FJ-B1X">
-                                <string key="keyEquivalent" base64-UTF8="YES">
-CQ
-</string>
-                                <modifierMask key="keyEquivalentModifierMask" shift="YES" control="YES"/>
+                            <menuItem title="Select Older Conversation" keyEquivalent="]" id="eYP-FJ-B1X">
                                 <connections>
                                     <action selector="selectOlderConversation:" target="Voe-Tx-rLC" id="8VD-OJ-Aec"/>
                                 </connections>

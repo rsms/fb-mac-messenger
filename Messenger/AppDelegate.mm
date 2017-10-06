@@ -9,7 +9,6 @@
 #import "WebViewZoomController.h"
 #import "JSClass.hh"
 #import "MEmbeddedRes.h"
-#import "MMFakeDragInfo.h"
 #import "FBMWindow.h"
 #import "PFMoveApplication.h"
 
@@ -477,48 +476,59 @@ const CGFloat kTitlebarHeightAtDefaultScale = 50;
 
 - (IBAction)paste:(id)sender {
   NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
-
-  // If we've got an image, let's paste it!
-  // Ain't nobody got time for dirty hax with React.
-  if ([pasteboard canReadObjectForClasses:@[[NSImage class]] options:nil]) {
-    NSImage *pastedImage = [[pasteboard readObjectsForClasses:@[[NSImage class]] options:nil] firstObject];
-
-    // Try to grab the URL to the image being pasted (if it's available) to just repurpose the already useable pasteboard.
-    NSURL *pastedFileURL = [[pasteboard readObjectsForClasses:@[[NSURL class]] options:nil] firstObject];
-
-    // If we haven't got a file URL (screenshot), we need to write it out first.
-    if (pastedFileURL == nil) {
-      // Convert the pasteboard image to a PNG.
+  
+  // Safari views don't seem to want to paste anything that isn't a URL (or plain text), so if it's not one of those we try to fix that.
+  NSURL *pastedFileURL = [[pasteboard readObjectsForClasses:@[[NSURL class]] options:nil] firstObject];
+  
+  // NOTE: if the clipboard simply contains plain text, it won't have a URL, but none of the methods in this will handle it, so it will fall through at the end just fine.
+  // We can't pre-emptively check whether the pasteboard contains NSString, because this is basically always true (e.g. plain text filename)
+  // Structured this way, we ONLY mess around with the pasteboard data if it contains image data with no URL (more handlers can be added later if needed)
+  // Note that we need a file URL, images copied from Safari include a web URL when the user actually wants to paste the image.
+  if (!(pastedFileURL != nil && [pastedFileURL isFileURL])) {
+    // Image data with no URL (e.g. a screenshot or copied from somewhere)
+    if ([pasteboard canReadObjectForClasses:@[[NSImage class]] options:nil]) {
+      NSImage *pastedImage = [[pasteboard readObjectsForClasses:@[[NSImage class]] options:nil] firstObject];
+      
+      // Convert the pasteboard image to a JPEG. NSPNGFileType does not offer any compression at all, and we don't want to upload huge files.
       NSRect proposedRect = NSMakeRect(0, 0, pastedImage.size.width, pastedImage.size.height);
       CGImageRef pastedImageRef = [pastedImage CGImageForProposedRect:&proposedRect
                                                               context:NULL
                                                                 hints:nil];
       NSBitmapImageRep *bitmapImageRep = [[NSBitmapImageRep alloc] initWithCGImage:pastedImageRef];
-      NSData *PNGImageData = [bitmapImageRep representationUsingType:NSPNGFileType properties:@{}];
-
+      // Save it as JPEG at near highest quality; we don't need lossless because Facebook will ruin it anyway
+      NSData *JPEGImageData = [bitmapImageRep representationUsingType:NSJPEGFileType properties:@{ NSImageCompressionFactor : @0.99 }];
+      
       // Save it (temporarily with a new name).
-      NSString *uniqueFilename = [[NSUUID UUID].UUIDString stringByAppendingString:@".png"];
+      NSString *uniqueFilename = [[NSUUID UUID].UUIDString stringByAppendingString:@".jpeg"];
       NSString *tmpPath = [NSTemporaryDirectory() stringByAppendingPathComponent:uniqueFilename];
-      [PNGImageData writeToFile:tmpPath atomically:YES];
-
+      [JPEGImageData writeToFile:tmpPath atomically:YES];
+      
       pastedFileURL = [NSURL fileURLWithPath:tmpPath];
-
+      
       // Write our newly saved file to the pasteboard.
       [pasteboard clearContents];
       [pasteboard declareTypes:@[NSFilenamesPboardType] owner:self];
       [pasteboard writeObjects:@[pastedFileURL]];
     }
-
-    if (pastedFileURL != nil) {
-      // Fire off a completely falsified (and bs) drag+drop event. >:D
-      MMFakeDragInfo *info = [[MMFakeDragInfo alloc] initWithImage:pastedImage pasteboard:pasteboard];
-      [_webView draggingEntered:info];
-      [_webView draggingUpdated:info];
-      [_webView performDragOperation:info];
-    }
-  } else {
-    [[NSApplication sharedApplication] sendAction:@selector(paste:) to:nil from:self];
   }
+  else {
+    // We can't paste directories, show an error
+    // TODO: in future, try silently zipping up the directory and sending that?
+    NSNumber *res;
+    [pastedFileURL getResourceValue:&res forKey:NSURLIsDirectoryKey error:nil];
+    if ([res boolValue]) {
+      NSAlert *alert = [NSAlert new];
+      [alert addButtonWithTitle:@"OK"];
+      [alert setMessageText:@"Could not send attachment"];
+      [alert setInformativeText:@"Directories cannot be sent. Zip it up first and try again."];
+      [alert setAlertStyle:NSAlertStyleWarning];
+      [alert beginSheetModalForWindow:self.mainWindow completionHandler:nil];
+      return;
+    }
+  }
+  
+  // forward the paste action to the webview, now that we've fixed the paste data (if needed)
+  [[NSApplication sharedApplication] sendAction:@selector(paste:) to:_webView from:self];
 }
 
 - (IBAction)openMainMenu:(id)sender {

@@ -483,7 +483,8 @@ const CGFloat kTitlebarHeightAtDefaultScale = 50;
   // NOTE: if the clipboard simply contains plain text, it won't have a URL, but none of the methods in this will handle it, so it will fall through at the end just fine.
   // We can't pre-emptively check whether the pasteboard contains NSString, because this is basically always true (e.g. plain text filename)
   // Structured this way, we ONLY mess around with the pasteboard data if it contains image data with no URL (more handlers can be added later if needed)
-  if (pastedFileURL == nil) {
+  // Note that we need a file URL, images copied from Safari include a web URL when the user actually wants to paste the image.
+  if (!(pastedFileURL != nil && [pastedFileURL isFileURL])) {
     // Image data with no URL (e.g. a screenshot or copied from somewhere)
     if ([pasteboard canReadObjectForClasses:@[[NSImage class]] options:nil]) {
       NSImage *pastedImage = [[pasteboard readObjectsForClasses:@[[NSImage class]] options:nil] firstObject];

@@ -442,7 +442,6 @@ const CGFloat kTitlebarHeightAtDefaultScale = 50;
   [self evaluateJavaScript:@"MacMessenger.selectNewerConversation()"];
 }
 
-
 - (BOOL)canSelectOlderConversation {
   NSNumber* v = [self evaluateJavaScript:@"MacMessenger.canSelectOlderConversation()"];
   return v == nil || ![v isKindOfClass:[NSNumber class]] ? NO : [v boolValue];
@@ -453,6 +452,9 @@ const CGFloat kTitlebarHeightAtDefaultScale = 50;
   [self evaluateJavaScript:@"MacMessenger.selectOlderConversation()"];
 }
 
+- (void) focusSearchField {
+  [self evaluateJavaScript:@"MacMessenger.focusSearchField()"];
+}
 
 - (IBAction)reloadFromServer:(id)sender {
   NSString* url = nil;

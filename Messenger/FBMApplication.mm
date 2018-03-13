@@ -57,6 +57,10 @@
             }
             break;
           }
+          case u't': {
+            [((AppDelegate*)self.delegate) focusSearchField];
+            break;
+          }
           default: {
             break;
           }

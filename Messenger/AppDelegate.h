@@ -15,6 +15,7 @@ int FBMOSX1010OrNewer();
 
 - (IBAction)checkForUpdates:(id)sender;
 - (void)setActiveConversationAtIndex:(NSString *)index;
+- (void) focusSearchField;
 - (BOOL)canSelectNewerConversation;
 - (IBAction)selectNewerConversation:(id)sender;
 - (BOOL)canSelectOlderConversation;

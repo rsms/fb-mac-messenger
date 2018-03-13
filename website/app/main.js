@@ -290,7 +290,7 @@
     },
 
     focusSearchField: function() {
-      document.querySelector('input[aria-autocomplete="list"]').focus();
+      document.querySelector('._58ak').focus();
     },
 
     focusComposer: function() {
